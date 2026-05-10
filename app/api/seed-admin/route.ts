@@ -37,10 +37,9 @@
 //   }
 // }
 
-
-import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/mongodb';
-import { AdminUser } from '@/lib/models';
+import { NextRequest, NextResponse } from "next/server";
+import { connectDB } from "@/lib/mongodb";
+import { AdminUser } from "@/lib/models";
 
 // GET /api/seed-admin
 export async function GET(request: NextRequest) {
@@ -48,41 +47,42 @@ export async function GET(request: NextRequest) {
     await connectDB();
 
     const existing = await AdminUser.findOne({
-      email: 'admin@shopease.com',
+      email: "admin@shopease.com",
     });
 
     if (existing) {
       return NextResponse.json({
         success: true,
-        message: 'Admin already exists',
+        message: "Admin already exists",
       });
     }
 
     const admin = await AdminUser.create({
-      name: 'Admin',
-      email: 'admin@shopease.com',
-      password_hash: 'Admin@2024',
-      phone: '+1234567890',
-      role: 'super_admin',
+      name: "Admin",
+      email: "admin@shopease.com",
+      password_hash: "Admin@2024",
+      phone: "+1234567890",
+      role: "super_admin",
     });
 
     return NextResponse.json({
       success: true,
-      message: 'Admin created successfully',
+      message: "Admin created successfully",
       data: {
         email: admin.email,
         role: admin.role,
       },
     });
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    console.log("SEED ERROR:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: 'Failed to seed admin',
+        message: error.message,
+        error: error,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

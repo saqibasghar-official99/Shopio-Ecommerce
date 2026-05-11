@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ShoppingCart, MessageCircle } from 'lucide-react';
 import { Product } from '@/lib/types';
 import { formatCurrency, getStockBadge, cn } from '@/lib/utils';
@@ -14,9 +13,10 @@ import { Badge } from '@/components/ui/badge';
 
 interface ProductCardProps {
   product: Product;
+  priority?: boolean;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+function ProductCardBase({ product, priority = false }: ProductCardProps) {
   const { addItem } = useCart();
   const { settings } = useSettings();
   const { showToast } = useToast();
@@ -27,45 +27,56 @@ export default function ProductCard({ product }: ProductCardProps) {
   const inStock = product.stock > 0;
   const imageSrc = product.images?.[0] || '/placeholder.png';
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!inStock) return;
-    addItem({
-      productId: product.id,
-      name: product.name,
-      slug: product.slug,
-      image: imageSrc,
-      price: product.price,
-      comparePrice: product.compare_price,
-      qty: 1,
-      stock: product.stock,
-    });
-    showToast(`${product.name} added to cart`);
-  };
+  const handleAddToCart = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!inStock) return;
+      addItem({
+        productId: product.id,
+        name: product.name,
+        slug: product.slug,
+        image: imageSrc,
+        price: product.price,
+        comparePrice: product.compare_price,
+        qty: 1,
+        stock: product.stock,
+      });
+      showToast(`${product.name} added to cart`);
+    },
+    [addItem, imageSrc, inStock, product.compare_price, product.id, product.name, product.price, product.slug, product.stock, showToast]
+  );
 
-  const handleWhatsApp = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!whatsappNumber) return;
-    const message = encodeURIComponent(`Hi, I'm interested in ${product.name}`);
-    window.open(`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
-  };
+  const handleWhatsApp = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!whatsappNumber) return;
+      const message = encodeURIComponent(`Hi, I'm interested in ${product.name}`);
+      window.open(
+        `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${message}`,
+        '_blank'
+      );
+    },
+    [product.name, whatsappNumber]
+  );
 
   return (
     <Link
       href={`/products/${product.slug}`}
       className="group block rounded-lg border border-gray-100 bg-white overflow-hidden hover:shadow-md transition-shadow"
+      prefetch={false}
     >
-      {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-gray-100">
         <img
           src={imageSrc}
           alt={product.name}
           className="h-full w-full object-cover transition-transform group-hover:scale-105"
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+          fetchPriority={priority ? 'high' : 'auto'}
         />
 
-        {/* Stock badge */}
         <Badge
           className={cn(
             'absolute top-2 left-2 text-[10px] px-1.5 py-0.5 rounded',
@@ -75,22 +86,22 @@ export default function ProductCard({ product }: ProductCardProps) {
           {stockBadge.label}
         </Badge>
 
-        {/* Discount badge */}
         {product.compare_price > product.price && (
           <Badge className="absolute top-2 right-2 bg-red-600 text-white text-[10px] px-1.5 py-0.5 rounded font-semibold">
-            -{Math.round(((product.compare_price - product.price) / product.compare_price) * 100)}%
+            -
+            {Math.round(
+              ((product.compare_price - product.price) / product.compare_price) * 100
+            )}
+            %
           </Badge>
         )}
       </div>
 
-      {/* Details */}
       <div className="p-3 flex flex-col gap-1.5">
-        {/* Name */}
         <h3 className="text-sm font-medium text-gray-900 line-clamp-2 leading-tight">
           {product.name}
         </h3>
 
-        {/* Price row */}
         <div className="flex items-baseline gap-1.5">
           <span className="text-sm font-semibold text-green-600">
             {formatCurrency(product.price, currency)}
@@ -102,7 +113,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
 
-        {/* Action buttons */}
         <div className="flex gap-2 mt-1">
           <Button
             size="sm"
@@ -131,3 +141,10 @@ export default function ProductCard({ product }: ProductCardProps) {
     </Link>
   );
 }
+
+// Memo: cart/settings context changes shouldn't re-render every card unnecessarily.
+const ProductCard = memo(ProductCardBase, (prev, next) => {
+  return prev.product.id === next.product.id && prev.priority === next.priority;
+});
+
+export default ProductCard;

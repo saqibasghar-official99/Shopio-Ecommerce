@@ -3,6 +3,8 @@ import { connectDB } from '@/lib/mongodb';
 import { Product } from '@/lib/models';
 import { getAdminFromRequest } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/products/[slug] - Public: get single product by slug
 export async function GET(
   _request: NextRequest,
@@ -12,7 +14,9 @@ export async function GET(
     await connectDB();
     const { slug } = await params;
 
-    const data = await Product.findOne({ slug }).populate('category_id', 'name slug');
+    const data = await Product.findOne({ slug })
+      .populate('category_id', 'name slug')
+      .lean();
 
     if (!data) {
       return NextResponse.json(
@@ -21,8 +25,14 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ success: true, data });
-  } catch {
+    const res = NextResponse.json({ success: true, data });
+    res.headers.set(
+      'Cache-Control',
+      'public, max-age=60, s-maxage=120, stale-while-revalidate=600'
+    );
+    return res;
+  } catch (err) {
+    console.error('Product slug GET error:', err);
     return NextResponse.json(
       { success: false, data: null, message: 'Failed to fetch product' },
       { status: 500 }
@@ -48,7 +58,9 @@ export async function PUT(
     const { slug } = await params;
     const body = await request.json();
 
-    const data = await Product.findOneAndUpdate({ slug }, body, { new: true }).populate('category_id', 'name slug');
+    const data = await Product.findOneAndUpdate({ slug }, body, { new: true })
+      .populate('category_id', 'name slug')
+      .lean();
 
     if (!data) {
       return NextResponse.json(
@@ -58,7 +70,8 @@ export async function PUT(
     }
 
     return NextResponse.json({ success: true, data });
-  } catch {
+  } catch (err) {
+    console.error('Product slug PUT error:', err);
     return NextResponse.json(
       { success: false, data: null, message: 'Failed to update product' },
       { status: 500 }
@@ -83,7 +96,7 @@ export async function DELETE(
     await connectDB();
     const { slug } = await params;
 
-    const data = await Product.findOneAndDelete({ slug });
+    const data = await Product.findOneAndDelete({ slug }).lean();
 
     if (!data) {
       return NextResponse.json(
@@ -93,7 +106,8 @@ export async function DELETE(
     }
 
     return NextResponse.json({ success: true, data: null, message: 'Product deleted' });
-  } catch {
+  } catch (err) {
+    console.error('Product slug DELETE error:', err);
     return NextResponse.json(
       { success: false, data: null, message: 'Failed to delete product' },
       { status: 500 }

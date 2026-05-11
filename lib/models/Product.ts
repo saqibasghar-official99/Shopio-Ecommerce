@@ -44,8 +44,14 @@ const ProductSchema = new Schema<IProduct>({
   ratings_count: { type: Number, default: 0 },
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
-ProductSchema.index({ slug: 1 });
-ProductSchema.index({ category_id: 1 });
-ProductSchema.index({ is_active: 1, is_featured: 1 });
+// Compound indexes for the common storefront query patterns
+ProductSchema.index({ is_active: 1, created_at: -1 });
+ProductSchema.index({ is_active: 1, is_featured: 1, created_at: -1 });
+ProductSchema.index({ is_active: 1, category_id: 1, created_at: -1 });
+ProductSchema.index({ is_active: 1, price: 1 });
+ProductSchema.index({ is_active: 1, ratings_count: -1 });
+ProductSchema.index({ tags: 1 });
+// Full-text index for fast search instead of slow $regex scans
+ProductSchema.index({ name: 'text', description: 'text', short_description: 'text', tags: 'text' });
 
 export default mongoose.models.Product || mongoose.model<IProduct>('Product', ProductSchema);

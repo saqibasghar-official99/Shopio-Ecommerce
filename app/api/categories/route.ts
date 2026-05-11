@@ -3,6 +3,8 @@ import { connectDB } from '@/lib/mongodb';
 import { Category } from '@/lib/models';
 import { getAdminFromRequest } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/categories - Public: get categories with optional search
 export async function GET(request: NextRequest) {
   try {
@@ -16,10 +18,20 @@ export async function GET(request: NextRequest) {
       filter.name = { $regex: search, $options: 'i' };
     }
 
-    const data = await Category.find(filter).sort({ sort_order: 1 });
+    const data = await Category.find(filter)
+      .select('name slug description image parent_id is_active sort_order')
+      .sort({ sort_order: 1 })
+      .lean();
 
-    return NextResponse.json({ success: true, data });
-  } catch {
+    const res = NextResponse.json({ success: true, data });
+    // Categories change rarely — cache aggressively
+    res.headers.set(
+      'Cache-Control',
+      'public, max-age=300, s-maxage=600, stale-while-revalidate=3600'
+    );
+    return res;
+  } catch (err) {
+    console.error('Categories GET error:', err);
     return NextResponse.json(
       { success: false, data: null, message: 'Failed to fetch categories' },
       { status: 500 }
@@ -40,7 +52,6 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    // Auto-generate slug if not provided
     if (!body.slug && body.name) {
       body.slug = body.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
@@ -49,7 +60,8 @@ export async function POST(request: NextRequest) {
     const data = await Category.create(body);
 
     return NextResponse.json({ success: true, data }, { status: 201 });
-  } catch {
+  } catch (err) {
+    console.error('Categories POST error:', err);
     return NextResponse.json(
       { success: false, data: null, message: 'Failed to create category' },
       { status: 500 }

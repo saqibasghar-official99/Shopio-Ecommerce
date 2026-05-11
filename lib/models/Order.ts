@@ -68,7 +68,10 @@ const OrderSchema = new Schema<IOrder>({
   invoice_url: { type: String, default: '' },
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
-OrderSchema.index({ order_number: 1 });
-OrderSchema.index({ customer_id: 1 });
+OrderSchema.index({ order_number: 1 }, { unique: true });
+OrderSchema.index({ customer_id: 1, created_at: -1 });
+OrderSchema.index({ order_status: 1, created_at: -1 });
+OrderSchema.index({ payment_status: 1, created_at: -1 });
+OrderSchema.index({ created_at: -1 });
 
 export default mongoose.models.Order || mongoose.model<IOrder>('Order', OrderSchema);

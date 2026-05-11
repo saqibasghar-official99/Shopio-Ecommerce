@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Search, ShoppingCart, Menu, House, Grid3x3, User, ClipboardList, X } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useCart } from '@/contexts/CartContext';
@@ -29,6 +30,7 @@ interface SearchResult {
 }
 
 export default function Navbar() {
+  const router = useRouter();
   const { settings } = useSettings();
   const { totalItems, hydrated } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
@@ -43,33 +45,42 @@ export default function Navbar() {
   const storeName = settings?.store_name || 'Store';
   const currency = settings?.currency || '$';
 
-  // Live search with debounce
+  // Live search with debounce + cancel-in-flight to avoid stale results
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
-    if (!searchQuery.trim()) {
+    const q = searchQuery.trim();
+    if (!q) {
       setSearchResults([]);
       setSearchOpen(false);
       return;
     }
 
+    const controller = new AbortController();
     debounceRef.current = setTimeout(async () => {
       setSearchLoading(true);
       try {
-        const res = await fetch(`/api/products?search=${encodeURIComponent(searchQuery.trim())}&limit=6`);
+        const res = await fetch(
+          `/api/products?search=${encodeURIComponent(q)}&limit=6`,
+          { signal: controller.signal }
+        );
         const data = await res.json();
-        const items = (data.data || []).map((p: SearchResult & { _id?: string }) => ({ ...p, id: p._id || p.id }));
+        const items = (data.data || []).map((p: SearchResult & { _id?: string }) => ({
+          ...p,
+          id: p._id || p.id,
+        }));
         setSearchResults(items);
         setSearchOpen(items.length > 0);
-      } catch {
-        setSearchResults([]);
+      } catch (err) {
+        if ((err as Error)?.name !== 'AbortError') setSearchResults([]);
       } finally {
         setSearchLoading(false);
       }
-    }, 300);
+    }, 350);
 
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
+      controller.abort();
     };
   }, [searchQuery]);
 
@@ -86,8 +97,10 @@ export default function Navbar() {
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      window.location.href = `/products?search=${encodeURIComponent(searchQuery.trim())}`;
+    const q = searchQuery.trim();
+    if (q) {
+      // Client-side nav — preserves cache, no full reload
+      router.push(`/products?search=${encodeURIComponent(q)}`);
       setSearchOpen(false);
     }
   };
@@ -135,7 +148,16 @@ export default function Navbar() {
           {/* Store name / Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
             {settings?.logo && (
-              <img src={settings.logo} alt={storeName} className="h-8 w-auto object-contain" />
+              <img
+                src={settings.logo}
+                alt={storeName}
+                width={32}
+                height={32}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                className="h-8 w-auto object-contain"
+              />
             )}
             <span className="text-lg font-semibold text-green-600 hidden sm:inline">
               {storeName}
@@ -198,6 +220,8 @@ export default function Navbar() {
                           <img
                             src={product.images?.[0] || '/placeholder.png'}
                             alt={product.name}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover"
                           />
                         </div>

@@ -31,12 +31,15 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    const total = await Customer.countDocuments(filter);
-    const data = await Customer.find(filter)
-      .select('-password_hash')
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .sort({ created_at: -1 });
+    const [total, data] = await Promise.all([
+      Customer.countDocuments(filter),
+      Customer.find(filter)
+        .select('-password_hash')
+        .sort({ created_at: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean(),
+    ]);
 
     return NextResponse.json({
       success: true,
@@ -45,6 +48,7 @@ export async function GET(request: NextRequest) {
         page,
         limit,
         total,
+        totalPages: Math.max(1, Math.ceil(total / limit)),
       },
     });
   } catch {

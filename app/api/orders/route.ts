@@ -54,11 +54,14 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const total = await Order.countDocuments(filter);
-    const data = await Order.find(filter)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .sort({ created_at: -1 });
+    const [total, data] = await Promise.all([
+      Order.countDocuments(filter),
+      Order.find(filter)
+        .sort({ created_at: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean(),
+    ]);
 
     return NextResponse.json({
       success: true,
@@ -67,6 +70,7 @@ export async function GET(request: NextRequest) {
         page,
         limit,
         total,
+        totalPages: Math.max(1, Math.ceil(total / limit)),
       },
     });
   } catch {

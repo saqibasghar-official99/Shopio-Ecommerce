@@ -22,6 +22,7 @@ const CategorySchema = new Schema<ICategory>({
   sort_order: { type: Number, default: 0 },
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
-CategorySchema.index({ slug: 1 });
+CategorySchema.index({ is_active: 1, sort_order: 1 });
+CategorySchema.index({ parent_id: 1 });
 
 export default mongoose.models.Category || mongoose.model<ICategory>('Category', CategorySchema);

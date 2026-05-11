@@ -76,33 +76,40 @@ function ProductsContent() {
       .catch(() => {});
   }, []);
 
-  // Fetch products
-  const fetchProducts = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      if (categorySlug) params.set('category', categorySlug);
-      if (sort) params.set('sort', sort);
-      params.set('page', page.toString());
-      params.set('limit', PRODUCTS_PER_PAGE.toString());
-      if (search) params.set('search', search);
-      if (tagFilter) params.set('tag', tagFilter);
-      if (priceMin) params.set('min', priceMin);
-      if (priceMax) params.set('max', priceMax);
+  // Fetch products — cancel in-flight on rapid filter changes
+  const fetchProducts = useCallback(
+    async (signal: AbortSignal) => {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams();
+        if (categorySlug) params.set('category', categorySlug);
+        if (sort) params.set('sort', sort);
+        params.set('page', page.toString());
+        params.set('limit', PRODUCTS_PER_PAGE.toString());
+        if (search) params.set('search', search);
+        if (tagFilter) params.set('tag', tagFilter);
+        if (priceMin) params.set('min', priceMin);
+        if (priceMax) params.set('max', priceMax);
 
-      const res = await fetch(`/api/products?${params.toString()}`);
-      const data = await res.json();
-      setProducts((data.data || []).map((p: Product & { _id?: string }) => ({ ...p, id: p._id || p.id })));
-      setTotalPages(data.pagination?.totalPages || 1);
-    } catch {
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [categorySlug, sort, page, search, tagFilter, priceMin, priceMax]);
+        const res = await fetch(`/api/products?${params.toString()}`, { signal });
+        const data = await res.json();
+        setProducts(
+          (data.data || []).map((p: Product & { _id?: string }) => ({ ...p, id: p._id || p.id }))
+        );
+        setTotalPages(data.pagination?.totalPages || 1);
+      } catch (err) {
+        if ((err as Error)?.name !== 'AbortError') setProducts([]);
+      } finally {
+        if (!signal.aborted) setLoading(false);
+      }
+    },
+    [categorySlug, sort, page, search, tagFilter, priceMin, priceMax]
+  );
 
   useEffect(() => {
-    fetchProducts();
+    const controller = new AbortController();
+    fetchProducts(controller.signal);
+    return () => controller.abort();
   }, [fetchProducts]);
 
   // Build URL with updated params

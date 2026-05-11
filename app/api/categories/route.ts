@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
 import { Category } from '@/lib/models';
 import { getAdminFromRequest } from '@/lib/auth';
+import { invalidate } from '@/lib/server/cache';
+import { transformCategoryImage } from '@/lib/server/imageTransforms';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,10 +21,14 @@ export async function GET(request: NextRequest) {
       filter.name = { $regex: search, $options: 'i' };
     }
 
-    const data = await Category.find(filter)
+    const raw = await Category.find(filter)
       .select('name slug description image parent_id is_active sort_order')
       .sort({ sort_order: 1 })
       .lean();
+
+    const data = (raw as unknown[]).map((c) =>
+      transformCategoryImage(c as { slug?: string; image?: unknown })
+    );
 
     const res = NextResponse.json({ success: true, data });
     // Categories change rarely — cache aggressively
@@ -58,6 +65,14 @@ export async function POST(request: NextRequest) {
 
     await connectDB();
     const data = await Category.create(body);
+
+    invalidate('categories');
+    try {
+      revalidatePath('/');
+      revalidatePath('/products');
+    } catch {
+      // ignore
+    }
 
     return NextResponse.json({ success: true, data }, { status: 201 });
   } catch (err) {

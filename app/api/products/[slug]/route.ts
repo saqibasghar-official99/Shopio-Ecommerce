@@ -1,7 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
 import { Product } from '@/lib/models';
 import { getAdminFromRequest } from '@/lib/auth';
+import { invalidate } from '@/lib/server/cache';
+import { transformProductImages } from '@/lib/server/imageTransforms';
+
+function bust(slug?: string) {
+  invalidate('products');
+  try {
+    revalidatePath('/');
+    revalidatePath('/products');
+    if (slug) revalidatePath(`/products/${slug}`);
+  } catch {
+    // ignore
+  }
+}
 
 export const dynamic = 'force-dynamic';
 
@@ -14,17 +28,18 @@ export async function GET(
     await connectDB();
     const { slug } = await params;
 
-    const data = await Product.findOne({ slug })
+    const raw = await Product.findOne({ slug })
       .populate('category_id', 'name slug')
       .lean();
 
-    if (!data) {
+    if (!raw) {
       return NextResponse.json(
         { success: false, data: null, message: 'Product not found' },
         { status: 404 }
       );
     }
 
+    const data = transformProductImages(raw as { slug?: string; images?: unknown });
     const res = NextResponse.json({ success: true, data });
     res.headers.set(
       'Cache-Control',
@@ -69,6 +84,7 @@ export async function PUT(
       );
     }
 
+    bust(slug);
     return NextResponse.json({ success: true, data });
   } catch (err) {
     console.error('Product slug PUT error:', err);
@@ -105,6 +121,7 @@ export async function DELETE(
       );
     }
 
+    bust(slug);
     return NextResponse.json({ success: true, data: null, message: 'Product deleted' });
   } catch (err) {
     console.error('Product slug DELETE error:', err);

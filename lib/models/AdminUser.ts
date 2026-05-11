@@ -18,6 +18,6 @@ const AdminUserSchema = new Schema<IAdminUser>({
   role: { type: String, default: 'admin' },
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
-AdminUserSchema.index({ email: 1 });
+// email unique index is declared on the field definition above.
 
 export default mongoose.models.AdminUser || mongoose.model<IAdminUser>('AdminUser', AdminUserSchema);

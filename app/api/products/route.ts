@@ -1,12 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
 import { Product, Category } from '@/lib/models';
 import { getAdminFromRequest } from '@/lib/auth';
+import { invalidate } from '@/lib/server/cache';
+import { transformProductImages } from '@/lib/server/imageTransforms';
 
 // Light projection for list views — never ship heavy description / specifications
-// to product listings. The detail page fetches the full doc by slug.
-const LIST_PROJECTION =
-  'name slug short_description category_id price compare_price stock images is_active is_featured tags ratings_avg ratings_count created_at';
+// to product listings. $slice on images keeps only the thumbnail, avoiding
+// megabytes of base64 per row.
+const LIST_PROJECTION = {
+  name: 1,
+  slug: 1,
+  short_description: 1,
+  category_id: 1,
+  price: 1,
+  compare_price: 1,
+  stock: 1,
+  is_active: 1,
+  is_featured: 1,
+  tags: 1,
+  ratings_avg: 1,
+  ratings_count: 1,
+  created_at: 1,
+  images: { $slice: 1 } as unknown as 1,
+};
 
 export const dynamic = 'force-dynamic';
 
@@ -77,7 +95,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Run count and find in parallel — was sequential before, cutting one RTT.
-    const [total, data] = await Promise.all([
+    const [total, rawData] = await Promise.all([
       Product.countDocuments(filter),
       Product.find(filter)
         .select(LIST_PROJECTION)
@@ -87,6 +105,12 @@ export async function GET(request: NextRequest) {
         .populate('category_id', 'name slug')
         .lean(),
     ]);
+
+    // Replace inline base64 images with small API URLs so the JSON payload
+    // stays tiny and browsers can cache each image independently.
+    const data = (rawData as unknown[]).map((p) =>
+      transformProductImages(p as { slug?: string; images?: unknown })
+    );
 
     const res = NextResponse.json({
       success: true,
@@ -145,6 +169,14 @@ export async function POST(request: NextRequest) {
 
     const data = await Product.create(body);
     await data.populate('category_id', 'name slug');
+
+    invalidate('products');
+    try {
+      revalidatePath('/');
+      revalidatePath('/products');
+    } catch {
+      // ignore
+    }
 
     return NextResponse.json({ success: true, data }, { status: 201 });
   } catch (err) {

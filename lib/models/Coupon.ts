@@ -26,6 +26,6 @@ const CouponSchema = new Schema<ICoupon>({
   is_visible: { type: Boolean, default: true },
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
-CouponSchema.index({ code: 1 });
+// code unique index is declared on the field definition above.
 
 export default mongoose.models.Coupon || mongoose.model<ICoupon>('Coupon', CouponSchema);

@@ -22,6 +22,9 @@ const CustomerSchema = new Schema<ICustomer>({
   is_guest: { type: Boolean, default: false },
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
-CustomerSchema.index({ email: 1 }, { unique: true });
+// Add a non-unique compound index later if needed; the primary email index
+// is implicit from the field definition. Keep schema lean to avoid duplicate
+// index warnings on cold start.
+CustomerSchema.index({ email: 1 }, { unique: true, sparse: true, name: 'email_unique' });
 
 export default mongoose.models.Customer || mongoose.model<ICustomer>('Customer', CustomerSchema);

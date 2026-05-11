@@ -1,0 +1,47 @@
+﻿
+> nextjs@0.1.0 dev
+> next dev
+
+node.exe :  ⚠ Port 3000 is in use, trying 3001 instead.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( ⚠ Port 3000 is...g 3001 instead.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ▲ Next.js 13.5.1
+  - Local:        http://localhost:3001
+  - Environments: .env
+  - Experiments (use at your own risk):
+     · optimizePackageImports
+     · serverComponentsExternalPackages
+
+ ✓ Ready in 3.5s
+ ○ compiling /(store)/page ...
+ ✓ Compiled /(store)/page in 8.2s (702 modules)
+(node:11220) [MONGOOSE] Warning: mongoose: Duplicate schema index on {"order_number":1} for model "Order". This is 
+often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index 
+definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11220) [MONGOOSE] Warning: mongoose: Duplicate schema index on {"code":1} for model "Coupon". This is often due 
+to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:11220) [MONGOOSE] Warning: mongoose: Duplicate schema index on {"email":1} for model "AdminUser". This is often 
+due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+ ✓ Compiled in 1606ms (344 modules)
+ ✓ Compiled in 728ms (330 modules)
+ ✓ Compiled in 999ms (344 modules)
+ ✓ Compiled in 832ms (344 modules)
+ ✓ Compiled in 683ms (344 modules)
+ ✓ Compiled in 420ms (344 modules)
+ ✓ Compiled in 470ms (344 modules)
+ ✓ Compiled in 351ms (344 modules)
+ ✓ Compiled in 437ms (344 modules)
+ ✓ Compiled in 558ms (344 modules)
+ ✓ Compiled in 540ms (344 modules)
+ ✓ Compiled in 589ms (344 modules)
+ ✓ Compiled in 451ms (344 modules)
+ ✓ Compiled in 356ms (344 modules)
+ ✓ Compiled /api/products/route in 828ms (76 modules)
+ ✓ Compiled /(store)/page in 489ms (734 modules)
+ ✓ Compiled /api/image/b/[index]/route in 175ms (407 modules)
+ ✓ Compiled /api/image/c/[slug]/route in 171ms (409 modules)

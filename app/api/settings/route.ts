@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
 import { SiteSettings } from '@/lib/models';
 import { getAdminFromRequest } from '@/lib/auth';
+import { invalidate } from '@/lib/server/cache';
+import { transformSettings } from '@/lib/server/imageTransforms';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,9 +27,9 @@ export async function GET() {
     }
 
     await connectDB();
-    let data = await SiteSettings.findOne().lean();
+    let raw = await SiteSettings.findOne().lean();
 
-    if (!data) {
+    if (!raw) {
       const created = await SiteSettings.create({
         store_name: 'ShopEase',
         currency: '$',
@@ -34,9 +37,11 @@ export async function GET() {
         announcement_bar: { text: '', isActive: false },
         social_links: {},
       });
-      data = created.toObject();
+      raw = created.toObject();
     }
 
+    // Replace inline base64 logo/banners with small API URLs
+    const data = transformSettings(raw as Record<string, unknown> & { banners?: Array<{ image?: unknown }>; logo?: unknown });
     settingsCache = { data, expires: now + SETTINGS_TTL_MS };
 
     const res = NextResponse.json({ success: true, data });
@@ -84,6 +89,14 @@ export async function PUT(request: NextRequest) {
 
     // Bust the in-memory cache so the next GET reflects the change
     settingsCache = null;
+    invalidate('settings');
+    // Bust the ISR-cached home page so the new banner/announcement appears immediately
+    try {
+      revalidatePath('/');
+      revalidatePath('/(store)', 'layout');
+    } catch {
+      // revalidatePath can throw outside a request scope — ignore safely
+    }
 
     return NextResponse.json({ success: true, data });
   } catch (error) {

@@ -6,14 +6,20 @@ import Navbar from '@/components/store/Navbar';
 import Footer from '@/components/store/Footer';
 import WhatsAppButton from '@/components/store/WhatsAppButton';
 import BottomNav from '@/components/store/BottomNav';
+import { getSettings } from '@/lib/server/queries';
+import type { SiteSettings } from '@/lib/types';
 
-export default function StoreLayout({
+export default async function StoreLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Pre-fetch settings on the server so navbar/footer/announcement bar render
+  // with real data on first paint. cached() de-dupes if the page also calls it.
+  const initialSettings = (await getSettings()) as unknown as SiteSettings | null;
+
   return (
-    <SettingsProvider>
+    <SettingsProvider initial={initialSettings}>
       <CartProvider>
         <ToastProvider>
           <div className="flex flex-col min-h-screen">

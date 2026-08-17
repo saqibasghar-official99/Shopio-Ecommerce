@@ -17,6 +17,10 @@ export interface IProduct extends Document {
   is_featured: boolean;
   tags: string[];
   specifications: { key: string; value: string }[];
+  variants: {
+    label: string;
+    options: string[];
+  }[];
   ratings_avg: number;
   ratings_count: number;
   created_at: Date;
@@ -40,6 +44,12 @@ const ProductSchema = new Schema<IProduct>({
   is_featured: { type: Boolean, default: false },
   tags: [{ type: String }],
   specifications: [{ key: { type: String, required: true }, value: { type: String, required: true } }],
+  variants: [
+    {
+      label: { type: String, required: true },
+      options: [{ type: String }],
+    },
+  ],
   ratings_avg: { type: Number, default: 0 },
   ratings_count: { type: Number, default: 0 },
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });

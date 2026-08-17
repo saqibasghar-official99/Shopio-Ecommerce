@@ -106,7 +106,7 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { href: '/', label: 'Home', icon: House },
+    // { href: '/', label: 'Home', icon: House },
     { href: '/products', label: 'Products', icon: Grid3x3 },
     { href: '/orders', label: 'Orders', icon: ClipboardList },
     { href: '/account', label: 'Account', icon: User },

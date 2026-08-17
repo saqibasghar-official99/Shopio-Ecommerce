@@ -16,14 +16,20 @@ const LIST_PROJECTION = {
   category_id: 1,
   price: 1,
   compare_price: 1,
+  cost: 1,
   stock: 1,
+  sku: 1,
+  weight: 1,
   is_active: 1,
   is_featured: 1,
   tags: 1,
+  specifications: 1,
+  variants: 1,
   ratings_avg: 1,
   ratings_count: 1,
   created_at: 1,
-  images: { $slice: 1 } as unknown as 1,
+  // images: { $slice: 1 } as unknown as 1,
+  images: 1, // TODO: slice to 1 once we have thumbnails
 };
 
 export const dynamic = 'force-dynamic';
@@ -167,6 +173,7 @@ export async function POST(request: NextRequest) {
       if (cat) body.category_id = cat._id;
     }
 
+    console.log("PRODUCT BODY RECEIVED:", JSON.stringify(body, null, 2));
     const data = await Product.create(body);
     await data.populate('category_id', 'name slug');
 

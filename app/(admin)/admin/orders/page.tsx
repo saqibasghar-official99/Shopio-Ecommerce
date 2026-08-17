@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, Filter, Eye, ChevronDown, ChevronUp, Package } from 'lucide-react';
+import { Search, Filter, Eye, ChevronDown, ChevronUp, Package, Trash2 } from 'lucide-react';
 import DataTable from '@/components/admin/DataTable';
 import Pagination from '@/components/admin/Pagination';
 import OrderStatusBadge from '@/components/admin/OrderStatusBadge';
@@ -119,6 +119,41 @@ export default function AdminOrdersPage() {
     }
   };
 
+  const deleteOrder = async (orderNumber: string) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete order ${orderNumber}? This action cannot be undone.`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`/api/orders/${orderNumber}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        const error = await res.json().catch(() => ({}));
+        throw new Error(error.message || 'Failed to delete order');
+      }
+
+      // Remove the deleted order immediately from the current table
+      setOrders((prev) =>
+        prev.filter((order) => order.order_number !== orderNumber)
+      );
+
+      // Update total count
+      setTotal((prev) => Math.max(0, prev - 1));
+
+      // Close detail dialog if the deleted order is open
+      if (selectedOrder?.order_number === orderNumber) {
+        setSelectedOrder(null);
+      }
+    } catch (err) {
+      console.error('Failed to delete order', err);
+      alert(err instanceof Error ? err.message : 'Failed to delete order');
+    }
+  };
+
   const columns = [
     {
       key: 'order_number',
@@ -184,15 +219,34 @@ export default function AdminOrdersPage() {
     },
     {
       key: 'actions',
-      label: '',
-      render: (row: Record<string, unknown>) => (
-        <button
-          onClick={() => setSelectedOrder(row as unknown as Order)}
-          className="text-gray-400 hover:text-gray-600"
-        >
-          <Eye className="h-4 w-4" />
-        </button>
-      ),
+      label: 'Actions',
+      render: (row: Record<string, unknown>) => {
+        const orderNumber = row.order_number as string;
+
+        return (
+          <div className="flex items-center gap-3">
+            {/* View */}
+            <button
+              type="button"
+              onClick={() => setSelectedOrder(row as unknown as Order)}
+              className="text-gray-400 hover:text-gray-600"
+              title="View Order"
+            >
+              <Eye className="h-4 w-4" />
+            </button>
+
+            {/* Delete */}
+            <button
+              type="button"
+              onClick={() => deleteOrder(orderNumber)}
+              className="text-red-500 hover:text-red-700"
+              title="Delete Order"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        );
+      },
     },
   ];
 

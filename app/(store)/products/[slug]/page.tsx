@@ -9,6 +9,7 @@ import {
   Plus,
   ShoppingCart,
   Zap,
+  ShoppingBag,
   MessageCircle,
   ArrowLeft,
   Truck,
@@ -177,14 +178,47 @@ export default function ProductDetailPage() {
     router.push('/cart');
   };
 
+  // const handleWhatsAppOrder = () => {
+  //   if (!whatsappNumber) return;
+  //   const variantText = variantString ? ` (${variantString})` : '';
+  //   const message = encodeURIComponent(
+  //     `Hi, I'd like to order: ${product.name}${variantText} x${quantity} - ${formatCurrency(product.price * quantity, currency)}`
+  //   );
+  //   window.open(`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
+  // };
+  
   const handleWhatsAppOrder = () => {
-    if (!whatsappNumber) return;
-    const variantText = variantString ? ` (${variantString})` : '';
-    const message = encodeURIComponent(
-      `Hi, I'd like to order: ${product.name}${variantText} x${quantity} - ${formatCurrency(product.price * quantity, currency)}`
-    );
-    window.open(`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
-  };
+  if (!whatsappNumber || !product) return;
+
+  let phoneNumber = whatsappNumber.replace(/\D/g, '');
+
+  // Convert Pakistani local format:
+  // 03001234567 -> 923001234567
+  if (phoneNumber.startsWith('0')) {
+    phoneNumber = '92' + phoneNumber.substring(1);
+  }
+
+  // If number was saved as 92XXXXXXXXXX, keep it as is.
+  // Example: +92 300 1234567 -> 923001234567
+
+  const message = encodeURIComponent(
+    `Hi, I'd like to order:
+
+Product: ${product.name}
+Quantity: ${quantity}
+${variantString ? `Variant: ${variantString}\n` : ''}Price: ${formatCurrency(
+      product.price * quantity,
+      currency
+    )}`
+  );
+
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+
+  console.log('WhatsApp Number:', phoneNumber);
+  console.log('WhatsApp URL:', whatsappUrl);
+
+  window.open(whatsappUrl, '_blank');
+};
 
   // Strip HTML tags for short description display
   const stripHtml = (html: string) => html?.replace(/<[^>]*>/g, '').trim() || '';
@@ -229,11 +263,11 @@ export default function ProductDetailPage() {
               className="w-full h-full object-contain p-2"
             />
             {discount > 0 && (
-              <Badge className="absolute top-2 left-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded">
+              <Badge className="absolute top-2 left-0 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded">
                 -{discount}%
               </Badge>
             )}
-            <Badge className={cn('absolute top-2 right-2 text-[10px] px-1.5 py-0.5 rounded', stockBadge.color)}>
+            <Badge className={cn('absolute top-8 left-0 text-[10px] px-1.5 py-0.5 rounded', stockBadge.color)}>
               {stockBadge.label}
             </Badge>
           </div>
@@ -347,12 +381,12 @@ export default function ProductDetailPage() {
                 Add to Cart
               </Button>
               <Button className="flex-1 h-11 bg-green-600 hover:bg-green-700 text-white text-sm font-medium" onClick={handleBuyNow} disabled={!inStock}>
-                <Zap className="h-4 w-4 mr-2" />
+                <ShoppingBag className="h-4 w-4 mr-2" />
                 Buy Now
               </Button>
             </div>
             {whatsappNumber && (
-              <Button variant="outline" className="w-full h-10 border-green-600 text-green-600 hover:bg-green-50 text-sm" onClick={handleWhatsAppOrder} disabled={!inStock}>
+              <Button variant="outline" className="bg-secondary text-sm" onClick={handleWhatsAppOrder} disabled={!inStock}>
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Order via WhatsApp
               </Button>

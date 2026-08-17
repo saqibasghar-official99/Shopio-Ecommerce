@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
       customer_city,
       items,
       payment_method,
-      couponCode,
+      coupon_code,
       delivery_zone,
       notes,
       is_guest,
@@ -127,15 +127,48 @@ export async function POST(request: NextRequest) {
     }
 
     // Apply coupon discount if provided
+    // let discount = 0;
+    // let coupon_code = '';
+    // if (coupon_code) {
+    //   const coupon = await Coupon.findOne({
+    //     code: coupon_code,
+    //     is_active: true,
+    //   });
+
+    //   if (coupon) {
+    //     const now = new Date();
+    //     const expired = coupon.expires_at && new Date(coupon.expires_at) < now;
+    //     const maxUsed = coupon.max_uses > 0 && coupon.used_count >= coupon.max_uses;
+    //     const minOrderMet = subtotal >= coupon.min_order;
+
+    //     if (!expired && !maxUsed && minOrderMet) {
+    //       if (coupon.type === 'percent') {
+    //         discount = subtotal * (coupon.value / 100);
+    //       } else {
+    //         discount = coupon.value;
+    //       }
+    //       // Ensure discount doesn't exceed subtotal
+    //       discount = Math.min(discount, subtotal);
+    //       coupon_code = couponCode;
+    //     }
+    //   }
+    // }
+
     let discount = 0;
-    let coupon_code = '';
-    if (couponCode) {
-      const coupon = await Coupon.findOne({ code: couponCode, is_active: true });
+    let appliedCouponCode = '';
+
+    if (coupon_code) {
+      const coupon = await Coupon.findOne({
+        code: coupon_code,
+        is_active: true,
+      });
 
       if (coupon) {
         const now = new Date();
-        const expired = coupon.expires_at && new Date(coupon.expires_at) < now;
-        const maxUsed = coupon.max_uses > 0 && coupon.used_count >= coupon.max_uses;
+        const expired =
+          coupon.expires_at && new Date(coupon.expires_at) < now;
+        const maxUsed =
+          coupon.max_uses > 0 && coupon.used_count >= coupon.max_uses;
         const minOrderMet = subtotal >= coupon.min_order;
 
         if (!expired && !maxUsed && minOrderMet) {
@@ -144,9 +177,9 @@ export async function POST(request: NextRequest) {
           } else {
             discount = coupon.value;
           }
-          // Ensure discount doesn't exceed subtotal
+
           discount = Math.min(discount, subtotal);
-          coupon_code = couponCode;
+          appliedCouponCode = coupon_code;
         }
       }
     }

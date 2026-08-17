@@ -80,3 +80,61 @@ export async function PUT(
     );
   }
 }
+
+
+// DELETE /api/orders/[orderNumber] - Admin: delete order
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ orderNumber: string }> }
+) {
+  try {
+    const admin = await getAdminFromRequest();
+
+    if (!admin) {
+      return NextResponse.json(
+        {
+          success: false,
+          data: null,
+          message: 'Unauthorized',
+        },
+        { status: 401 }
+      );
+    }
+
+    await connectDB();
+
+    const { orderNumber } = await params;
+
+    const data = await Order.findOneAndDelete({
+      order_number: orderNumber,
+    });
+
+    if (!data) {
+      return NextResponse.json(
+        {
+          success: false,
+          data: null,
+          message: 'Order not found',
+        },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: null,
+      message: 'Order deleted successfully',
+    });
+  } catch (error) {
+    console.error('Failed to delete order:', error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        data: null,
+        message: 'Failed to delete order',
+      },
+      { status: 500 }
+    );
+  }
+}

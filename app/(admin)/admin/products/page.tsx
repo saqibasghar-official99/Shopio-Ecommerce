@@ -371,11 +371,25 @@ export default function AdminProductsPage() {
           .split(",")
           .map((t) => t.trim())
           .filter(Boolean),
+
+        // images: form.images,
+        // specifications: form.specifications.filter(
+        //   (s) => s.key.trim() && s.value.trim(),
+        // ),
+
         images: form.images,
+
         specifications: form.specifications.filter(
           (s) => s.key.trim() && s.value.trim(),
         ),
+
+        variants: form.variants.filter(
+          (v) => v.label.trim() && v.options.length > 0,
+        ),
+
       };
+
+      console.log("PRODUCT PAYLOAD:", JSON.stringify(payload, null, 2));
 
       const url = editingSlug
         ? `/api/products/${editingSlug}`
@@ -461,12 +475,12 @@ export default function AdminProductsPage() {
         i === idx
           ? field === "options"
             ? {
-                ...v,
-                options: value
-                  .split(",")
-                  .map((o) => o.trim())
-                  .filter(Boolean),
-              }
+              ...v,
+              options: value
+                .split(",")
+                .map((o) => o.trim())
+                .filter(Boolean),
+            }
             : { ...v, label: value }
           : v,
       ),

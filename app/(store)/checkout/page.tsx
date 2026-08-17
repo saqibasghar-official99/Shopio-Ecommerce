@@ -22,7 +22,7 @@ import {
 
 const PAYMENT_METHODS = [
   { value: 'cod', label: 'Cash on Delivery', icon: Banknote, description: 'Pay when you receive your order' },
-  { value: 'bank', label: 'Bank Transfer', icon: CreditCard, description: 'Transfer to our bank account' },
+  // { value: 'bank', label: 'Bank Transfer', icon: CreditCard, description: 'Transfer to our bank account' },
   { value: 'whatsapp', label: 'WhatsApp Order', icon: MessageCircle, description: 'Complete order via WhatsApp' },
 ];
 
@@ -61,7 +61,7 @@ export default function CheckoutPage() {
         const coupons: Coupon[] = (data.data || []).map((c: Coupon & { _id?: string }) => ({ ...c, id: c._id || c.id }));
         setAvailableCoupons(coupons);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // Fetch delivery zones
@@ -72,7 +72,7 @@ export default function CheckoutPage() {
         const zones = (data.data || []).filter((z: DeliveryZone) => z.is_active).map((z: DeliveryZone & { _id?: string }) => ({ ...z, id: z._id || z.id }));
         setDeliveryZones(zones);
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setZonesLoading(false));
   }, []);
 
@@ -140,6 +140,22 @@ export default function CheckoutPage() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const formatWhatsAppNumber = (phone: string) => {
+    let number = phone.trim().replace(/\D/g, '');
+
+    // Pakistan local format: 03001234567 -> 923001234567
+    if (number.startsWith('0')) {
+      number = '92' + number.substring(1);
+    }
+
+    // Already starts with Pakistan country code
+    if (number.startsWith('92')) {
+      return number;
+    }
+
+    return number;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
@@ -158,10 +174,38 @@ export default function CheckoutPage() {
       const orderLines = items
         .map((item) => `- ${item.name}${item.variant ? ` (${item.variant})` : ''} x${item.qty} = ${formatCurrency(item.price * item.qty, currency)}`)
         .join('\n');
+
+      // const message = encodeURIComponent(
+      //   `New Order\n\n${orderLines}\n\nSubtotal: ${formatCurrency(subtotal, currency)}\n${discount > 0 ? `Discount: -${formatCurrency(discount, currency)}\n` : ''}Delivery: ${formatCurrency(deliveryFee, currency)}\nTotal: ${formatCurrency(total, currency)}\n\nCustomer: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\nAddress: ${form.address}, ${form.city}\n${notes ? `Notes: ${notes}` : ''}\nPayment: WhatsApp Order`
+      // );
+      // window.open(`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
+
+
       const message = encodeURIComponent(
-        `New Order\n\n${orderLines}\n\nSubtotal: ${formatCurrency(subtotal, currency)}\n${discount > 0 ? `Discount: -${formatCurrency(discount, currency)}\n` : ''}Delivery: ${formatCurrency(deliveryFee, currency)}\nTotal: ${formatCurrency(total, currency)}\n\nCustomer: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\nAddress: ${form.address}, ${form.city}\n${notes ? `Notes: ${notes}` : ''}\nPayment: WhatsApp Order`
+        `${settings?.whatsapp_message ? `_${settings.whatsapp_message}_\n\n` : ''}` +
+        `*🛍️ NEW ORDER*\n\n` +
+        `*Order Items:*\n${orderLines}\n\n` +
+        `━━━━━━━━━━━━━━━━\n` +
+        `*Subtotal:* ${formatCurrency(subtotal, currency)}\n` +
+        `${discount > 0 ? `*Discount:* -${formatCurrency(discount, currency)}\n` : ''}` +
+        `*Delivery:* ${deliveryFee === 0 ? 'Free' : formatCurrency(deliveryFee, currency)}\n` +
+        `*TOTAL: ${formatCurrency(total, currency)}*\n` +
+        `━━━━━━━━━━━━━━━━\n\n` +
+        `*👤 Customer Details*\n` +
+        `*Name:* ${form.name}\n` +
+        `*Phone:* ${form.phone}\n` +
+        `*Email:* ${form.email}\n` +
+        `*Address:* ${form.address}, ${form.city}\n` +
+        `${notes ? `*Notes:* _${notes}_\n` : ''}\n` +
+        `*💳 Payment:* WhatsApp Order`
       );
-      window.open(`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
+
+      const formattedWhatsAppNumber = formatWhatsAppNumber(whatsappNumber);
+
+      window.open(
+        `https://wa.me/${formattedWhatsAppNumber}?text=${message}`,
+        '_blank'
+      );
       return;
     }
 
@@ -197,7 +241,7 @@ export default function CheckoutPage() {
           const existing: string[] = saved ? JSON.parse(saved) : [];
           const updated = [data.data.order_number, ...existing].slice(0, 10);
           localStorage.setItem('recentOrders', JSON.stringify(updated));
-        } catch {}
+        } catch { }
         clearCart();
         showToast('Order placed successfully!');
         router.push(`/order/${data.data.order_number}`);
@@ -303,7 +347,14 @@ export default function CheckoutPage() {
                     <span className="text-xs font-medium text-green-600">{couponCode}</span>
                     <span className="text-xs text-green-600">(-{formatCurrency(discount, currency)})</span>
                   </div>
-                  <button onClick={handleRemoveCoupon} className="text-xs text-gray-400 hover:text-red-500">
+                  {/* <button onClick={handleRemoveCoupon} className="text-xs text-gray-400 hover:text-red-500">
+                    <X className="h-3.5 w-3.5" />
+                  </button> */}
+                  <button
+                    type="button"
+                    onClick={handleRemoveCoupon}
+                    className="text-xs text-gray-400 hover:text-red-500"
+                  >
                     <X className="h-3.5 w-3.5" />
                   </button>
                 </div>
@@ -317,9 +368,19 @@ export default function CheckoutPage() {
                       className="h-9 text-sm"
                       onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleApplyCoupon(); } }}
                     />
-                    <Button size="sm" className="h-9 text-xs bg-green-600 hover:bg-green-700" onClick={() => handleApplyCoupon()} disabled={couponLoading}>
+                    {/* <Button size="sm" className="h-9 text-xs bg-green-600 hover:bg-green-700" onClick={() => handleApplyCoupon()} disabled={couponLoading}>
+                      {couponLoading ? 'Applying...' : 'Apply'}
+                    </Button> */}
+                    <Button
+                      type="button"
+                      size="sm"
+                      className="h-9 text-xs bg-green-600 hover:bg-green-700"
+                      onClick={() => handleApplyCoupon()}
+                      disabled={couponLoading}
+                    >
                       {couponLoading ? 'Applying...' : 'Apply'}
                     </Button>
+
                   </div>
 
                   {/* Available coupons */}
@@ -359,9 +420,8 @@ export default function CheckoutPage() {
                   return (
                     <label
                       key={method.value}
-                      className={`flex items-center gap-3 p-3 rounded-md border cursor-pointer transition-colors ${
-                        paymentMethod === method.value ? 'border-green-600 bg-green-50' : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                      className={`flex items-center gap-3 p-3 rounded-md border cursor-pointer transition-colors ${paymentMethod === method.value ? 'border-green-600 bg-green-50' : 'border-gray-200 hover:border-gray-300'
+                        }`}
                     >
                       <input type="radio" name="paymentMethod" value={method.value} checked={paymentMethod === method.value} onChange={() => setPaymentMethod(method.value)} className="text-green-600 focus:ring-green-600" />
                       <Icon className={`h-4 w-4 ${paymentMethod === method.value ? 'text-green-600' : 'text-gray-400'}`} />

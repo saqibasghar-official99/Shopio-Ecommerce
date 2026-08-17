@@ -414,12 +414,21 @@ export default function AdminSiteSettingsPage() {
                   <Label className="text-sm text-gray-700">
                     WhatsApp Number
                   </Label>
-                  <Input
+                  {/* <Input
                     value={whatsappNumber}
                     onChange={(e) => setWhatsappNumber(e.target.value)}
                     className="h-8 text-xs"
                     placeholder="+1 234 567 8900"
+                  /> */}
+                  <Input
+                    value={whatsappNumber}
+                    onChange={(e) => setWhatsappNumber(e.target.value)}
+                    className="h-8 text-xs"
+                    placeholder="+92 300 1234567"
                   />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Enter your WhatsApp number with country code, e.g. +92 300 1234567
+                  </p>
                 </div>
                 <div className="space-y-1">
                   <Label className="text-sm text-gray-700">

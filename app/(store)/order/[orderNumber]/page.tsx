@@ -135,7 +135,7 @@ export default function OrderTrackingPage() {
             {/* Line behind steps */}
             <div className="absolute top-5 left-0 right-0 h-0.5 bg-gray-200" />
             <div
-              className="absolute top-5 left-0 h-0.5 bg-green-600 transition-all duration-500"
+              className="absolute top-5 left-0 h-0.5 bg-[#7A1F3D] transition-all duration-500"
               style={{
                 width: currentStepIndex >= 0
                   ? `${(currentStepIndex / (STATUS_STEPS.length - 1)) * 100}%`
@@ -157,7 +157,7 @@ export default function OrderTrackingPage() {
                     className={cn(
                       'w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors',
                       isCompleted
-                        ? 'bg-green-600 border-green-600 text-white'
+                        ? 'bg-[#7A1F3D] border-[#7A1F3D] text-white'
                         : 'bg-white border-gray-300 text-gray-400'
                     )}
                   >
@@ -170,7 +170,7 @@ export default function OrderTrackingPage() {
                   <span
                     className={cn(
                       'text-[10px] mt-1.5 font-medium text-center leading-tight',
-                      isCompleted ? 'text-green-600' : 'text-gray-400'
+                      isCompleted ? 'text-[#7A1F3D]' : 'text-gray-400'
                     )}
                   >
                     {step.label}
@@ -238,7 +238,7 @@ export default function OrderTrackingPage() {
           <Separator />
           <div className="flex justify-between text-sm font-semibold">
             <span>Total</span>
-            <span className="text-green-600">
+            <span className="text-[#7A1F3D]">
               {formatCurrency(order.total, currency)}
             </span>
           </div>
@@ -279,7 +279,7 @@ export default function OrderTrackingPage() {
                 className={cn(
                   'text-[10px] px-1.5 py-0.5',
                   order.payment_status === 'paid'
-                    ? 'bg-green-100 text-green-700'
+                    ? 'bg-green-100 text-[#7A1F3D]'
                     : 'bg-yellow-100 text-yellow-700'
                 )}
               >
@@ -309,7 +309,7 @@ export default function OrderTrackingPage() {
           Download Invoice
         </Button>
         <Link href="/">
-          <Button className="bg-green-600 hover:bg-green-700 text-white">
+          <Button className="bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white">
             Continue Shopping
           </Button>
         </Link>

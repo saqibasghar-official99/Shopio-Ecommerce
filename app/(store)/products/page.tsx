@@ -161,7 +161,7 @@ function ProductsContent() {
             </span>
             <button
               onClick={clearAllFilters}
-              className="text-xs text-green-600 hover:text-green-700"
+              className="text-xs text-[#7A1F3D]"
             >
               Clear all
             </button>
@@ -220,8 +220,8 @@ function ProductsContent() {
             className={cn(
               'w-full text-left px-2 py-1.5 text-sm rounded-md transition-colors',
               !categorySlug
-                ? 'bg-green-50 text-green-600 font-medium'
-                : 'text-gray-600 hover:bg-gray-50'
+                ? 'bg-green-50 text-black font-medium'
+                : 'text-gray-600 hover:bg-black-50'
             )}
           >
             All Products
@@ -318,7 +318,7 @@ function ProductsContent() {
         </div>
         <Button
           size="sm"
-          className="mt-2 w-full h-8 text-xs bg-green-600 hover:bg-green-700"
+          className="mt-2 w-full h-8 text-xs bg-[#7A1F3D] text-white hover:bg-[#7A1F3D] disabled:bg-gray-200 disabled:text-gray-400"
           onClick={() => {
             const url = buildUrl({
               min: priceMin || null,
@@ -352,7 +352,7 @@ function ProductsContent() {
                   'px-2 py-1 text-xs rounded-md border transition-colors',
                   tagFilter === tag
                     ? 'bg-green-50 border-green-600 text-green-600'
-                    : 'border-gray-200 text-gray-600 hover:border-green-300'
+                    : 'border-gray-200 text-[#7A1F3D] hover:bg-gray-50'
                 )}
               >
                 {tag}

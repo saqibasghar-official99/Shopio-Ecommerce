@@ -374,7 +374,7 @@ export default function CheckoutPage() {
                     <Button
                       type="button"
                       size="sm"
-                      className="h-9 text-xs bg-green-600 hover:bg-green-700"
+                      className="h-9 text-xs bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white"
                       onClick={() => handleApplyCoupon()}
                       disabled={couponLoading}
                     >
@@ -420,11 +420,11 @@ export default function CheckoutPage() {
                   return (
                     <label
                       key={method.value}
-                      className={`flex items-center gap-3 p-3 rounded-md border cursor-pointer transition-colors ${paymentMethod === method.value ? 'border-green-600 bg-green-50' : 'border-gray-200 hover:border-gray-300'
+                      className={`flex items-center gap-3 p-3 rounded-md border cursor-pointer transition-colors ${paymentMethod === method.value ? 'border-[#7A1F3D]' : 'border-gray-200 hover:border-gray-300'
                         }`}
                     >
-                      <input type="radio" name="paymentMethod" value={method.value} checked={paymentMethod === method.value} onChange={() => setPaymentMethod(method.value)} className="text-green-600 focus:ring-green-600" />
-                      <Icon className={`h-4 w-4 ${paymentMethod === method.value ? 'text-green-600' : 'text-gray-400'}`} />
+                      <input type="radio" name="paymentMethod" value={method.value} checked={paymentMethod === method.value} onChange={() => setPaymentMethod(method.value)} className="text-[#7A1F3D] focus:ring-[#7A1F3D]" />
+                      <Icon className={`h-4 w-4 ${paymentMethod === method.value ? 'text-[#7A1F3D]' : 'text-gray-400'}`} />
                       <div>
                         <p className="text-sm font-medium text-gray-900">{method.label}</p>
                         <p className="text-xs text-gray-500">{method.description}</p>
@@ -476,13 +476,13 @@ export default function CheckoutPage() {
                 <Separator />
                 <div className="flex justify-between text-sm font-semibold">
                   <span>Total</span>
-                  <span className="text-green-600">{formatCurrency(total, currency)}</span>
+                  <span className="text-black">{formatCurrency(total, currency)}</span>
                 </div>
               </div>
 
               <Button
                 type="submit"
-                className="w-full h-10 mt-4 bg-green-600 hover:bg-green-700 text-white"
+                className="w-full h-10 mt-4 bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white"
                 disabled={submitting}
               >
                 {submitting ? (

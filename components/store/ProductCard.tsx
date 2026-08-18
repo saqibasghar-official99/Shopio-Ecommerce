@@ -243,12 +243,12 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
           </h3>
 
           <div className="flex items-baseline gap-1.5">
-            <span className="text-sm font-semibold text-green-600">
+            <span className="text-md font-semibold text-[#7A1F3D]">
               {formatCurrency(product.price, currency)}
             </span>
 
             {product.compare_price > product.price && (
-              <span className="text-xs text-gray-400 line-through">
+              <span className="text-sm text-gray-400 line-through">
                 {formatCurrency(product.compare_price, currency)}
               </span>
             )}
@@ -264,7 +264,7 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
             size="sm"
             onClick={handleAddToCart}
             disabled={!inStock}
-            className="flex-1 h-8 text-xs bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-200 disabled:text-gray-400"
+            className="flex-1 h-8 text-xs bg-[#7A1F3D] text-white hover:bg-[#7A1F3D] disabled:bg-gray-200 disabled:text-gray-400"
           >
             <ShoppingCart className="h-3 w-3 mr-1" />
             Add to Cart
@@ -276,9 +276,9 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
               size="sm"
               variant="outline"
               onClick={handleWhatsApp}
-              className="h-8 w-9 p-0 text-xs border border-green-600 text-green-600 hover:bg-green-50"
+              className="h-8 w-9 p-0 text-xs border border-[#7A1F3D] text-[#7A1F3D] hover:bg-[#7A1F3D]"
             >
-              <MessageCircle className="h-3 w-3" />
+              <MessageCircle className="h-3 w-3 hover:text-white" />
             </Button>
           )}
         </div>

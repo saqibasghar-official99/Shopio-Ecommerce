@@ -83,7 +83,7 @@ function SectionHeader({ title, href }: { title: string; href: string }) {
       <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
       <Link
         href={href}
-        className="text-sm text-green-600 hover:text-green-700 flex items-center gap-1"
+        className="text-sm text-[#7A1F3D] hover:text-[#7A1F3D] flex items-center gap-1"
       >
         View all
         <ChevronRight className="h-4 w-4" />

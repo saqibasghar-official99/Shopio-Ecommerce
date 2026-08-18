@@ -173,10 +173,10 @@ export default function AccountPage() {
   if (loggedIn && customer) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-8">
-        <div className="border rounded-lg p-6 bg-white">
+        <div className="rounded-lg p-6 bg-white">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-              <User className="h-6 w-6 text-green-600" />
+            <div className="w-12 h-12 rounded-full bg-[#7A1F3D] flex items-center justify-center">
+              <User className="h-6 w-6 text-white" />
             </div>
             <div>
               <h1 className="text-lg font-semibold text-gray-900">{customer.name}</h1>
@@ -210,8 +210,8 @@ export default function AccountPage() {
           {/* Quick actions */}
           <div className="mb-6 space-y-2">
             <h2 className="text-sm font-semibold text-gray-900 mb-3">Quick Actions</h2>
-            <Link href="/orders" className="flex items-center gap-3 p-3 rounded-md border hover:bg-gray-50 transition-colors">
-              <Package className="h-4 w-4 text-green-600" />
+            <Link href="/orders" className="flex items-center gap-3 p-3 rounded-md hover:bg-gray-50 transition-colors">
+              <Package className="h-4 w-4 text-[#7A1F3D]" />
               <span className="text-sm text-gray-700">Track My Orders</span>
             </Link>
           </div>
@@ -234,10 +234,10 @@ export default function AccountPage() {
   // Guest / logged-out view
   return (
     <div className="max-w-md mx-auto px-4 py-8">
-      <div className="border rounded-lg p-6 bg-white">
+      <div className="rounded-lg p-6 bg-white">
         <div className="text-center mb-6">
-          <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
-            <User className="h-7 w-7 text-green-600" />
+          <div className="w-14 h-14 rounded-full bg-[#7A1F3D] flex items-center justify-center mx-auto mb-3">
+            <User className="h-7 w-7 text-white" />
           </div>
           <h1 className="text-lg font-semibold text-gray-900">My Account</h1>
           <p className="text-xs text-gray-500 mt-1">
@@ -290,7 +290,7 @@ export default function AccountPage() {
                 {loginErrors.password && <p className="text-xs text-red-500 mt-0.5">{loginErrors.password}</p>}
               </div>
 
-              <Button type="submit" className="w-full h-10 bg-green-600 hover:bg-green-700 text-white" disabled={loading}>
+              <Button type="submit" className="w-full h-10 bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white" disabled={loading}>
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Log In'}
               </Button>
             </form>
@@ -351,7 +351,7 @@ export default function AccountPage() {
                 {registerErrors.password && <p className="text-xs text-red-500 mt-0.5">{registerErrors.password}</p>}
               </div>
 
-              <Button type="submit" className="w-full h-10 bg-green-600 hover:bg-green-700 text-white" disabled={loading}>
+              <Button type="submit" className="w-full h-10 bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white" disabled={loading}>
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Create Account'}
               </Button>
             </form>

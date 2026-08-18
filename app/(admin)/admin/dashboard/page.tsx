@@ -238,7 +238,7 @@ export default function AdminDashboardPage() {
           <CardTitle className="text-sm font-medium text-gray-900">Recent Orders</CardTitle>
           <button
             onClick={() => router.push('/admin/orders')}
-            className="text-xs text-green-600 hover:text-green-700"
+            className="text-xs text-[#7A1F3D] hover:text-[#7A1F3D]"
           >
             View all
           </button>
@@ -254,7 +254,7 @@ export default function AdminDashboardPage() {
           <CardTitle className="text-sm font-medium text-gray-900">Top Products</CardTitle>
           <button
             onClick={() => router.push('/admin/products')}
-            className="text-xs text-green-600 hover:text-green-700"
+            className="text-xs text-[#7A1F3D] hover:text-[#7A1F3D]"
           >
             View all
           </button>

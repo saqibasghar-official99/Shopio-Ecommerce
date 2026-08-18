@@ -58,14 +58,29 @@ export async function GET(request: NextRequest) {
       else filter.category_id = null; // no results for unknown category
     }
 
+    // if (search) {
+    //   const trimmed = search.trim();
+    //   if (trimmed.length > 0) {
+    //     // Prefer fast text index; fall back to prefix regex on `name` only.
+    //     // Using a single field regex keeps the scan small.
+    //     filter.$or = [
+    //       { $text: { $search: trimmed } },
+    //       { name: { $regex: '^' + escapeRegex(trimmed), $options: 'i' } },
+    //     ];
+    //   }
+    // }
+
     if (search) {
       const trimmed = search.trim();
+
       if (trimmed.length > 0) {
-        // Prefer fast text index; fall back to prefix regex on `name` only.
-        // Using a single field regex keeps the scan small.
+        const regex = new RegExp(escapeRegex(trimmed), 'i');
+
         filter.$or = [
-          { $text: { $search: trimmed } },
-          { name: { $regex: '^' + escapeRegex(trimmed), $options: 'i' } },
+          { name: regex },
+          { slug: regex },
+          { sku: regex },
+          { tags: regex },
         ];
       }
     }

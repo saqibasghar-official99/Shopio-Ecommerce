@@ -153,7 +153,7 @@ export default function OrdersPage() {
     <div className="max-w-2xl mx-auto px-4 py-8">
       <div className="text-center mb-8">
         <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
-          <Package className="h-7 w-7 text-green-600" />
+          <Package className="h-7 w-7 text-[#7A1F3D]" />
         </div>
         <h1 className="text-xl font-semibold text-gray-900">Track Your Order</h1>
         <p className="text-sm text-gray-500 mt-1">
@@ -189,7 +189,7 @@ export default function OrdersPage() {
                 className="h-10 text-sm"
               />
             </div>
-            <Button type="submit" disabled={loading} className="w-full h-10 bg-green-600 hover:bg-green-700 text-white text-sm">
+            <Button type="submit" disabled={loading} className="w-full h-10 bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white text-sm">
               {loading ? 'Tracking...' : 'Track Order'}
             </Button>
           </form>

@@ -34,7 +34,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-4 h-14 border-b">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="h-5 w-5 text-green-600" />
+            <ShoppingBag className="h-5 w-5 text-[#7A1F3D]" />
             <h2 className="text-sm font-semibold text-gray-900">
               Cart ({items.length} {items.length === 1 ? 'item' : 'items'})
             </h2>
@@ -62,7 +62,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
               <Button
                 variant="outline"
                 size="sm"
-                className="mt-4 text-xs text-green-600 border-green-600 hover:bg-green-50"
+                className="mt-4 text-xs text-[#7A1F3D] border-[#7A1F3D] hover:bg-[#7A1F3D] hover:text-white"
                 onClick={onClose}
               >
                 Continue Shopping
@@ -94,7 +94,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
                       <p className="text-xs text-gray-400 mt-0.5">{item.variant}</p>
                     )}
                     <div className="flex items-baseline gap-1.5 mt-1">
-                      <span className="text-sm font-semibold text-green-600">
+                      <span className="text-sm font-semibold text-black">
                         {formatCurrency(item.price, currency)}
                       </span>
                       {item.comparePrice > item.price && (
@@ -148,7 +148,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-9 text-xs border-green-600 text-green-600 hover:bg-green-50"
+                className="h-9 text-xs border-[#7A1F3D] text-[#7A1F3D] hover:bg-[#7A1F3D] hover:text-white"
                 onClick={onClose}
               >
                 Continue Shopping
@@ -156,7 +156,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
               <Link href="/checkout" onClick={onClose}>
                 <Button
                   size="sm"
-                  className="w-full h-9 text-xs bg-green-600 hover:bg-green-700 text-white"
+                  className="w-full h-9 text-xs bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white"
                 >
                   Checkout
                 </Button>
@@ -165,7 +165,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
             <Link
               href="/cart"
               onClick={onClose}
-              className="block text-center text-xs text-gray-500 hover:text-green-600 transition-colors"
+              className="block text-center text-xs text-[#7A1F3D] hover:text-[#7A1F3D] transition-colors"
             >
               View Full Cart
             </Link>

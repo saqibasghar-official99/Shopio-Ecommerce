@@ -126,7 +126,7 @@ export default function Navbar() {
               </SheetTrigger>
               <SheetContent side="left" className="w-72">
                 <SheetHeader>
-                  <SheetTitle className="text-green-600">{storeName}</SheetTitle>
+                  <SheetTitle className="text-[#7A1F3D]">{storeName}</SheetTitle>
                 </SheetHeader>
                 <nav className="mt-6 flex flex-col gap-1">
                   {navLinks.map((link) => (
@@ -136,7 +136,7 @@ export default function Navbar() {
                       onClick={() => setMobileOpen(false)}
                       className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors"
                     >
-                      <link.icon className="h-4 w-4 text-green-600" />
+                      <link.icon className="h-4 w-4 text-[#7A1F3D]" />
                       {link.label}
                     </Link>
                   ))}
@@ -159,7 +159,7 @@ export default function Navbar() {
                 className="h-8 w-auto object-contain"
               />
             )}
-            <span className="text-lg font-semibold text-green-600 hidden sm:inline">
+            <span className="text-lg font-semibold text-[#7A1F3D] hidden sm:inline">
               {storeName}
             </span>
           </Link>
@@ -170,7 +170,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-3 py-1.5 text-sm text-gray-600 rounded-md hover:text-green-600 hover:bg-green-50 transition-colors"
+                className="px-3 py-1.5 text-sm text-gray-600 rounded-md hover:text-[#7A1F3D] hover:bg-[#7A1F3D] hover:text-white transition-colors"
               >
                 {link.label}
               </Link>
@@ -181,14 +181,31 @@ export default function Navbar() {
           <div className="flex-1 max-w-md ml-auto md:mx-auto relative" ref={searchRef}>
             <form onSubmit={handleSearchSubmit}>
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
                 <Input
                   type="search"
                   placeholder="Search products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchResults.length > 0 && setSearchOpen(true)}
-                  className="pl-9 pr-8 h-9 text-sm rounded-md border-gray-200 focus:border-green-600 focus:ring-green-600"
+                  className="
+                    pl-9
+                    pr-8
+                    h-8
+                    text-sm
+                    rounded-sm
+                    border
+                    border-gray-200
+                    focus:border-transparent
+                    focus:ring-0
+                    focus:ring-offset-0
+                    focus:outline-none
+                    focus-visible:border-transparent
+                    focus-visible:ring-0
+                    focus-visible:ring-offset-0
+                    [&::-webkit-search-cancel-button]:appearance-none
+                    [&::-webkit-search-decoration]:appearance-none
+                    "
                 />
                 {searchQuery && (
                   <button
@@ -228,7 +245,7 @@ export default function Navbar() {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm text-gray-900 truncate">{product.name}</p>
                           <div className="flex items-baseline gap-1.5">
-                            <span className="text-xs font-semibold text-green-600">
+                            <span className="text-xs font-semibold text-[#7A1F3D]">
                               {formatCurrency(product.price, currency)}
                             </span>
                             {product.compare_price > product.price && (
@@ -243,7 +260,7 @@ export default function Navbar() {
                     <Link
                       href={`/products?search=${encodeURIComponent(searchQuery.trim())}`}
                       onClick={() => setSearchOpen(false)}
-                      className="block px-3 py-2.5 text-xs text-center text-green-600 hover:bg-green-50 font-medium border-t"
+                      className="block px-3 py-2.5 text-xs text-center text-black font-medium border-t"
                     >
                       View all results for &quot;{searchQuery}&quot;
                     </Link>
@@ -263,7 +280,7 @@ export default function Navbar() {
           >
             <ShoppingCart className="h-5 w-5 text-gray-700" />
             {hydrated && totalItems > 0 && (
-              <Badge className="absolute -top-0.5 -right-0.5 h-5 min-w-[20px] flex items-center justify-center bg-green-600 text-white text-[10px] px-1.5">
+              <Badge className="absolute -top-0.5 -right-0.5 h-5 min-w-[20px] flex items-center justify-center bg-[#7A1F3D] text-white text-[10px] px-1.5">
                 {totalItems}
               </Badge>
             )}

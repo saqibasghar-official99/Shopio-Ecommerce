@@ -224,7 +224,7 @@ export default function CartPage() {
 
                     {/* Price */}
                     <div className="text-right">
-                      <span className="text-sm font-semibold text-green-600">
+                      <span className="text-sm font-semibold text-black">
                         {formatCurrency(item.price * item.qty, currency)}
                       </span>
                       {item.comparePrice > item.price && (
@@ -294,7 +294,7 @@ export default function CartPage() {
                   />
                   <Button
                     size="sm"
-                    className="h-8 text-xs bg-green-600 hover:bg-green-700"
+                    className="h-8 text-xs bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white"
                     onClick={handleApplyCoupon}
                     disabled={couponLoading}
                   >
@@ -347,13 +347,13 @@ export default function CartPage() {
               <Separator />
               <div className="flex justify-between text-sm font-semibold">
                 <span>Total</span>
-                <span className="text-green-600">{formatCurrency(total, currency)}</span>
+                <span className="text-black">{formatCurrency(total, currency)}</span>
               </div>
             </div>
 
             {/* Checkout button */}
             <Link href="/checkout" className="block mt-4">
-              <Button className="w-full h-10 bg-green-600 hover:bg-green-700 text-white">
+              <Button className="w-full h-10 bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white">
                 Proceed to Checkout
               </Button>
             </Link>

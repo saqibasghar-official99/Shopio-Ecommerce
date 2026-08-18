@@ -143,7 +143,7 @@ export default function ProductDetailPage() {
     return (
       <div className="max-w-6xl mx-auto px-4 py-16 text-center">
         <p className="text-sm text-gray-500">Product not found.</p>
-        <Link href="/products" className="mt-3 inline-block text-sm text-green-600 hover:text-green-700">
+        <Link href="/products" className="mt-3 inline-block text-sm text-[#7A1F3D] hover:text-green-700">
           Back to products
         </Link>
       </div>
@@ -227,25 +227,25 @@ ${variantString ? `Variant: ${variantString}\n` : ''}Price: ${formatCurrency(
     <div className="max-w-6xl mx-auto px-4 py-4 pb-12">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-xs text-gray-500 mb-4">
-        <Link href="/" className="hover:text-green-600">Home</Link>
+        <Link href="/" className="hover:text-[#7A1F3D]">Home</Link>
         <ChevronRight className="h-3 w-3" />
-        <Link href="/products" className="hover:text-green-600">Products</Link>
+        <Link href="/products" className="hover:text-[#7A1F3D]">Products</Link>
         {product.category && (
           <>
             <ChevronRight className="h-3 w-3" />
-            <Link href={`/products?category=${product.category.slug}`} className="hover:text-green-600">
+            <Link href={`/products?category=${product.category.slug}`} className="hover:text-[#7A1F3D]">
               {product.category.name}
             </Link>
           </>
         )}
-        <ChevronRight className="h-3 w-3" />
-        <span className="text-gray-900 truncate">{product.name}</span>
+        {/* <ChevronRight className="h-3 w-3" /> */}
+        {/* <span className="text-gray-900 truncate">{product.name}</span> */}
       </nav>
 
       {/* Back button (mobile) */}
       <button
         onClick={() => router.back()}
-        className="md:hidden flex items-center gap-1 text-sm text-gray-500 mb-3 hover:text-green-600"
+        className="md:hidden flex items-center gap-1 text-sm text-gray-500 mb-3 hover:text-[#7A1F3D]"
       >
         <ArrowLeft className="h-4 w-4" />
         Back
@@ -295,14 +295,14 @@ ${variantString ? `Variant: ${variantString}\n` : ''}Price: ${formatCurrency(
 
         {/* Product Info */}
         <div className="md:w-7/12">
-          <h1 className="text-lg md:text-xl font-semibold text-gray-900 leading-tight">{product.name}</h1>
+          <h1 className="text-lg md:text-xl font-bold text-gray-900 leading-tight">{product.name}</h1>
 
           {/* Category + Rating row */}
           <div className="flex items-center gap-3 mt-2">
             {product.category && (
               <Link
                 href={`/products?category=${product.category.slug}`}
-                className="text-xs text-green-600 hover:text-green-700 font-medium"
+                className="text-xs text-[#7A1F3D] hover:text-[#7A1F3D] font-medium"
               >
                 {product.category.name}
               </Link>
@@ -316,12 +316,12 @@ ${variantString ? `Variant: ${variantString}\n` : ''}Price: ${formatCurrency(
 
           {/* Price */}
           <div className="flex items-baseline gap-2 mt-3">
-            <span className="text-2xl font-bold text-green-600">{formatCurrency(product.price, currency)}</span>
+            <span className="text-2xl font-semibold text-black">{formatCurrency(product.price, currency)}</span>
             {product.compare_price > product.price && (
               <span className="text-sm text-gray-400 line-through">{formatCurrency(product.compare_price, currency)}</span>
             )}
             {discount > 0 && (
-              <Badge className="bg-red-50 text-red-600 text-[10px] px-1.5 py-0.5 rounded font-semibold">
+              <Badge className="bg-red-50 text-red-600 text-[10px] px-1.5 py-0.5 rounded font-semibold hover:text-white">
                 Save {discount}%
               </Badge>
             )}
@@ -376,11 +376,11 @@ ${variantString ? `Variant: ${variantString}\n` : ''}Price: ${formatCurrency(
           {/* Action buttons */}
           <div className="space-y-2">
             <div className="flex gap-2">
-              <Button className="flex-1 h-11 bg-green-600 hover:bg-green-700 text-white text-sm font-medium" onClick={handleAddToCart} disabled={!inStock}>
+              <Button className="flex-1 h-10 bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white text-sm font-medium" onClick={handleAddToCart} disabled={!inStock}>
                 <ShoppingCart className="h-4 w-4 mr-2" />
                 Add to Cart
               </Button>
-              <Button className="flex-1 h-11 bg-green-600 hover:bg-green-700 text-white text-sm font-medium" onClick={handleBuyNow} disabled={!inStock}>
+              <Button className="flex-1 h-10 bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white text-sm font-medium" onClick={handleBuyNow} disabled={!inStock}>
                 <ShoppingBag className="h-4 w-4 mr-2" />
                 Buy Now
               </Button>
@@ -408,7 +408,7 @@ ${variantString ? `Variant: ${variantString}\n` : ''}Price: ${formatCurrency(
                 <span className="text-gray-400 text-xs">Tags:</span>
                 {product.tags.map((tag) => (
                   <Link key={tag} href={`/products?tag=${encodeURIComponent(tag)}`}>
-                    <Badge variant="secondary" className="text-[10px] hover:bg-green-50 hover:text-green-600 cursor-pointer">{tag}</Badge>
+                    <Badge variant="secondary" className="text-[10px] hover:bg-green-50 hover:text-[#7A1F3D] cursor-pointer">{tag}</Badge>
                   </Link>
                 ))}
               </div>
@@ -437,15 +437,15 @@ ${variantString ? `Variant: ${variantString}\n` : ''}Price: ${formatCurrency(
           {/* Trust badges */}
           <div className="grid grid-cols-3 gap-3 mt-4">
             <div className="flex items-center gap-2 p-2.5 rounded-md bg-gray-50">
-              <Truck className="h-4 w-4 text-green-600 shrink-0" />
+              <Truck className="h-4 w-4 text-[#7A1F3D] shrink-0" />
               <span className="text-[11px] text-gray-600 leading-tight">Free shipping over $50</span>
             </div>
             <div className="flex items-center gap-2 p-2.5 rounded-md bg-gray-50">
-              <RotateCcw className="h-4 w-4 text-green-600 shrink-0" />
+              <RotateCcw className="h-4 w-4 text-[#7A1F3D] shrink-0" />
               <span className="text-[11px] text-gray-600 leading-tight">7-day returns</span>
             </div>
             <div className="flex items-center gap-2 p-2.5 rounded-md bg-gray-50">
-              <Shield className="h-4 w-4 text-green-600 shrink-0" />
+              <Shield className="h-4 w-4 text-[#7A1F3D] shrink-0" />
               <span className="text-[11px] text-gray-600 leading-tight">Secure checkout</span>
             </div>
           </div>
@@ -457,7 +457,7 @@ ${variantString ? `Variant: ${variantString}\n` : ''}Price: ${formatCurrency(
         <div className="border rounded-lg overflow-hidden">
           <div className="bg-gray-50 px-5 py-3 border-b">
             <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-              <Package className="h-4 w-4 text-green-600" />
+              <Package className="h-4 w-4 text-[#7A1F3D]" />
               Product Details
             </h2>
           </div>
@@ -517,7 +517,7 @@ ${variantString ? `Variant: ${variantString}\n` : ''}Price: ${formatCurrency(
         <section className="mt-10">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-semibold text-gray-900">You May Also Like</h2>
-            <Link href={`/products?category=${product.category?.slug || ''}`} className="text-xs text-green-600 hover:text-green-700 font-medium">
+            <Link href={`/products?category=${product.category?.slug || ''}`} className="text-xs text-[#7A1F3D] hover:text-green-700 font-medium">
               View All
             </Link>
           </div>

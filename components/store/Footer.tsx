@@ -11,8 +11,6 @@ import {
   Phone,
   MapPin,
   MessageCircle,
-  ShoppingBag,
-  User,
   Truck,
   RotateCcw,
   ShieldCheck,
@@ -33,13 +31,84 @@ export default function Footer() {
   const address = settings?.address || '';
   const phone = settings?.phone || '';
   const whatsappNumber = settings?.whatsapp_number || '';
+  const whatsappMessage = settings?.whatsapp_message || '';
   const socialLinks = settings?.social_links || {};
+
   const aboutText =
     settings?.about_text ||
     'Discover quality products at great prices. Shop with confidence and enjoy a simple, secure shopping experience.';
 
+  /*
+   * Convert a Pakistani phone number into WhatsApp international format.
+   *
+   * Supported examples:
+   *
+   * 03471428593
+   * 0347 1428593
+   * 0347-1428593
+   * +92 347 1428593
+   * +923471428593
+   * 92 347 1428593
+   * 923471428593
+   * 0092 347 1428593
+   * 00923471428593
+   *
+   * Result:
+   * 923471428593
+   */
+  const normalizePakistanWhatsAppNumber = (value: string): string => {
+    if (!value) return '';
+
+    // Keep digits only
+    let number = value.replace(/\D/g, '');
+
+    // Remove international dialing prefix 00
+    if (number.startsWith('00')) {
+      number = number.substring(2);
+    }
+
+    // Local Pakistani format:
+    // 03471428593 -> 923471428593
+    if (number.startsWith('0')) {
+      number = `92${number.substring(1)}`;
+    }
+
+    // Already Pakistani international format:
+    // 923471428593 -> 923471428593
+    if (number.startsWith('92')) {
+      return number;
+    }
+
+    // If someone enters the mobile number without 0 or 92:
+    // 3471428593 -> 923471428593
+    if (number.length === 10 && number.startsWith('3')) {
+      number = `92${number}`;
+    }
+
+    return number;
+  };
+
   const cleanPhone = phone.replace(/\D/g, '');
-  const cleanWhatsApp = whatsappNumber.replace(/\D/g, '');
+
+  const whatsappInternationalNumber =
+    normalizePakistanWhatsAppNumber(whatsappNumber);
+
+  /*
+   * WhatsApp chat URL.
+   *
+   * Example:
+   * https://wa.me/923471428593
+   *
+   * If a WhatsApp message is configured:
+   * https://wa.me/923471428593?text=Hello...
+   */
+  const whatsappUrl = whatsappInternationalNumber
+    ? `https://wa.me/${whatsappInternationalNumber}${
+        whatsappMessage
+          ? `?text=${encodeURIComponent(whatsappMessage)}`
+          : ''
+      }`
+    : '';
 
   const socialItems = [
     {
@@ -71,16 +140,19 @@ export default function Footer() {
 
   return (
     <footer className="w-full bg-secondary text-black mt-auto">
+
       {/* Trust / Benefits Bar */}
-      <div className="border-b border-gray-800">
+      <div className="border-b border-gray-400">
         <div className="max-w-7xl mx-auto px-4 py-5">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-600/10">
-                <Truck className="h-5 w-5 text-green-500" />
+                <Truck className="h-5 w-5 text-[#7A1F3D]" />
               </div>
+
               <div>
-                <p className="text-sm font-medium text-white">
+                <p className="text-sm font-medium text-black">
                   Fast Delivery
                 </p>
                 <p className="text-xs text-gray-400">
@@ -91,10 +163,11 @@ export default function Footer() {
 
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-600/10">
-                <RotateCcw className="h-5 w-5 text-green-500" />
+                <RotateCcw className="h-5 w-5 text-[#7A1F3D]" />
               </div>
+
               <div>
-                <p className="text-sm font-medium text-white">
+                <p className="text-sm font-medium text-black">
                   Easy Returns
                 </p>
                 <p className="text-xs text-gray-400">
@@ -105,10 +178,11 @@ export default function Footer() {
 
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-600/10">
-                <ShieldCheck className="h-5 w-5 text-green-500" />
+                <ShieldCheck className="h-5 w-5 text-[#7A1F3D]" />
               </div>
+
               <div>
-                <p className="text-sm font-medium text-white">
+                <p className="text-sm font-medium text-black">
                   Secure Shopping
                 </p>
                 <p className="text-xs text-gray-400">
@@ -119,10 +193,11 @@ export default function Footer() {
 
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-600/10">
-                <MessageCircle className="h-5 w-5 text-green-500" />
+                <MessageCircle className="h-5 w-5 text-[#7A1F3D]" />
               </div>
+
               <div>
-                <p className="text-sm font-medium text-white">
+                <p className="text-sm font-medium text-black">
                   Customer Support
                 </p>
                 <p className="text-xs text-gray-400">
@@ -130,9 +205,9 @@ export default function Footer() {
                 </p>
               </div>
             </div>
+
           </div>
         </div>
-        
       </div>
 
       {/* Main Footer */}
@@ -143,7 +218,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <Link
               href="/"
-              className="inline-block text-xl font-bold  hover:text-green-500 transition-colors"
+              className="inline-block text-xl font-bold hover:text-green-500 transition-colors"
             >
               {storeName}
             </Link>
@@ -307,23 +382,24 @@ export default function Footer() {
                   href={`tel:${cleanPhone}`}
                   className="flex items-center gap-3 text-sm text-gray-400 hover:text-green-500 transition-colors"
                 >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-gray-900 border border-gray-800">
-                    <Phone className="h-4 w-4 text-green-500" />
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#7A1F3D] border">
+                    <Phone className="h-4 w-4 text-white" />
                   </div>
 
                   <span>{phone}</span>
                 </a>
               )}
 
-              {whatsappNumber && (
+              {/* WhatsApp Chat */}
+              {whatsappInternationalNumber && (
                 <a
-                  href={`https://wa.me/${cleanWhatsApp}`}
+                  href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-sm text-gray-400 hover:text-green-500 transition-colors"
                 >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-gray-900 border border-gray-800">
-                    <MessageCircle className="h-4 w-4 text-green-500" />
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#7A1F3D] border">
+                    <MessageCircle className="h-4 w-4 text-white" />
                   </div>
 
                   <span>Chat on WhatsApp</span>
@@ -331,22 +407,23 @@ export default function Footer() {
               )}
 
               {/* WhatsApp CTA */}
-              {whatsappNumber && (
+              {whatsappInternationalNumber && (
                 <a
-                  href={`https://wa.me/${cleanWhatsApp}`}
+                  href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-md bg-green-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-green-700 transition-colors"
+                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-md bg-white border border-[#7A1F3D] px-5 py-2 text-sm font-medium text-[#7A1F3D] hover:bg-[#7A1F3D] hover:text-white transition-colors"
                 >
                   <MessageCircle className="h-4 w-4" />
                   Chat With Us
                 </a>
               )}
+
             </div>
           </div>
         </div>
 
-        <Separator className="my-8 bg-gray-800" />
+        <Separator className="my-8 bg-gray-400" />
 
         {/* Bottom Footer */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">

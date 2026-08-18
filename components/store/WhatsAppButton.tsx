@@ -9,10 +9,76 @@ export default function WhatsAppButton() {
   const whatsappNumber = settings?.whatsapp_number || '';
   const whatsappMessage = settings?.whatsapp_message || '';
 
-  if (!whatsappNumber) return null;
+  /*
+   * Convert Pakistani phone numbers to WhatsApp international format.
+   *
+   * Supported:
+   *
+   * 03471428593
+   * 0347 1428593
+   * 0347-1428593
+   * +92 347 1428593
+   * +923471428593
+   * 92 347 1428593
+   * 923471428593
+   * 0092 347 1428593
+   * 00923471428593
+   * 3471428593
+   *
+   * Final result:
+   * 923471428593
+   */
+  const normalizePakistanWhatsAppNumber = (value: string): string => {
+    if (!value) return '';
 
-  const url = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}${
-    whatsappMessage ? `?text=${encodeURIComponent(whatsappMessage)}` : ''
+    // Keep digits only
+    let number = value.replace(/\D/g, '');
+
+    // Remove international dialing prefix
+    // 00923471428593 -> 923471428593
+    if (number.startsWith('00')) {
+      number = number.substring(2);
+    }
+
+    // Local Pakistani format
+    // 03471428593 -> 923471428593
+    if (number.startsWith('0')) {
+      number = `92${number.substring(1)}`;
+    }
+
+    // Already international Pakistani format
+    // 923471428593 -> 923471428593
+    if (number.startsWith('92')) {
+      return number;
+    }
+
+    // Mobile number without country code or leading 0
+    // 3471428593 -> 923471428593
+    if (number.length === 10 && number.startsWith('3')) {
+      number = `92${number}`;
+    }
+
+    return number;
+  };
+
+  const whatsappInternationalNumber =
+    normalizePakistanWhatsAppNumber(whatsappNumber);
+
+  if (!whatsappInternationalNumber) return null;
+
+  /*
+   * Build WhatsApp chat URL.
+   *
+   * Example:
+   * https://wa.me/923471428593
+   *
+   * With message:
+   * https://wa.me/923471428593?text=Hello...
+   */
+  const url = `https://wa.me/${whatsappInternationalNumber}${
+    whatsappMessage
+      ? `?text=${encodeURIComponent(whatsappMessage)}`
+      : ''
   }`;
 
   return (

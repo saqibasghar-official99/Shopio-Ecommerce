@@ -129,9 +129,11 @@ export async function GET(request: NextRequest) {
 
     // Replace inline base64 images with small API URLs so the JSON payload
     // stays tiny and browsers can cache each image independently.
-    const data = (rawData as unknown[]).map((p) =>
-      transformProductImages(p as { slug?: string; images?: unknown })
-    );
+    // const data = (rawData as unknown[]).map((p) =>
+    //   transformProductImages(p as { slug?: string; images?: unknown })
+    // );
+
+    const data = rawData;
 
     const res = NextResponse.json({
       success: true,

@@ -218,7 +218,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <Link
               href="/"
-              className="inline-block text-xl font-bold hover:text-green-500 transition-colors"
+              className="inline-block text-xl font-bold hover:text-[#7A1F3D] transition-colors"
             >
               {storeName}
             </Link>
@@ -248,7 +248,7 @@ export default function Footer() {
                         rel="noopener noreferrer"
                         aria-label={label}
                         title={label}
-                        className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-700 text-gray-400 hover:border-green-600 hover:bg-green-600 hover:text-white transition-all"
+                        className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-700 text-gray-400 hover:border-[#7A1F3D] hover:bg-[#7A1F3D] hover:text-white transition-all"
                       >
                         <Icon className="h-4 w-4" />
                       </a>
@@ -268,7 +268,7 @@ export default function Footer() {
             <nav className="flex flex-col gap-3">
               <Link
                 href="/"
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-green-500 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />
                 Home
@@ -276,7 +276,7 @@ export default function Footer() {
 
               <Link
                 href="/products"
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-green-500 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />
                 All Products
@@ -284,7 +284,7 @@ export default function Footer() {
 
               <Link
                 href="/cart"
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-green-500 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />
                 Shopping Cart
@@ -292,7 +292,7 @@ export default function Footer() {
 
               <Link
                 href="/account"
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-green-500 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />
                 My Account
@@ -300,7 +300,7 @@ export default function Footer() {
 
               <Link
                 href="/orders"
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-green-500 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D]  transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />
                 Track Order
@@ -317,7 +317,7 @@ export default function Footer() {
             <nav className="flex flex-col gap-3">
               <Link
                 href="/contact"
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-green-500 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />
                 Contact Us
@@ -325,7 +325,7 @@ export default function Footer() {
 
               <Link
                 href="/shipping"
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-green-500 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />
                 Shipping Information
@@ -333,7 +333,7 @@ export default function Footer() {
 
               <Link
                 href="/returns"
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-green-500 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />
                 Returns & Refunds
@@ -341,7 +341,7 @@ export default function Footer() {
 
               <Link
                 href="/privacy"
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-green-500 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />
                 Privacy Policy
@@ -349,7 +349,7 @@ export default function Footer() {
 
               <Link
                 href="/terms"
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-green-500 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />
                 Terms & Conditions
@@ -380,7 +380,7 @@ export default function Footer() {
               {phone && (
                 <a
                   href={`tel:${cleanPhone}`}
-                  className="flex items-center gap-3 text-sm text-gray-400 hover:text-green-500 transition-colors"
+                  className="flex items-center gap-3 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
                 >
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#7A1F3D] border">
                     <Phone className="h-4 w-4 text-white" />
@@ -396,7 +396,7 @@ export default function Footer() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-sm text-gray-400 hover:text-green-500 transition-colors"
+                  className="flex items-center gap-3 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
                 >
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#7A1F3D] border">
                     <MessageCircle className="h-4 w-4 text-white" />
@@ -434,21 +434,21 @@ export default function Footer() {
           <div className="flex items-center gap-5 text-xs text-gray-500">
             <Link
               href="/privacy"
-              className="hover:text-green-500 transition-colors"
+              className="hover:text-[#7A1F3D] transition-colors"
             >
               Privacy
             </Link>
 
             <Link
               href="/terms"
-              className="hover:text-green-500 transition-colors"
+              className="hover:text-[#7A1F3D] transition-colors"
             >
               Terms
             </Link>
 
             <Link
               href="/contact"
-              className="hover:text-green-500 transition-colors"
+              className="hover:text-[#7A1F3D] transition-colors"
             >
               Contact
             </Link>

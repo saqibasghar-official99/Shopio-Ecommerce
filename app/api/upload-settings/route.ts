@@ -1,44 +1,3 @@
-// import { NextRequest, NextResponse } from 'next/server';
-// import { writeFile, mkdir } from 'fs/promises';
-// import path from 'path';
-// import { v4 as uuidv4 } from 'uuid';
-// import { getAdminFromRequest } from '@/lib/auth';
-
-// export async function POST(request: NextRequest) {
-//   try {
-//     const admin = await getAdminFromRequest();
-//     if (!admin) {
-//       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
-//     }
-
-//     const formData = await request.formData();
-//     const file = formData.get('file') as File | null;
-
-//     if (!file) {
-//       return NextResponse.json({ success: false, message: 'No file provided' }, { status: 400 });
-//     }
-
-//     const bytes = await file.arrayBuffer();
-//     const buffer = Buffer.from(bytes);
-
-//     const ext = path.extname(file.name) || '.jpg';
-//     const filename = `${uuidv4()}${ext}`;
-//     const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-
-//     await mkdir(uploadDir, { recursive: true });
-//     const filepath = path.join(uploadDir, filename);
-//     await writeFile(filepath, buffer);
-
-//     const url = `/uploads/${filename}`;
-
-//     return NextResponse.json({ success: true, url, filename });
-//   } catch (error) {
-//     console.error('Upload error:', error);
-//     return NextResponse.json({ success: false, message: 'Upload failed' }, { status: 500 });
-//   }
-// }
-
-
 import { NextRequest, NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
 import { getAdminFromRequest } from "@/lib/auth";
@@ -62,6 +21,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
 
     const file = formData.get("file");
+    const type = formData.get("type");
 
     if (!(file instanceof File)) {
       return NextResponse.json(
@@ -83,15 +43,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Convert File -> Buffer
+    // 10MB limit
+    if (file.size > 10 * 1024 * 1024) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Image must be smaller than 10MB",
+        },
+        { status: 400 }
+      );
+    }
+
+    let folder = "shopio/settings";
+
+    if (type === "logo") {
+      folder = "shopio/logo";
+    } else if (type === "banner") {
+      folder = "shopio/banners";
+    }
+
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Upload to Cloudinary
     const result = await new Promise<any>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          folder: "products",
+          folder,
           resource_type: "image",
         },
         (error, result) => {
@@ -115,7 +92,7 @@ export async function POST(request: NextRequest) {
       format: result.format,
     });
   } catch (error) {
-    console.error("Cloudinary upload error:", error);
+    console.error("Settings Cloudinary upload error:", error);
 
     return NextResponse.json(
       {

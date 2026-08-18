@@ -113,51 +113,143 @@ export default function AdminSiteSettingsPage() {
     fetchSettings();
   }, [fetchSettings]);
 
-  const handleLogoUpload = async (file: File) => {
-    setUploadingLogo(true);
+  // const handleLogoUpload = async (file: File) => {
+  //   setUploadingLogo(true);
 
-    try {
-      const reader = new FileReader();
+  //   try {
+  //     const reader = new FileReader();
 
-      reader.readAsDataURL(file);
+  //     reader.readAsDataURL(file);
 
-      reader.onload = () => {
-        setLogo(reader.result as string);
-        setUploadingLogo(false);
-      };
+  //     reader.onload = () => {
+  //       setLogo(reader.result as string);
+  //       setUploadingLogo(false);
+  //     };
 
-      reader.onerror = () => {
-        console.error("Failed to convert logo");
-        setUploadingLogo(false);
-      };
-    } catch (err) {
-      console.error(err);
-      setUploadingLogo(false);
+  //     reader.onerror = () => {
+  //       console.error("Failed to convert logo");
+  //       setUploadingLogo(false);
+  //     };
+  //   } catch (err) {
+  //     console.error(err);
+  //     setUploadingLogo(false);
+  //   }
+  // };
+
+
+ const handleLogoUpload = async (file: File) => {
+  setUploadingLogo(true);
+
+  try {
+    const formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("type", "logo");
+
+    const res = await fetch("/api/upload-settings", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.url) {
+      console.error("Logo upload failed:", data);
+
+      showToast(
+        data.message || "Failed to upload logo",
+        "error"
+      );
+
+      return;
     }
-  };
 
-  const handleBannerUpload = async (file: File) => {
-    setUploadingBanner(true);
+    setLogo(data.url);
 
-    try {
-      const reader = new FileReader();
+    showToast(
+      "Logo uploaded successfully",
+      "success"
+    );
+  } catch (error) {
+    console.error("Logo upload error:", error);
 
-      reader.readAsDataURL(file);
+    showToast(
+      "Failed to upload logo",
+      "error"
+    );
+  } finally {
+    setUploadingLogo(false);
+  }
+};
 
-      reader.onload = () => {
-        setBannerImage(reader.result as string);
-        setUploadingBanner(false);
-      };
+  // const handleBannerUpload = async (file: File) => {
+  //   setUploadingBanner(true);
 
-      reader.onerror = () => {
-        console.error("Failed to convert banner");
-        setUploadingBanner(false);
-      };
-    } catch (err) {
-      console.error(err);
-      setUploadingBanner(false);
+  //   try {
+  //     const reader = new FileReader();
+
+  //     reader.readAsDataURL(file);
+
+  //     reader.onload = () => {
+  //       setBannerImage(reader.result as string);
+  //       setUploadingBanner(false);
+  //     };
+
+  //     reader.onerror = () => {
+  //       console.error("Failed to convert banner");
+  //       setUploadingBanner(false);
+  //     };
+  //   } catch (err) {
+  //     console.error(err);
+  //     setUploadingBanner(false);
+  //   }
+  // };
+
+  
+const handleBannerUpload = async (file: File) => {
+  setUploadingBanner(true);
+
+  try {
+    const formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("type", "banner");
+
+    const res = await fetch("/api/upload-settings", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.url) {
+      console.error("Banner upload failed:", data);
+
+      showToast(
+        data.message || "Failed to upload banner",
+        "error"
+      );
+
+      return;
     }
-  };
+
+    setBannerImage(data.url);
+
+    showToast(
+      "Banner uploaded successfully",
+      "success"
+    );
+  } catch (error) {
+    console.error("Banner upload error:", error);
+
+    showToast(
+      "Failed to upload banner",
+      "error"
+    );
+  } finally {
+    setUploadingBanner(false);
+  }
+};
 
   const handleSave = async () => {
     setSaving(true);
@@ -313,79 +405,50 @@ export default function AdminSiteSettingsPage() {
                 </div> */}
 
                 <div className="space-y-2">
-                  <Label className="text-sm text-gray-700">Logo</Label>
+  <Label className="text-sm text-gray-700">
+    Logo
+  </Label>
 
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setLogoMode("url")}
-                      className={cn(
-                        "flex items-center gap-1 rounded px-2 py-1 text-xs font-medium",
-                        logoMode === "url"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-500",
-                      )}
-                    >
-                      <LinkIcon className="h-3 w-3" />
-                      URL
-                    </button>
+  <div className="flex items-center gap-2">
+    <input
+      ref={logoInputRef}
+      type="file"
+      accept="image/*"
+      className="hidden"
+      onChange={(e) => {
+        const file = e.target.files?.[0];
 
-                    <button
-                      type="button"
-                      onClick={() => setLogoMode("upload")}
-                      className={cn(
-                        "flex items-center gap-1 rounded px-2 py-1 text-xs font-medium",
-                        logoMode === "upload"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-500",
-                      )}
-                    >
-                      <Upload className="h-3 w-3" />
-                      Upload
-                    </button>
-                  </div>
+        if (file) {
+          handleLogoUpload(file);
+        }
 
-                  {logoMode === "url" ? (
-                    <Input
-                      value={logo}
-                      onChange={(e) => setLogo(e.target.value)}
-                      className="h-8 text-xs"
-                      placeholder="https://..."
-                    />
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <input
-                        ref={logoInputRef}
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) handleLogoUpload(file);
-                        }}
-                      />
+        e.currentTarget.value = "";
+      }}
+    />
 
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => logoInputRef.current?.click()}
-                        disabled={uploadingLogo}
-                        className="h-8 text-xs"
-                      >
-                        <Upload className="mr-1 h-3 w-3" />
-                        {uploadingLogo ? "Uploading..." : "Choose File"}
-                      </Button>
-                    </div>
-                  )}
+    <Button
+      type="button"
+      variant="outline"
+      onClick={() => logoInputRef.current?.click()}
+      disabled={uploadingLogo}
+      className="h-8 text-xs"
+    >
+      <Upload className="mr-1 h-3 w-3" />
 
-                  {logo && (
-                    <img
-                      src={logo}
-                      alt="Logo"
-                      className="h-14 w-14 rounded border object-cover"
-                    />
-                  )}
-                </div>
+      {uploadingLogo
+        ? "Uploading..."
+        : "Choose Logo"}
+    </Button>
+  </div>
+
+  {logo && (
+    <img
+      src={logo}
+      alt="Logo"
+      className="h-14 w-14 rounded border object-cover"
+    />
+  )}
+</div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
@@ -477,79 +540,50 @@ export default function AdminSiteSettingsPage() {
                 </div> */}
 
                 <div className="flex-1 space-y-2">
-                  <Label className="text-sm text-gray-700">Banner Image</Label>
+  <Label className="text-sm text-gray-700">
+    Banner Image
+  </Label>
 
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setBannerMode("url")}
-                      className={cn(
-                        "flex items-center gap-1 rounded px-2 py-1 text-xs font-medium",
-                        bannerMode === "url"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-500",
-                      )}
-                    >
-                      <LinkIcon className="h-3 w-3" />
-                      URL
-                    </button>
+  <div className="flex items-center gap-2">
+    <input
+      ref={bannerInputRef}
+      type="file"
+      accept="image/*"
+      className="hidden"
+      onChange={(e) => {
+        const file = e.target.files?.[0];
 
-                    <button
-                      type="button"
-                      onClick={() => setBannerMode("upload")}
-                      className={cn(
-                        "flex items-center gap-1 rounded px-2 py-1 text-xs font-medium",
-                        bannerMode === "upload"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-500",
-                      )}
-                    >
-                      <Upload className="h-3 w-3" />
-                      Upload
-                    </button>
-                  </div>
+        if (file) {
+          handleBannerUpload(file);
+        }
 
-                  {bannerMode === "url" ? (
-                    <Input
-                      value={bannerImage}
-                      onChange={(e) => setBannerImage(e.target.value)}
-                      className="h-8 text-xs"
-                      placeholder="https://..."
-                    />
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <input
-                        ref={bannerInputRef}
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) handleBannerUpload(file);
-                        }}
-                      />
+        e.currentTarget.value = "";
+      }}
+    />
 
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => bannerInputRef.current?.click()}
-                        disabled={uploadingBanner}
-                        className="h-8 text-xs"
-                      >
-                        <Upload className="mr-1 h-3 w-3" />
-                        {uploadingBanner ? "Uploading..." : "Choose File"}
-                      </Button>
-                    </div>
-                  )}
+    <Button
+      type="button"
+      variant="outline"
+      onClick={() => bannerInputRef.current?.click()}
+      disabled={uploadingBanner}
+      className="h-8 text-xs"
+    >
+      <Upload className="mr-1 h-3 w-3" />
 
-                  {bannerImage && (
-                    <img
-                      src={bannerImage}
-                      alt="Banner Preview"
-                      className="h-20 w-full rounded border object-cover"
-                    />
-                  )}
-                </div>
+      {uploadingBanner
+        ? "Uploading..."
+        : "Choose Banner"}
+    </Button>
+  </div>
+
+  {bannerImage && (
+    <img
+      src={bannerImage}
+      alt="Banner Preview"
+      className="h-20 w-full rounded border object-cover"
+    />
+  )}
+</div>
                 <div className="flex-1 space-y-1">
                   <Label className="text-sm text-gray-700">Link URL</Label>
                   <Input

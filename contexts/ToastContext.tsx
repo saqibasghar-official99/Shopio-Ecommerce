@@ -47,14 +47,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             key={toast.id}
             style={{
               pointerEvents: 'auto',
-              padding: '12px 16px',
-              borderRadius: '6px',
+              padding: '8px 20px',
+              borderRadius: '4px',
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
               fontSize: '14px',
               color: '#fff',
-              backgroundColor: toast.type === 'success' ? '#16a34a' : '#dc2626',
+              backgroundColor: toast.type === 'success' ? '#107a37' : '#dc2626',
               animation: 'toast-slide-in 0.3s ease-out',
-              maxWidth: '360px',
+              maxWidth: '380px',
               wordBreak: 'break-word',
             }}
           >

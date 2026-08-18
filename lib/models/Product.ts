@@ -36,7 +36,10 @@ const ProductSchema = new Schema<IProduct>({
   price: { type: Number, required: true, min: 0 },
   compare_price: { type: Number, default: 0, min: 0 },
   cost: { type: Number, default: 0, min: 0 },
-  images: [{ type: String }],
+  images: {
+  type: [String],
+  default: [],
+},
   stock: { type: Number, default: 0, min: 0 },
   sku: { type: String, default: '' },
   weight: { type: Number, default: 0 },

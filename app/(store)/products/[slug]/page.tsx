@@ -170,7 +170,7 @@ export default function ProductDetailPage() {
       variant: variantString || undefined,
       stock: product.stock,
     });
-    showToast(`${product.name} added to cart`);
+    showToast(`Product added to cart`);
   };
 
   const handleBuyNow = () => {

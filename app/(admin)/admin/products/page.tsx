@@ -275,37 +275,74 @@ export default function AdminProductsPage() {
   //   }
   // };
 
+  // const uploadImage = async (file: File): Promise<string | null> => {
+  //   setUploadingImage(true);
+
+  //   try {
+  //     const compressedFile = await imageCompression(file, {
+  //       maxSizeMB: 0.4,
+  //       maxWidthOrHeight: 1000,
+  //       useWebWorker: true,
+  //     });
+
+  //     return await new Promise((resolve) => {
+  //       const reader = new FileReader();
+
+  //       reader.readAsDataURL(compressedFile);
+
+  //       reader.onload = () => {
+  //         resolve(reader.result as string);
+  //       };
+
+  //       reader.onerror = () => {
+  //         console.error("Failed to convert image");
+  //         resolve(null);
+  //       };
+  //     });
+  //   } catch (err) {
+  //     console.error("Failed to process image", err);
+  //     return null;
+  //   } finally {
+  //     setUploadingImage(false);
+  //   }
+  // };
+
   const uploadImage = async (file: File): Promise<string | null> => {
-    setUploadingImage(true);
+  setUploadingImage(true);
 
-    try {
-      const compressedFile = await imageCompression(file, {
-        maxSizeMB: 0.4,
-        maxWidthOrHeight: 1000,
-        useWebWorker: true,
-      });
+  try {
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 0.4,
+      maxWidthOrHeight: 1000,
+      useWebWorker: true,
+    });
 
-      return await new Promise((resolve) => {
-        const reader = new FileReader();
+    const formData = new FormData();
+    formData.append("file", compressedFile);
 
-        reader.readAsDataURL(compressedFile);
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
 
-        reader.onload = () => {
-          resolve(reader.result as string);
-        };
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
 
-        reader.onerror = () => {
-          console.error("Failed to convert image");
-          resolve(null);
-        };
-      });
-    } catch (err) {
-      console.error("Failed to process image", err);
+      console.error("Upload failed:", error);
+
       return null;
-    } finally {
-      setUploadingImage(false);
     }
-  };
+
+    const data = await res.json();
+
+    return data.url || null;
+  } catch (error) {
+    console.error("Failed to upload image:", error);
+    return null;
+  } finally {
+    setUploadingImage(false);
+  }
+};
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -522,7 +559,7 @@ export default function AdminProductsPage() {
         const images = row.images as string[];
         return images?.[0] ? (
           <img
-            src={images[0]}
+           src={images[0]}
             alt=""
             className="h-8 w-8 rounded object-cover"
           />

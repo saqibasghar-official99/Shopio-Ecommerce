@@ -42,7 +42,7 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
         qty: 1,
         stock: product.stock,
       });
-      showToast(`${product.name} added to cart`);
+      showToast(`Product added to cart`);
     },
     [addItem, imageSrc, inStock, product.compare_price, product.id, product.name, product.price, product.slug, product.stock, showToast]
   );

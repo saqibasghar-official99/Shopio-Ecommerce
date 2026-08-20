@@ -52,7 +52,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
               fontSize: '14px',
               color: '#fff',
-              backgroundColor: toast.type === 'success' ? '#107a37' : '#dc2626',
+              backgroundColor: toast.type === 'success' ? '#7A1F3D' : '#dc2626',
               animation: 'toast-slide-in 0.3s ease-out',
               maxWidth: '380px',
               wordBreak: 'break-word',

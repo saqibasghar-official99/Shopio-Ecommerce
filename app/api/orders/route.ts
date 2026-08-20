@@ -89,6 +89,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       customer_name,
+      guest_customer_id,
       customer_phone,
       customer_email,
       customer_address,
@@ -225,6 +226,7 @@ export async function POST(request: NextRequest) {
     const order = await Order.create({
       order_number,
       customer_id,
+      guest_customer_id: guest_customer_id || null,
       customer_name,
       customer_phone,
       customer_email: customer_email || '',

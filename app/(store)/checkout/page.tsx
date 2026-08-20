@@ -53,6 +53,19 @@ export default function CheckoutPage() {
   const [selectedZone, setSelectedZone] = useState<string>('');
   const [zonesLoading, setZonesLoading] = useState(true);
 
+  const [guestCustomerId, setGuestCustomerId] = useState('');
+
+  useEffect(() => {
+    let id = localStorage.getItem('guest_customer_id');
+
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem('guest_customer_id', id);
+    }
+
+    setGuestCustomerId(id);
+  }, []);
+
   // Fetch available visible coupons
   useEffect(() => {
     fetch('/api/coupons?visible=true')
@@ -165,6 +178,11 @@ export default function CheckoutPage() {
       return;
     }
 
+    if (!guestCustomerId) {
+      showToast('Please wait a moment and try again.', 'error');
+      return;
+    }
+
     if (paymentMethod === 'whatsapp') {
       const whatsappNumber = settings?.whatsapp_number || '';
       if (!whatsappNumber) {
@@ -221,6 +239,7 @@ export default function CheckoutPage() {
           customer_address: form.address.trim(),
           customer_city: form.city.trim(),
           is_guest: true,
+          guest_customer_id: guestCustomerId,
           items: items.map((item) => ({
             productId: item.productId, name: item.name, image: item.image, qty: item.qty,
             unitPrice: item.price, variant: item.variant || undefined,

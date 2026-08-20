@@ -140,7 +140,9 @@ export interface SiteSettings {
 }
 
 export interface Banner {
+  type: "image" | "video";
   image: string;
+  video: string;
   link: string;
   isActive: boolean;
 }

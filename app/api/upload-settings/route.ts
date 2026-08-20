@@ -4,6 +4,9 @@ import { getAdminFromRequest } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
+// Maximum upload size: 100 MB
+const MAX_FILE_SIZE = 100 * 1024 * 1024;
+
 export async function POST(request: NextRequest) {
   try {
     const admin = await getAdminFromRequest();
@@ -33,26 +36,59 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!file.type.startsWith("image/")) {
+    // ------------------------------------------------------------
+    // Detect file type
+    // ------------------------------------------------------------
+
+    const mimeType = file.type || "";
+    const isImage = mimeType.startsWith("image/");
+    const isVideo = mimeType.startsWith("video/");
+
+    // ------------------------------------------------------------
+    // Only images/videos are allowed
+    // ------------------------------------------------------------
+
+    if (!isImage && !isVideo) {
       return NextResponse.json(
         {
           success: false,
-          message: "Only image files are allowed",
+          message: "Only image and video files are allowed",
         },
         { status: 400 }
       );
     }
 
-    // 10MB limit
-    if (file.size > 10 * 1024 * 1024) {
+    // ------------------------------------------------------------
+    // Logo must be an image
+    // ------------------------------------------------------------
+
+    if (type === "logo" && !isImage) {
       return NextResponse.json(
         {
           success: false,
-          message: "Image must be smaller than 10MB",
+          message: "Logo must be an image file",
         },
         { status: 400 }
       );
     }
+
+    // ------------------------------------------------------------
+    // File size validation
+    // ------------------------------------------------------------
+
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "File must be smaller than 100MB",
+        },
+        { status: 400 }
+      );
+    }
+
+    // ------------------------------------------------------------
+    // Cloudinary folder
+    // ------------------------------------------------------------
 
     let folder = "shopio/settings";
 
@@ -62,14 +98,33 @@ export async function POST(request: NextRequest) {
       folder = "shopio/banners";
     }
 
+    // ------------------------------------------------------------
+    // Cloudinary resource type
+    // ------------------------------------------------------------
+
+    const resourceType = isVideo ? "video" : "image";
+
+    // ------------------------------------------------------------
+    // Convert File -> Buffer
+    // ------------------------------------------------------------
+
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
+
+    // ------------------------------------------------------------
+    // Upload to Cloudinary
+    // ------------------------------------------------------------
 
     const result = await new Promise<any>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           folder,
-          resource_type: "image",
+          resource_type: resourceType,
+
+          // Let Cloudinary determine the correct format.
+          // This works for a wide range of image/video formats.
+          use_filename: true,
+          unique_filename: true,
         },
         (error, result) => {
           if (error) {
@@ -83,13 +138,32 @@ export async function POST(request: NextRequest) {
       uploadStream.end(buffer);
     });
 
+    // ------------------------------------------------------------
+    // Return upload information
+    // ------------------------------------------------------------
+
     return NextResponse.json({
       success: true,
+
       url: result.secure_url,
+
       public_id: result.public_id,
-      width: result.width,
-      height: result.height,
+
+      resource_type: result.resource_type,
+
       format: result.format,
+
+      original_filename: file.name,
+
+      mime_type: mimeType,
+
+      bytes: result.bytes,
+
+      width: result.width,
+
+      height: result.height,
+
+      duration: result.duration || null,
     });
   } catch (error) {
     console.error("Settings Cloudinary upload error:", error);
@@ -97,7 +171,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to upload image",
+        message: "Failed to upload file",
       },
       { status: 500 }
     );

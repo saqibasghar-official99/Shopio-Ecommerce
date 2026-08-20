@@ -13,6 +13,7 @@ export interface IOrderItem {
 export interface IOrder extends Document {
   order_number: string;
   customer_id: mongoose.Types.ObjectId | null;
+  guest_customer_id: string | null;
   customer_name: string;
   customer_phone: string;
   customer_email: string;
@@ -48,6 +49,13 @@ const OrderItemSchema = new Schema<IOrderItem>({
 const OrderSchema = new Schema<IOrder>({
   order_number: { type: String, required: true, unique: true },
   customer_id: { type: Schema.Types.ObjectId, ref: 'Customer', default: null },
+
+  // Browser-specific guest customer identifier
+  guest_customer_id: {
+    type: String,
+    default: null,
+  },
+
   customer_name: { type: String, required: true },
   customer_phone: { type: String, required: true },
   customer_email: { type: String, default: '' },
@@ -70,6 +78,7 @@ const OrderSchema = new Schema<IOrder>({
 
 // order_number unique index is declared on the field definition above.
 OrderSchema.index({ customer_id: 1, created_at: -1 });
+OrderSchema.index({ guest_customer_id: 1, created_at: -1 });
 OrderSchema.index({ order_status: 1, created_at: -1 });
 OrderSchema.index({ payment_status: 1, created_at: -1 });
 OrderSchema.index({ created_at: -1 });

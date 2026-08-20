@@ -36,7 +36,7 @@ const PRODUCTS_PER_PAGE = 12;
 
 export default function ProductsPage() {
   return (
-    <Suspense fallback={<div className="max-w-7xl mx-auto px-4 py-6"><div className="animate-pulse space-y-4"><div className="h-8 bg-gray-100 rounded w-48" /><div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">{Array.from({length:8}).map((_,i)=><div key={i} className="aspect-square bg-gray-100 rounded-lg" />)}</div></div></div>}>
+    <Suspense fallback={<div className="max-w-7xl mx-auto px-4 py-6"><div className="animate-pulse space-y-4"><div className="h-8 bg-gray-100 rounded w-48" /><div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="aspect-square bg-gray-100 rounded-lg" />)}</div></div></div>}>
       <ProductsContent />
     </Suspense>
   );
@@ -73,7 +73,7 @@ function ProductsContent() {
     fetch('/api/categories')
       .then((r) => r.json())
       .then((data) => setCategories((data.data || []).map((c: Category & { _id?: string }) => ({ ...c, id: c._id || c.id }))))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // Fetch products — cancel in-flight on rapid filter changes
@@ -193,8 +193,8 @@ function ProductsContent() {
                 {priceMin && priceMax
                   ? `$${priceMin} - $${priceMax}`
                   : priceMin
-                  ? `From $${priceMin}`
-                  : `Up to $${priceMax}`}
+                    ? `From $${priceMin}`
+                    : `Up to $${priceMax}`}
                 <X
                   className="h-3 w-3 cursor-pointer"
                   onClick={() => {
@@ -351,8 +351,8 @@ function ProductsContent() {
                 className={cn(
                   'px-2 py-1 text-xs rounded-md border transition-colors',
                   tagFilter === tag
-                    ? 'bg-green-50 border-green-600 text-green-600'
-                    : 'border-gray-200 text-[#7A1F3D] hover:bg-gray-50'
+                    ? ''
+                    : 'text-black'
                 )}
               >
                 {tag}
@@ -367,26 +367,33 @@ function ProductsContent() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       {/* Toolbar */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-1.5">
           {/* Mobile filter button */}
           <div className="md:hidden">
             <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
               <SheetTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-1.5">
-                  <SlidersHorizontal className="h-4 w-4" />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 gap-1 px-2 text-xs"
+                >
+                  <SlidersHorizontal className="h-3.5 w-3.5" />
                   Filters
+
                   {activeFilterCount > 0 && (
-                    <Badge className="h-5 min-w-[20px] bg-green-600 text-white text-[10px] px-1.5">
+                    <Badge className="h-4 min-w-[16px] px-1 bg-green-600 text-white text-[9px]">
                       {activeFilterCount}
                     </Badge>
                   )}
                 </Button>
               </SheetTrigger>
+
               <SheetContent side="left" className="w-80 overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle>Filters</SheetTitle>
                 </SheetHeader>
+
                 <div className="mt-4">
                   <FilterSidebar />
                 </div>
@@ -394,14 +401,15 @@ function ProductsContent() {
             </Sheet>
           </div>
 
-          <h1 className="text-lg font-semibold text-gray-900">
+          <h1 className="text-sm font-semibold text-gray-900">
             {categorySlug
               ? categories.find((c) => c.slug === categorySlug)?.name || 'Products'
               : search
-              ? `Results for "${search}"`
-              : 'All Products'}
+                ? `Results for "${search}"`
+                : 'All Products'}
           </h1>
-          <span className="text-xs text-gray-400">
+
+          <span className="text-[10px] text-gray-400">
             {products.length} item{products.length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -409,14 +417,17 @@ function ProductsContent() {
         {/* Sort dropdown */}
         <Select
           value={sort}
-          onValueChange={(value) => router.push(buildUrl({ sort: value, page: '1' }))}
+          onValueChange={(value) =>
+            router.push(buildUrl({ sort: value, page: '1' }))
+          }
         >
-          <SelectTrigger className="w-[180px] h-8 text-sm">
+          <SelectTrigger className="w-[130px] h-7 px-2 text-xs">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
+
           <SelectContent>
             {SORT_OPTIONS.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+              <SelectItem key={option.value} value={option.value} className="text-xs">
                 {option.label}
               </SelectItem>
             ))}

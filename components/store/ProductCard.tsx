@@ -237,7 +237,7 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
           )}
         </div>
 
-        <div className="p-3 pb-1 flex flex-col gap-1.5">
+        {/* <div className="p-3 pb-1 flex flex-col gap-1.5">
           <h3 className="text-sm font-medium text-gray-900 line-clamp-2 leading-tight">
             {product.name}
           </h3>
@@ -249,6 +249,24 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
 
             {product.compare_price > product.price && (
               <span className="text-sm text-gray-400 line-through">
+                {formatCurrency(product.compare_price, currency)}
+              </span>
+            )}
+          </div>
+        </div> */}
+
+        <div className="p-2 pb-1 flex flex-col gap-1">
+          <h3 className="text-xs font-medium text-gray-900 line-clamp-2 leading-tight">
+            {product.name}
+          </h3>
+
+          <div className="flex items-baseline gap-1">
+            <span className="text-sm font-semibold text-[#7A1F3D]">
+              {formatCurrency(product.price, currency)}
+            </span>
+
+            {product.compare_price > product.price && (
+              <span className="text-xs text-gray-400 line-through">
                 {formatCurrency(product.compare_price, currency)}
               </span>
             )}

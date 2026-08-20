@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, ShoppingBag, Package, FolderTree, Users, Ticket, MapPin, ChartBar as BarChart3, FileText, Settings, X, UserCog } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Package, FolderTree, Users, Ticket, MapPin, ChartBar as BarChart3, FileText, Settings, X, UserCog, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -13,6 +13,8 @@ const navItems = [
   { label: 'Categories', href: '/admin/categories', icon: FolderTree },
   { label: 'Customers', href: '/admin/customers', icon: Users },
   { label: 'Coupons', href: '/admin/coupons', icon: Ticket },
+  { label: 'Reviews', href: '/admin/reviews', icon: Star },
+  { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
   { label: 'Delivery Zones', href: '/admin/delivery-zones', icon: MapPin },
   { label: 'Reports', href: '/admin/reports', icon: BarChart3 },
   { label: 'Invoices & Ledger', href: '/admin/invoices-ledger', icon: FileText },
@@ -61,8 +63,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                   className={cn(
                     'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
                     active
-                      ? 'bg-green-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-50'
+                      ? 'bg-[#7A1F3D] text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
                   )}
                 >
                   <Icon className="h-4 w-4 shrink-0" />

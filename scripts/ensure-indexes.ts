@@ -9,7 +9,7 @@ import {
   DeliveryZone,
   AdminUser,
 } from '../lib/models';
-
+ 
 const MONGODB_URI = process.env.MONGODB_URI;
 
 async function main() {

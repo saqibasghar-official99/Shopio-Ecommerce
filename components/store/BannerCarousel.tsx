@@ -73,7 +73,7 @@ function BannerVideo({
 
     try {
       video.currentTime = 0;
-    } catch {}
+    } catch { }
 
     /*
      * Force browser to reload source.
@@ -353,7 +353,7 @@ export default function BannerCarousel({
     if (
       activeBanners.length > 0 &&
       current >=
-        activeBanners.length
+      activeBanners.length
     ) {
       setCurrent(0);
     }
@@ -425,9 +425,8 @@ export default function BannerCarousel({
           ease-in-out
         "
         style={{
-          transform: `translateX(-${
-            current * 100
-          }%)`,
+          transform: `translateX(-${current * 100
+            }%)`,
         }}
       >
         {activeBanners.map(
@@ -494,9 +493,8 @@ export default function BannerCarousel({
                           inset-0
                           z-20
                         "
-                        aria-label={`Banner ${
-                          index + 1
-                        }`}
+                        aria-label={`Banner ${index + 1
+                          }`}
                       />
                     )}
                   </div>
@@ -507,46 +505,92 @@ export default function BannerCarousel({
             /*
              * IMAGE
              */
+            // if (imageUrl) {
+            //   return (
+            //     <div
+            //       key={`${imageUrl}-${index}`}
+            //       className="
+            //         w-full
+            //         shrink-0
+            //       "
+            //     >
+            //       <Link
+            //         href={
+            //           banner.link ||
+            //           "#"
+            //         }
+            //         className="block"
+            //       >
+            //         <div
+            //           className="
+            //             relative
+            //             w-full
+            //             aspect-[21/9]
+            //             sm:aspect-[3/1]
+            //             lg:h-[calc(100vh-100px)]
+            //             lg:min-h-[400px]
+            //             lg:max-h-[500px]
+            //             bg-black
+            //           "
+            //         >
+            //           <img
+            //             src={imageUrl}
+            //             alt={`Banner ${
+            //               index + 1
+            //             }`}
+            //             className="
+            //               absolute
+            //               inset-0
+            //               w-full
+            //               h-full
+            //               object-contain sm:object-cover
+            //             "
+            //             loading={
+            //               index === 0
+            //                 ? "eager"
+            //                 : "lazy"
+            //             }
+            //             decoding="async"
+            //           />
+            //         </div>
+            //       </Link>
+            //     </div>
+            //   );
+            // }
+
             if (imageUrl) {
               return (
                 <div
                   key={`${imageUrl}-${index}`}
-                  className="
-                    w-full
-                    shrink-0
-                  "
+                  className="w-full shrink-0"
                 >
                   <Link
-                    href={
-                      banner.link ||
-                      "#"
-                    }
-                    className="block"
+                    href={banner.link || "#"}
+                    className="block w-full"
                   >
                     <div
                       className="
-                        relative
-                        w-full
-                        aspect-[21/9]
-                        sm:aspect-[3/1]
-                        lg:h-[calc(100vh-100px)]
-                        lg:min-h-[400px]
-                        lg:max-h-[500px]
-                        bg-black
-                      "
+            relative
+            w-full
+            overflow-hidden
+            bg-white
+            lg:h-[calc(100vh-100px)]
+            lg:min-h-[400px]
+            lg:max-h-[500px]
+          "
                     >
                       <img
                         src={imageUrl}
-                        alt={`Banner ${
-                          index + 1
-                        }`}
+                        alt={`Banner ${index + 1}`}
                         className="
-                          absolute
-                          inset-0
-                          w-full
-                          h-full
-                          object-cover
-                        "
+              block
+              w-full
+              h-auto
+              lg:absolute
+              lg:inset-0
+              lg:h-full
+              lg:object-cover
+            "
                         loading={
                           index === 0
                             ? "eager"
@@ -567,8 +611,8 @@ export default function BannerCarousel({
 
       {activeBanners.length >
         1 && (
-        <div
-          className="
+          <div
+            className="
             absolute
             bottom-5
             left-1/2
@@ -578,32 +622,31 @@ export default function BannerCarousel({
             items-center
             gap-1.5
           "
-        >
-          {activeBanners.map(
-            (_, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() =>
-                  setCurrent(index)
-                }
-                className={`
+          >
+            {activeBanners.map(
+              (_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() =>
+                    setCurrent(index)
+                  }
+                  className={`
                   h-2
                   rounded-full
                   transition-all
                   duration-300
-                  ${
-                    index ===
-                    current
+                  ${index ===
+                      current
                       ? "w-6 bg-white"
                       : "w-2 bg-white/60"
-                  }
+                    }
                 `}
-              />
-            )
-          )}
-        </div>
-      )}
+                />
+              )
+            )}
+          </div>
+        )}
     </div>
   );
 }

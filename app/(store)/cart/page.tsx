@@ -48,7 +48,7 @@ export default function CartPage() {
   const [zonesLoading, setZonesLoading] = useState(true);
 
   // Add state for visible coupons
-  const [visibleCoupons, setVisibleCoupons] = useState<Array<{code: string, type: string, value: number, min_order: number}>>([]);
+  const [visibleCoupons, setVisibleCoupons] = useState<Array<{ code: string, type: string, value: number, min_order: number }>>([]);
 
   // Fetch visible coupons alongside delivery zones
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function CartPage() {
         const list = (data.data || []).filter((c: any) => c.is_visible && c.is_active);
         setVisibleCoupons(list);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // Fetch delivery zones
@@ -69,7 +69,7 @@ export default function CartPage() {
         const zones = (data.data || []).filter((z: DeliveryZone) => z.is_active).map((z: DeliveryZone & { _id?: string }) => ({ ...z, id: z._id || z.id }));
         setDeliveryZones(zones);
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setZonesLoading(false));
   }, []);
 
@@ -223,12 +223,13 @@ export default function CartPage() {
                     </div>
 
                     {/* Price */}
-                    <div className="text-right">
-                      <span className="text-sm font-semibold text-black">
+                    <div className="flex flex-col items-end text-right">
+                      <span className="mr-2 text-sm font-semibold text-black">
                         {formatCurrency(item.price * item.qty, currency)}
                       </span>
+
                       {item.comparePrice > item.price && (
-                        <span className="text-xs text-gray-400 line-through ml-1">
+                        <span className="text-xs text-gray-400 line-through">
                           {formatCurrency(item.comparePrice * item.qty, currency)}
                         </span>
                       )}
@@ -248,23 +249,23 @@ export default function CartPage() {
             {/* Coupon */}
 
             {/* Available Coupons */}
-{visibleCoupons.length > 0 && !couponCode && (
-  <div className="mb-2">
-    <p className="text-xs text-gray-500 mb-1.5">Available coupons:</p>
-    <div className="flex flex-wrap gap-1.5">
-      {visibleCoupons.map((c) => (
-        <button
-          key={c.code}
-          onClick={() => { setCouponInput(c.code); }}
-          className="text-xs px-2 py-1 border border-dashed border-green-400 rounded text-green-700 hover:bg-green-50 font-mono"
-          title={c.min_order > 0 ? `Min order: ${formatCurrency(c.min_order, currency)}` : ''}
-        >
-          {c.code} · {c.type === 'percent' ? `${c.value}%` : formatCurrency(c.value, currency)} off
-        </button>
-      ))}
-    </div>
-  </div>
-)}
+            {visibleCoupons.length > 0 && !couponCode && (
+              <div className="mb-2">
+                <p className="text-xs text-gray-500 mb-1.5">Available coupons:</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {visibleCoupons.map((c) => (
+                    <button
+                      key={c.code}
+                      onClick={() => { setCouponInput(c.code); }}
+                      className="text-xs px-2 py-1 border border-dashed border-green-400 rounded text-green-700 hover:bg-green-50 font-mono"
+                      title={c.min_order > 0 ? `Min order: ${formatCurrency(c.min_order, currency)}` : ''}
+                    >
+                      {c.code} · {c.type === 'percent' ? `${c.value}%` : formatCurrency(c.value, currency)} off
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="mb-4">
               {couponCode && discount > 0 ? (
                 <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-md px-3 py-2">

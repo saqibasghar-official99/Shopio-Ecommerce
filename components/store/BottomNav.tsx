@@ -35,13 +35,13 @@ export default function BottomNav() {
               href={item.href}
               className={cn(
                 'flex flex-col items-center justify-center gap-0.5 flex-1 h-full relative',
-                isActive ? 'text-green-600' : 'text-gray-500'
+                isActive ? 'text-[#7A1F3D]' : 'text-gray-500'
               )}
             >
               <div className="relative">
                 <Icon className="h-5 w-5" />
                 {item.href === '/cart' && hydrated && totalItems > 0 && (
-                  <span className="absolute -top-1.5 -right-2 h-4 min-w-[16px] flex items-center justify-center rounded-full bg-green-600 text-white text-[9px] px-1">
+                  <span className="absolute -top-1.5 -right-2 h-4 min-w-[16px] flex items-center justify-center rounded-full bg-[#7A1F3D] text-white text-[9px] px-1">
                     {totalItems}
                   </span>
                 )}

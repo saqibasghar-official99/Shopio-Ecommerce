@@ -62,16 +62,43 @@ export default function CartPage() {
   }, []);
 
   // Fetch delivery zones
-  useEffect(() => {
-    fetch('/api/delivery-zones')
-      .then((r) => r.json())
-      .then((data) => {
-        const zones = (data.data || []).filter((z: DeliveryZone) => z.is_active).map((z: DeliveryZone & { _id?: string }) => ({ ...z, id: z._id || z.id }));
-        setDeliveryZones(zones);
-      })
-      .catch(() => { })
-      .finally(() => setZonesLoading(false));
-  }, []);
+// Fetch delivery zones and select Pakistan by default
+useEffect(() => {
+  const fetchDeliveryZones = async () => {
+    try {
+      const res = await fetch('/api/delivery-zones');
+      const data = await res.json();
+
+      const zones = (data.data || [])
+        .filter((z: DeliveryZone) => z.is_active)
+        .map((z: DeliveryZone & { _id?: string }) => ({
+          ...z,
+          id: z._id || z.id,
+        }));
+
+      setDeliveryZones(zones);
+
+      // Find Pakistan
+      const pakistan = zones.find(
+        (zone: DeliveryZone) =>
+          zone.name?.trim().toLowerCase() === 'pakistan'
+      );
+
+      // Select Pakistan automatically
+      if (pakistan) {
+        setSelectedZone(pakistan.id);
+        setDeliveryFee(pakistan.fee || 0);
+        setDeliveryZoneName(pakistan.name);
+      }
+    } catch (error) {
+      console.error('Failed to fetch delivery zones:', error);
+    } finally {
+      setZonesLoading(false);
+    }
+  };
+
+  fetchDeliveryZones();
+}, [setDeliveryFee, setDeliveryZoneName]);
 
   // Handle delivery zone change
   const handleZoneChange = (zoneId: string) => {
@@ -307,12 +334,12 @@ export default function CartPage() {
 
             {/* Delivery zone */}
             <div className="mb-4">
-              <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">
-                Delivery Zone <span className="text-gray-400 normal-case font-normal">(optional)</span>
+              <label className="text-xs font-medium text-gray-700 tracking-wide">
+                Country/Region <span className="text-gray-400 normal-case font-normal">(optional)</span>
               </label>
               <Select value={selectedZone} onValueChange={handleZoneChange}>
                 <SelectTrigger className="mt-1 h-9 text-sm">
-                  <SelectValue placeholder="Select delivery zone (optional)" />
+                  <SelectValue placeholder="Select Region" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none" className="text-xs text-gray-400">No delivery zone</SelectItem>

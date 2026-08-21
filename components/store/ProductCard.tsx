@@ -117,85 +117,6 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
     ]
   );
 
-  // return (
-  //   <Link
-  //     href={`/products/${product.slug}`}
-  //     className="group block rounded-lg border border-gray-100 bg-white overflow-hidden hover:shadow-md transition-shadow"
-  //     prefetch={false}
-  //   >
-  //     <div className="relative aspect-square overflow-hidden bg-gray-100">
-  //       <img
-  //         src={imageSrc}
-  //         alt={product.name}
-  //         className="h-full w-full object-cover transition-transform group-hover:scale-105"
-  //         loading={priority ? 'eager' : 'lazy'}
-  //         decoding="async"
-  //         fetchPriority={priority ? 'high' : 'auto'}
-  //       />
-
-  //       <Badge
-  //         className={cn(
-  //           'absolute top-2 left-2 text-[10px] px-1.5 py-0.5 rounded',
-  //           stockBadge.color
-  //         )}
-  //       >
-  //         {stockBadge.label}
-  //       </Badge>
-
-  //       {product.compare_price > product.price && (
-  //         <Badge className="absolute top-2 right-2 bg-red-600 text-white text-[10px] px-1.5 py-0.5 rounded font-semibold">
-  //           -
-  //           {Math.round(
-  //             ((product.compare_price - product.price) / product.compare_price) * 100
-  //           )}
-  //           %
-  //         </Badge>
-  //       )}
-  //     </div>
-
-  //     <div className="p-3 flex flex-col gap-1.5">
-  //       <h3 className="text-sm font-medium text-gray-900 line-clamp-2 leading-tight">
-  //         {product.name}
-  //       </h3>
-
-  //       <div className="flex items-baseline gap-1.5">
-  //         <span className="text-sm font-semibold text-green-600">
-  //           {formatCurrency(product.price, currency)}
-  //         </span>
-  //         {product.compare_price > product.price && (
-  //           <span className="text-xs text-gray-400 line-through">
-  //             {formatCurrency(product.compare_price, currency)}
-  //           </span>
-  //         )}
-  //       </div>
-
-  //       <div className="flex gap-2 mt-1">
-  //         <Button
-  //           size="sm"
-  //           onClick={handleAddToCart}
-  //           disabled={!inStock}
-  //           className={cn(
-  //             'flex-1 h-8 text-xs bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-200 disabled:text-gray-400'
-  //           )}
-  //         >
-  //           <ShoppingCart className="h-3 w-3 mr-1" />
-  //           Add to Cart
-  //         </Button>
-
-  //         {whatsappNumber && (
-  //           <Button
-  //             size="sm"
-  //             variant="outline"
-  //             onClick={handleWhatsApp}
-  //             className="h-8 text-xs border border-green-600 text-green-600 hover:bg-green-50"
-  //           >
-  //             <MessageCircle className="h-3 w-3" />
-  //           </Button>
-  //         )}
-  //       </div>
-  //     </div>
-  //   </Link>
-  // );
 
   return (
     <div className="group block rounded-lg border border-gray-100 bg-white overflow-hidden hover:shadow-md transition-shadow">
@@ -260,13 +181,13 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
             {product.name}
           </h3>
 
-          <div className="flex items-baseline gap-1">
-            <span className="text-sm font-semibold text-[#7A1F3D]">
+          <div className="flex min-w-0 items-baseline gap-1 mt-2">
+            <span className="shrink-0 whitespace-nowrap text-sm font-semibold text-[#7A1F3D]">
               {formatCurrency(product.price, currency)}
             </span>
 
             {product.compare_price > product.price && (
-              <span className="text-xs text-gray-400 line-through">
+              <span className="shrink min-w-0 truncate whitespace-nowrap text-xs text-gray-400 line-through">
                 {formatCurrency(product.compare_price, currency)}
               </span>
             )}
@@ -275,17 +196,33 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
       </Link>
 
       {/* Actions - OUTSIDE Link */}
-      <div className="px-3 pb-3 pt-1">
-        <div className="flex gap-2">
+      {/* Actions - OUTSIDE Link */}
+      <div className="px-2 pb-2 pt-1 sm:px-3 sm:pb-3">
+        <div className="flex w-full items-center gap-1.5 sm:gap-2">
           <Button
             type="button"
             size="sm"
             onClick={handleAddToCart}
             disabled={!inStock}
-            className="flex-1 h-8 text-xs bg-[#7A1F3D] text-white hover:bg-[#7A1F3D] disabled:bg-gray-200 disabled:text-gray-400"
+            className="
+        min-w-0
+        flex-1
+        h-8
+        px-2
+        text-[11px]
+        sm:h-8
+        sm:px-3
+        sm:text-xs
+        whitespace-nowrap
+        bg-[#7A1F3D]
+        text-white
+        hover:bg-[#7A1F3D]
+        disabled:bg-gray-200
+        disabled:text-gray-400
+      "
           >
-            <ShoppingCart className="h-3 w-3 mr-1" />
-            Add to Cart
+            <ShoppingCart className="mr-1 h-3 w-3 shrink-0" />
+            <span className="truncate">Add to Cart</span>
           </Button>
 
           {whatsappNumber && (
@@ -294,9 +231,21 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
               size="sm"
               variant="outline"
               onClick={handleWhatsApp}
-              className="h-8 w-9 p-0 text-xs border border-[#7A1F3D] text-[#7A1F3D] hover:bg-[#7A1F3D]"
+              aria-label="Contact on WhatsApp"
+              className="
+          h-8
+          w-9
+          shrink-0
+          p-0
+          border
+          border-[#7A1F3D]
+          text-[#7A1F3D]
+          hover:bg-[#7A1F3D]
+          hover:text-white
+          sm:w-10
+        "
             >
-              <MessageCircle className="h-3 w-3 hover:text-white" />
+              <MessageCircle className="h-3.5 w-3.5" />
             </Button>
           )}
         </div>

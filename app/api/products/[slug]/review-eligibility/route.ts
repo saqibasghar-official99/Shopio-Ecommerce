@@ -82,7 +82,9 @@ export async function GET(
 
     for (const order of orders) {
       const hasProduct = order.items?.some(
-        (item) =>
+        (item: {
+          productId: string;
+        }) =>
           String(item.productId) ===
           String(product._id)
       );

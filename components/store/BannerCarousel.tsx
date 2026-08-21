@@ -279,7 +279,6 @@ function BannerVideo({
           bg-black
         "
         muted
-        defaultMuted
         autoPlay
         loop={false}
         playsInline

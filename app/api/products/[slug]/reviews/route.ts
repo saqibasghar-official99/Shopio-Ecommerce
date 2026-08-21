@@ -260,7 +260,7 @@ export async function POST(
         // --------------------------------------------------------
 
         const hasProduct = order.items?.some(
-            (item) =>
+            (item: { productId: string }) =>
                 String(item.productId) ===
                 String(product._id)
         );

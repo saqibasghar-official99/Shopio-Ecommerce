@@ -421,7 +421,7 @@ function ProductsContent() {
             router.push(buildUrl({ sort: value, page: '1' }))
           }
         >
-          <SelectTrigger className="w-[130px] h-7 px-2 text-xs">
+          <SelectTrigger className="w-[95px] h-7 px-2 text-xs">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
 

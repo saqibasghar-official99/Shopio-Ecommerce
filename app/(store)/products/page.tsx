@@ -409,7 +409,7 @@ function ProductsContent() {
                 : 'All Products'}
           </h1>
 
-          <span className="text-[10px] text-gray-400">
+          <span className="text-[12px] text-gray-400">
             {products.length} item{products.length !== 1 ? 's' : ''}
           </span>
         </div>

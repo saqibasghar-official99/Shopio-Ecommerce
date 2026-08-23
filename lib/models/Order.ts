@@ -140,6 +140,10 @@ export interface IOrder extends Document {
 
   created_at: Date;
   updated_at: Date;
+
+  payment_proof?: string;
+  payment_reference?: string;
+  bank_transfer_discount?: number;
 }
 
 const OrderItemSchema = new Schema<IOrderItem>(
@@ -245,6 +249,22 @@ const OrderSchema = new Schema<IOrder>(
     billing_zone: {
       type: String,
       default: 'Pakistan',
+    },
+
+    payment_proof: {
+      type: String,
+      default: '',
+    },
+
+    payment_reference: {
+      type: String,
+      default: '',
+    },
+
+    bank_transfer_discount: {
+      type: Number,
+      default: 0,
+      min: 0,
     },
 
     // =========================

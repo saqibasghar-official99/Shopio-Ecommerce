@@ -1171,7 +1171,7 @@ ${variantString
               <Truck className="h-4 w-4 text-[#7A1F3D]" />
 
               <span className="text-[11px] text-gray-600">
-                Free shipping over $50
+                Free shipping
               </span>
             </div>
 

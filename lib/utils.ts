@@ -55,5 +55,5 @@ export function getPaymentStatusColor(status: string): string {
 
 export const ORDER_STATUSES = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'];
 export const PAYMENT_STATUSES = ['pending', 'paid', 'partial', 'refunded'];
-// export const PAYMENT_METHODS = ['cod', 'bank', 'whatsapp'];
-export const PAYMENT_METHODS = ['cod', 'whatsapp'];
+export const PAYMENT_METHODS = ['cod', 'bank', 'whatsapp'];
+// export const PAYMENT_METHODS = ['cod', 'whatsapp'];

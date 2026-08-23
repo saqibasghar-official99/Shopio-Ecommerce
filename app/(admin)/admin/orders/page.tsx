@@ -491,6 +491,7 @@ import {
   Trash2,
   MapPin,
   CreditCard,
+  Image as ImageIcon,
 } from 'lucide-react';
 
 import DataTable from '@/components/admin/DataTable';
@@ -550,6 +551,9 @@ export default function AdminOrdersPage() {
 
   const [selectedOrder, setSelectedOrder] =
     useState<Order | null>(null);
+
+  const [paymentScreenshot, setPaymentScreenshot] =
+    useState<string | null>(null);
 
   const [updatingStatus, setUpdatingStatus] =
     useState<string | null>(null);
@@ -614,9 +618,9 @@ export default function AdminOrdersPage() {
 
         setTotal(
           result.pagination?.total ||
-            result.total ||
-            mapped.length ||
-            0
+          result.total ||
+          mapped.length ||
+          0
         );
       }
     } catch (err) {
@@ -670,9 +674,9 @@ export default function AdminOrdersPage() {
           prev.map((o) =>
             o.order_number === orderNumber
               ? {
-                  ...o,
-                  order_status: newStatus,
-                }
+                ...o,
+                order_status: newStatus,
+              }
               : o
           )
         );
@@ -684,9 +688,9 @@ export default function AdminOrdersPage() {
           setSelectedOrder((prev) =>
             prev
               ? {
-                  ...prev,
-                  order_status: newStatus,
-                }
+                ...prev,
+                order_status: newStatus,
+              }
               : null
           );
         }
@@ -730,9 +734,9 @@ export default function AdminOrdersPage() {
           prev.map((o) =>
             o.order_number === orderNumber
               ? {
-                  ...o,
-                  payment_status: newStatus,
-                }
+                ...o,
+                payment_status: newStatus,
+              }
               : o
           )
         );
@@ -744,9 +748,9 @@ export default function AdminOrdersPage() {
           setSelectedOrder((prev) =>
             prev
               ? {
-                  ...prev,
-                  payment_status: newStatus,
-                }
+                ...prev,
+                payment_status: newStatus,
+              }
               : null
           );
         }
@@ -789,7 +793,7 @@ export default function AdminOrdersPage() {
 
         throw new Error(
           error.message ||
-            'Failed to delete order'
+          'Failed to delete order'
         );
       }
 
@@ -841,11 +845,11 @@ export default function AdminOrdersPage() {
     // actual billing field contains data.
     return Boolean(
       order.billing_name?.trim() ||
-        order.billing_phone?.trim() ||
-        order.billing_email?.trim() ||
-        order.billing_address?.trim() ||
-        order.billing_city?.trim() ||
-        order.billing_zone?.trim()
+      order.billing_phone?.trim() ||
+      order.billing_email?.trim() ||
+      order.billing_address?.trim() ||
+      order.billing_city?.trim() ||
+      order.billing_zone?.trim()
     );
   };
 
@@ -922,6 +926,47 @@ export default function AdminOrdersPage() {
             {ps.charAt(0).toUpperCase() +
               ps.slice(1)}
           </span>
+        );
+      },
+    },
+
+    {
+      key: 'payment_proof',
+      label: 'Screenshot',
+
+      render: (
+        row: Record<string, unknown>
+      ) => {
+        const paymentProof =
+          row.payment_proof as string | undefined;
+
+        if (!paymentProof) {
+          return (
+            <span className="text-xs text-gray-400">
+              —
+            </span>
+          );
+        }
+
+        return (
+          <button
+            type="button"
+            onClick={() =>
+              setPaymentScreenshot(paymentProof)
+            }
+            className="group relative"
+            title="View payment screenshot"
+          >
+            <img
+              src={paymentProof}
+              alt="Payment screenshot"
+              className="h-10 w-14 rounded border border-gray-200 object-cover transition group-hover:opacity-80"
+            />
+
+            <div className="absolute inset-0 flex items-center justify-center rounded bg-black/0 transition group-hover:bg-black/30">
+              <Eye className="h-4 w-4 text-transparent transition group-hover:text-white" />
+            </div>
+          </button>
         );
       },
     },
@@ -1415,89 +1460,89 @@ export default function AdminOrdersPage() {
                   {hasSeparateBilling(
                     selectedOrder
                   ) && (
-                    <div className="rounded border bg-gray-50 p-3">
+                      <div className="rounded border bg-gray-50 p-3">
 
-                      <div className="mb-3 flex items-center justify-between">
-                        <span className="font-semibold text-gray-900">
-                          Billing Address
-                        </span>
+                        <div className="mb-3 flex items-center justify-between">
+                          <span className="font-semibold text-gray-900">
+                            Billing Address
+                          </span>
 
-                        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-medium text-blue-700">
-                          Different
-                        </span>
+                          <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-medium text-blue-700">
+                            Different
+                          </span>
+                        </div>
+
+                        <div className="space-y-2">
+
+                          <div>
+                            <span className="text-gray-500">
+                              Name
+                            </span>
+
+                            <p className="font-medium text-gray-900">
+                              {selectedOrder.billing_name ||
+                                '—'}
+                            </p>
+                          </div>
+
+                          <div>
+                            <span className="text-gray-500">
+                              Phone
+                            </span>
+
+                            <p className="font-medium text-gray-900">
+                              {selectedOrder.billing_phone ||
+                                '—'}
+                            </p>
+                          </div>
+
+                          <div>
+                            <span className="text-gray-500">
+                              Email
+                            </span>
+
+                            <p className="font-medium text-gray-900 break-all">
+                              {selectedOrder.billing_email ||
+                                '—'}
+                            </p>
+                          </div>
+
+                          <div>
+                            <span className="text-gray-500">
+                              Address
+                            </span>
+
+                            <p className="font-medium text-gray-900">
+                              {selectedOrder.billing_address ||
+                                '—'}
+                            </p>
+                          </div>
+
+                          <div>
+                            <span className="text-gray-500">
+                              City
+                            </span>
+
+                            <p className="font-medium text-gray-900">
+                              {selectedOrder.billing_city ||
+                                '—'}
+                            </p>
+                          </div>
+
+                          <div>
+                            <span className="text-gray-500">
+                              Billing Zone
+                            </span>
+
+                            <p className="font-medium text-gray-900">
+                              {selectedOrder.billing_zone ||
+                                '—'}
+                            </p>
+                          </div>
+
+                        </div>
                       </div>
-
-                      <div className="space-y-2">
-
-                        <div>
-                          <span className="text-gray-500">
-                            Name
-                          </span>
-
-                          <p className="font-medium text-gray-900">
-                            {selectedOrder.billing_name ||
-                              '—'}
-                          </p>
-                        </div>
-
-                        <div>
-                          <span className="text-gray-500">
-                            Phone
-                          </span>
-
-                          <p className="font-medium text-gray-900">
-                            {selectedOrder.billing_phone ||
-                              '—'}
-                          </p>
-                        </div>
-
-                        <div>
-                          <span className="text-gray-500">
-                            Email
-                          </span>
-
-                          <p className="font-medium text-gray-900 break-all">
-                            {selectedOrder.billing_email ||
-                              '—'}
-                          </p>
-                        </div>
-
-                        <div>
-                          <span className="text-gray-500">
-                            Address
-                          </span>
-
-                          <p className="font-medium text-gray-900">
-                            {selectedOrder.billing_address ||
-                              '—'}
-                          </p>
-                        </div>
-
-                        <div>
-                          <span className="text-gray-500">
-                            City
-                          </span>
-
-                          <p className="font-medium text-gray-900">
-                            {selectedOrder.billing_city ||
-                              '—'}
-                          </p>
-                        </div>
-
-                        <div>
-                          <span className="text-gray-500">
-                            Billing Zone
-                          </span>
-
-                          <p className="font-medium text-gray-900">
-                            {selectedOrder.billing_zone ||
-                              '—'}
-                          </p>
-                        </div>
-
-                      </div>
-                    </div>
-                  )}
+                    )}
 
                 </div>
               </div>
@@ -1559,7 +1604,7 @@ export default function AdminOrdersPage() {
                           <p className="font-medium text-gray-900">
                             {formatCurrency(
                               item.qty *
-                                item.unitPrice
+                              item.unitPrice
                             )}
                           </p>
 
@@ -1598,11 +1643,11 @@ export default function AdminOrdersPage() {
                     <p className="font-medium text-gray-900">
                       {selectedOrder.payment_method
                         ? selectedOrder.payment_method
-                            .charAt(0)
-                            .toUpperCase() +
-                          selectedOrder.payment_method.slice(
-                            1
-                          )
+                          .charAt(0)
+                          .toUpperCase() +
+                        selectedOrder.payment_method.slice(
+                          1
+                        )
                         : '—'}
                     </p>
                   </div>
@@ -1615,11 +1660,11 @@ export default function AdminOrdersPage() {
                     <p className="font-medium text-gray-900">
                       {selectedOrder.payment_status
                         ? selectedOrder.payment_status
-                            .charAt(0)
-                            .toUpperCase() +
-                          selectedOrder.payment_status.slice(
-                            1
-                          )
+                          .charAt(0)
+                          .toUpperCase() +
+                        selectedOrder.payment_status.slice(
+                          1
+                        )
                         : '—'}
                     </p>
                   </div>
@@ -1830,6 +1875,36 @@ export default function AdminOrdersPage() {
         </DialogContent>
       </Dialog>
 
+      {/* =====================================================
+    PAYMENT SCREENSHOT DIALOG
+===================================================== */}
+
+      <Dialog
+        open={!!paymentScreenshot}
+        onOpenChange={(open) => {
+          if (!open) {
+            setPaymentScreenshot(null);
+          }
+        }}
+      >
+        <DialogContent className="max-w-2xl max-h-[95vh] overflow-hidden">
+          <DialogHeader>
+            <DialogTitle className="text-sm font-semibold">
+              Payment Screenshot
+            </DialogTitle>
+          </DialogHeader>
+
+          {paymentScreenshot && (
+            <div className="flex max-h-[82vh] items-center justify-center overflow-auto rounded-lg bg-gray-100">
+              <img
+                src={paymentScreenshot}
+                alt="Full payment screenshot"
+                className="max-h-[78vh] max-w-full rounded object-contain shadow-sm"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

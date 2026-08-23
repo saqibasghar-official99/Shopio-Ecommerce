@@ -324,8 +324,12 @@ export interface Order {
   // PAYMENT
   // =========================
 
+
   payment_method: string;
   payment_status: string;
+  payment_proof?: string;
+  payment_proof_name?: string;
+  bank_transfer_discount?: number;
 
   // =========================
   // STATUS

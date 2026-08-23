@@ -318,13 +318,13 @@ export default function Footer() {
               <Link
                 href="/contact"
                 className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
-              >
+              style={{display:'none'}}>
                 <ChevronRight className="h-3 w-3" />
                 Contact Us
               </Link>
 
               <Link
-                href="/shipping"
+                href="/policies"
                 className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />
@@ -332,7 +332,7 @@ export default function Footer() {
               </Link>
 
               <Link
-                href="/returns"
+                href="/policies"
                 className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />
@@ -340,7 +340,7 @@ export default function Footer() {
               </Link>
 
               <Link
-                href="/privacy"
+                href="/policies"
                 className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3" />

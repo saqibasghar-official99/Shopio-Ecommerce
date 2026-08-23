@@ -32,6 +32,8 @@ export interface ISiteSettings extends Document {
 
   phone: string;
 
+  email: string;
+
   whatsapp_number: string;
 
   whatsapp_message: string;
@@ -142,6 +144,11 @@ const SiteSettingsSchema =
       },
 
       phone: {
+        type: String,
+        default: "",
+      },
+
+      email: {
         type: String,
         default: "",
       },

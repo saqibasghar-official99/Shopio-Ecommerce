@@ -55,6 +55,10 @@ export interface ISiteSettings extends Document {
     isActive: boolean;
   };
 
+  deals_section: {
+    isActive: boolean;
+  };
+
   shipping_policy: string;
 
   return_policy: string;
@@ -188,50 +192,57 @@ const SiteSettingsSchema =
         default: "",
       },
 
-      /* ======================================================
-         BANNERS
-      ======================================================= */
-
-      banners: {
-        type: [BannerSchema],
-        default: [],
+      deals_section: {
+        isActive: {
+          type: Boolean,
+          default: true,
+        },
       },
 
-      /* ======================================================
-         ANNOUNCEMENT
-      ======================================================= */
+        /* ======================================================
+           BANNERS
+        ======================================================= */
 
-      announcement_bar: {
-        text: {
+        banners: {
+          type: [BannerSchema],
+          default: [],
+        },
+
+        /* ======================================================
+           ANNOUNCEMENT
+        ======================================================= */
+
+        announcement_bar: {
+          text: {
+            type: String,
+            default: "",
+          },
+
+          isActive: {
+            type: Boolean,
+            default: false,
+          },
+        },
+
+        /* ======================================================
+           POLICIES
+        ======================================================= */
+
+        shipping_policy: {
           type: String,
           default: "",
         },
 
-        isActive: {
-          type: Boolean,
-          default: false,
+        return_policy: {
+          type: String,
+          default: "",
+        },
+
+        about_text: {
+          type: String,
+          default: "",
         },
       },
-
-      /* ======================================================
-         POLICIES
-      ======================================================= */
-
-      shipping_policy: {
-        type: String,
-        default: "",
-      },
-
-      return_policy: {
-        type: String,
-        default: "",
-      },
-
-      about_text: {
-        type: String,
-        default: "",
-      },
-    },
 
     {
       timestamps: {

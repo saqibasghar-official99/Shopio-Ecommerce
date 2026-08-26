@@ -1,37 +1,166 @@
 'use client';
 
-import React, { memo, useCallback } from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import Link from 'next/link';
-import { ShoppingCart, MessageCircle } from 'lucide-react';
+import {
+  ShoppingCart,
+  MessageCircle,
+} from 'lucide-react';
+
 import { Product } from '@/lib/types';
-import { formatCurrency, getStockBadge, cn } from '@/lib/utils';
+import {
+  formatCurrency,
+  getStockBadge,
+  cn,
+} from '@/lib/utils';
+
 import { useCart } from '@/contexts/CartContext';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useToast } from '@/contexts/ToastContext';
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import ReviewStars from '@/components/store/ReviewStars';
 
 interface ProductCardProps {
   product: Product;
   priority?: boolean;
 }
 
-function ProductCardBase({ product, priority = false }: ProductCardProps) {
+interface ReviewSummary {
+  count: number;
+  average: number;
+}
+
+function ProductCardBase({
+  product,
+  priority = false,
+}: ProductCardProps) {
   const { addItem } = useCart();
   const { settings } = useSettings();
   const { showToast } = useToast();
 
   const currency = settings?.currency || '$';
   const stockBadge = getStockBadge(product.stock);
-  const whatsappNumber = settings?.whatsapp_number || '';
+  const whatsappNumber =
+    settings?.whatsapp_number || '';
+
   const inStock = product.stock > 0;
-  const imageSrc = product.images?.[0] || '/placeholder.png';
+  const imageSrc =
+    product.images?.[0] || '/placeholder.png';
+
+  // ============================================================
+  // REVIEW STATE
+  // ============================================================
+
+  const [reviewStats, setReviewStats] =
+    useState<ReviewSummary>({
+      count: 0,
+      average: 0,
+    });
+
+  const [reviewsLoading, setReviewsLoading] =
+    useState(true);
+
+  // ============================================================
+  // FETCH REVIEWS
+  // ============================================================
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchReviews = async () => {
+      if (!product.slug) {
+        setReviewsLoading(false);
+        return;
+      }
+
+      try {
+        setReviewsLoading(true);
+
+        const response = await fetch(
+          `/api/products/${product.slug}/reviews`
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            'Failed to fetch reviews'
+          );
+        }
+
+        const data = await response.json();
+
+        if (cancelled) return;
+
+        const reviews = Array.isArray(data.data)
+          ? data.data
+          : [];
+
+        if (reviews.length === 0) {
+          setReviewStats({
+            count: 0,
+            average: 0,
+          });
+
+          return;
+        }
+
+        const total = reviews.reduce(
+          (
+            sum: number,
+            review: { rating?: number | string }
+          ) =>
+            sum +
+            Number(review.rating || 0),
+          0
+        );
+
+        setReviewStats({
+          count: reviews.length,
+          average: total / reviews.length,
+        });
+      } catch (error) {
+        if (!cancelled) {
+          console.error(
+            'Product reviews fetch error:',
+            error
+          );
+
+          setReviewStats({
+            count: 0,
+            average: 0,
+          });
+        }
+      } finally {
+        if (!cancelled) {
+          setReviewsLoading(false);
+        }
+      }
+    };
+
+    fetchReviews();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [product.slug]);
+
+  // ============================================================
+  // ADD TO CART
+  // ============================================================
 
   const handleAddToCart = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
+
       if (!inStock) return;
+
       addItem({
         productId: product.id,
         name: product.name,
@@ -42,47 +171,64 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
         qty: 1,
         stock: product.stock,
       });
-      showToast(`Product added to cart`);
+
+      showToast(
+        `Product added to cart`
+      );
     },
-    [addItem, imageSrc, inStock, product.compare_price, product.id, product.name, product.price, product.slug, product.stock, showToast]
+    [
+      addItem,
+      imageSrc,
+      inStock,
+      product.compare_price,
+      product.id,
+      product.name,
+      product.price,
+      product.slug,
+      product.stock,
+      showToast,
+    ]
   );
 
-  // const handleWhatsApp = useCallback(
-  //   (e: React.MouseEvent) => {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     if (!whatsappNumber) return;
-  //     const message = encodeURIComponent(`Hi, I'm interested in ${product.name}`);
-  //     window.open(
-  //       `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${message}`,
-  //       '_blank'
-  //     );
-  //   },
-  //   [product.name, whatsappNumber]
-  // );
+  // ============================================================
+  // WHATSAPP
+  // ============================================================
 
   const handleWhatsApp = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
+    (
+      e: React.MouseEvent<HTMLButtonElement>
+    ) => {
       e.preventDefault();
 
       if (!whatsappNumber) {
-        showToast('WhatsApp ordering is not available', 'error');
+        showToast(
+          'WhatsApp ordering is not available',
+          'error'
+        );
         return;
       }
 
-      let number = whatsappNumber.trim().replace(/\D/g, '');
+      let number = whatsappNumber
+        .trim()
+        .replace(/\D/g, '');
 
       // Pakistan:
       // 03001234567 -> 923001234567
       if (number.startsWith('0')) {
-        number = '92' + number.substring(1);
+        number =
+          '92' + number.substring(1);
       }
 
-      // Remove + if somehow left in the value
-      number = number.replace(/\D/g, '');
+      number = number.replace(
+        /\D/g,
+        ''
+      );
 
       if (!number) {
-        showToast('Invalid WhatsApp number', 'error');
+        showToast(
+          'Invalid WhatsApp number',
+          'error'
+        );
         return;
       }
 
@@ -90,21 +236,28 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
         `${window.location.origin}/products/${product.slug}`;
 
       const message = encodeURIComponent(
-        `${settings?.whatsapp_message
-          ? `_${settings.whatsapp_message}_\n\n`
-          : ''
+        `${
+          settings?.whatsapp_message
+            ? `_${settings.whatsapp_message}_\n\n`
+            : ''
         }` +
-        `*🛍️ Product Inquiry*\n\n` +
-        `*Product:* ${product.name}\n` +
-        `*Price:* ${formatCurrency(product.price, currency)}\n\n` +
-        `Hi, I'm interested in this product. Please provide more details.\n\n` +
-        `*Product Link:* ${productUrl}`
+          `*🛍️ Product Inquiry*\n\n` +
+          `*Product:* ${product.name}\n` +
+          `*Price:* ${formatCurrency(
+            product.price,
+            currency
+          )}\n\n` +
+          `Hi, I'm interested in this product. Please provide more details.\n\n` +
+          `*Product Link:* ${productUrl}`
       );
 
-      const whatsappUrl = `https://wa.me/${number}?text=${message}`;
+      const whatsappUrl =
+        `https://wa.me/${number}?text=${message}`;
 
-      // Open WhatsApp
-      window.open(whatsappUrl, '_blank');
+      window.open(
+        whatsappUrl,
+        '_blank'
+      );
     },
     [
       whatsappNumber,
@@ -117,24 +270,47 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
     ]
   );
 
+  // ============================================================
+  // RETURN UI
+  // ============================================================
 
   return (
     <div className="group block rounded-lg border border-gray-100 bg-white overflow-hidden hover:shadow-md transition-shadow">
-      {/* Product Link */}
+
+      {/* ======================================================
+          PRODUCT LINK
+      ====================================================== */}
+
       <Link
         href={`/products/${product.slug}`}
         prefetch={false}
         className="block"
       >
+
+        {/* ====================================================
+            PRODUCT IMAGE
+        ==================================================== */}
+
         <div className="relative aspect-square overflow-hidden bg-gray-100">
+
           <img
             src={imageSrc}
             alt={product.name}
             className="h-full w-full object-cover transition-transform group-hover:scale-105"
-            loading={priority ? 'eager' : 'lazy'}
+            loading={
+              priority
+                ? 'eager'
+                : 'lazy'
+            }
             decoding="async"
-            fetchPriority={priority ? 'high' : 'auto'}
+            fetchPriority={
+              priority
+                ? 'high'
+                : 'auto'
+            }
           />
+
+          {/* STOCK BADGE */}
 
           <Badge
             className={cn(
@@ -145,85 +321,162 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
             {stockBadge.label}
           </Badge>
 
-          {product.compare_price > product.price && (
-            <Badge className="absolute top-2 right-2 bg-red-600 text-white text-[10px] px-1.5 py-0.5 rounded font-semibold">
+          {/* DISCOUNT BADGE */}
+
+          {product.compare_price >
+            product.price && (
+            <Badge
+              className="
+                absolute
+                top-2
+                right-2
+                bg-red-600
+                text-white
+                text-[10px]
+                px-1.5
+                py-0.5
+                rounded
+                font-semibold
+              "
+            >
               -
               {Math.round(
-                ((product.compare_price - product.price) /
+                ((product.compare_price -
+                  product.price) /
                   product.compare_price) *
-                100
+                  100
               )}
               %
             </Badge>
           )}
+
         </div>
 
-        {/* <div className="p-3 pb-1 flex flex-col gap-1.5">
-          <h3 className="text-sm font-medium text-gray-900 line-clamp-2 leading-tight">
-            {product.name}
-          </h3>
-
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-md font-semibold text-[#7A1F3D]">
-              {formatCurrency(product.price, currency)}
-            </span>
-
-            {product.compare_price > product.price && (
-              <span className="text-sm text-gray-400 line-through">
-                {formatCurrency(product.compare_price, currency)}
-              </span>
-            )}
-          </div>
-        </div> */}
+        {/* ====================================================
+            PRODUCT INFORMATION
+        ==================================================== */}
 
         <div className="p-2 pb-1 flex flex-col gap-1">
+
+          {/* PRODUCT NAME */}
+
           <h3 className="text-xs font-medium text-gray-900 line-clamp-2 leading-tight">
             {product.name}
           </h3>
 
-          <div className="flex min-w-0 items-baseline gap-1 mt-2">
+          {/* ==================================================
+              RATING + REVIEW COUNT
+          ================================================== */}
+
+          <div className="min-h-[16px] mt-1">
+
+            {reviewsLoading ? (
+
+              /*
+               * Keep a fixed height while reviews load so
+               * product cards don't jump vertically.
+               */
+              <div className="flex items-center gap-1.5">
+                <div className="h-3 w-14 rounded bg-gray-100 animate-pulse" />
+              </div>
+
+            ) : reviewStats.count > 0 ? (
+
+              <div className="flex items-center gap-1.5">
+
+                <ReviewStars
+                  rating={reviewStats.average}
+                />
+
+                <span className="text-[10px] font-semibold text-gray-700">
+                  {reviewStats.average.toFixed(1)}
+                </span>
+
+                <span className="text-[10px] text-gray-400">
+                  ({reviewStats.count})
+                </span>
+
+              </div>
+
+            ) : (
+
+              <span className="text-[10px] text-gray-400">
+                No reviews yet
+              </span>
+
+            )}
+
+          </div>
+
+          {/* ==================================================
+              PRICE
+          ================================================== */}
+
+          <div className="flex min-w-0 items-baseline gap-1 mt-1">
+
             <span className="shrink-0 whitespace-nowrap text-sm font-semibold text-[#7A1F3D]">
-              {formatCurrency(product.price, currency)}
+              {formatCurrency(
+                product.price,
+                currency
+              )}
             </span>
 
-            {product.compare_price > product.price && (
+            {product.compare_price >
+              product.price && (
               <span className="shrink min-w-0 truncate whitespace-nowrap text-xs text-gray-400 line-through">
-                {formatCurrency(product.compare_price, currency)}
+                {formatCurrency(
+                  product.compare_price,
+                  currency
+                )}
               </span>
             )}
+
           </div>
+
         </div>
+
       </Link>
 
-      {/* Actions - OUTSIDE Link */}
-      {/* Actions - OUTSIDE Link */}
+      {/* ======================================================
+          ACTIONS
+      ====================================================== */}
+
       <div className="px-2 pb-2 pt-1 sm:px-3 sm:pb-3">
+
         <div className="flex w-full items-center gap-1.5 sm:gap-2">
+
+          {/* ADD TO CART */}
+
           <Button
             type="button"
             size="sm"
             onClick={handleAddToCart}
             disabled={!inStock}
             className="
-        min-w-0
-        flex-1
-        h-8
-        px-2
-        text-[11px]
-        sm:h-8
-        sm:px-3
-        sm:text-xs
-        whitespace-nowrap
-        bg-[#7A1F3D]
-        text-white
-        hover:bg-[#7A1F3D]
-        disabled:bg-gray-200
-        disabled:text-gray-400
-      "
+              min-w-0
+              flex-1
+              h-8
+              px-2
+              text-[11px]
+              sm:h-8
+              sm:px-3
+              sm:text-xs
+              whitespace-nowrap
+              bg-[#7A1F3D]
+              text-white
+              hover:bg-[#7A1F3D]
+              disabled:bg-gray-200
+              disabled:text-gray-400
+            "
           >
             <ShoppingCart className="mr-1 h-3 w-3 shrink-0" />
-            <span className="truncate">Add to Cart</span>
+
+            <span className="truncate">
+              Add to Cart
+            </span>
           </Button>
+
+          {/* WHATSAPP */}
 
           {whatsappNumber && (
             <Button
@@ -233,30 +486,44 @@ function ProductCardBase({ product, priority = false }: ProductCardProps) {
               onClick={handleWhatsApp}
               aria-label="Contact on WhatsApp"
               className="
-          h-8
-          w-9
-          shrink-0
-          p-0
-          border
-          border-[#7A1F3D]
-          text-[#7A1F3D]
-          hover:bg-[#7A1F3D]
-          hover:text-white
-          sm:w-10
-        "
+                h-8
+                w-9
+                shrink-0
+                p-0
+                border
+                border-[#7A1F3D]
+                text-[#7A1F3D]
+                hover:bg-[#7A1F3D]
+                hover:text-white
+                sm:w-10
+              "
             >
               <MessageCircle className="h-3.5 w-3.5" />
             </Button>
           )}
+
         </div>
+
       </div>
+
     </div>
   );
 }
 
-// Memo: cart/settings context changes shouldn't re-render every card unnecessarily.
-const ProductCard = memo(ProductCardBase, (prev, next) => {
-  return prev.product.id === next.product.id && prev.priority === next.priority;
-});
+// ============================================================
+// MEMO
+// ============================================================
+
+const ProductCard = memo(
+  ProductCardBase,
+  (prev, next) => {
+    return (
+      prev.product.id ===
+        next.product.id &&
+      prev.priority ===
+        next.priority
+    );
+  }
+);
 
 export default ProductCard;

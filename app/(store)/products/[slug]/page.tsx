@@ -1317,7 +1317,7 @@ ${variantString
 
                 </div>
 
-                <Button
+                <Button style={{ display: 'none' }}
                   type="button"
                   size="sm"
                   className="h-8 shrink-0 bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white text-xs px-3"

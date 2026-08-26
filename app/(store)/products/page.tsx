@@ -65,6 +65,9 @@ function ProductsContent() {
   const [priceMax, setPriceMax] = useState<string>(
     searchParams.get('max') || ''
   );
+
+  const badgeFilter = searchParams.get('badge') || '';
+
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [collapsedCats, setCollapsedCats] = useState<Record<string, boolean>>({});
 
@@ -90,6 +93,7 @@ function ProductsContent() {
         if (tagFilter) params.set('tag', tagFilter);
         if (priceMin) params.set('min', priceMin);
         if (priceMax) params.set('max', priceMax);
+        if (badgeFilter) params.set('badge', badgeFilter);
 
         const res = await fetch(`/api/products?${params.toString()}`, { signal });
         const data = await res.json();
@@ -128,6 +132,7 @@ function ProductsContent() {
   // Active filter count
   const activeFilterCount = [
     categorySlug,
+    badgeFilter,
     tagFilter,
     priceMin,
     priceMax,
@@ -176,15 +181,14 @@ function ProductsContent() {
                 />
               </Badge>
             )}
-            {tagFilter && (
+            {badgeFilter && (
               <Badge variant="secondary" className="text-xs gap-1">
-                {tagFilter}
+                {badgeFilter}
                 <X
                   className="h-3 w-3 cursor-pointer"
-                  onClick={() => {
-                    setTagFilter('');
-                    router.push(buildUrl({ tag: null }));
-                  }}
+                  onClick={() =>
+                    router.push(buildUrl({ badge: null, page: '1' }))
+                  }
                 />
               </Badge>
             )}

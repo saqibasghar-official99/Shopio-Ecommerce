@@ -12,6 +12,32 @@ export interface Category {
   created_at: string;
 }
 
+
+
+export interface Deal {
+  _id?: string;
+
+  id: string;
+
+  name: string;
+
+  subtitle: string;
+
+  image: string;
+
+  href: string;
+
+  badge?: string;
+
+  is_active: boolean;
+
+  sort_order: number;
+
+  created_at: string;
+
+  updated_at?: string;
+}
+
 export interface Product {
   _id?: string;
   id: string;
@@ -27,6 +53,7 @@ export interface Product {
   cost_price: number;
   stock: number;
   sku: string;
+  badge?: string;
   weight: number;
   is_active: boolean;
   is_featured: boolean;

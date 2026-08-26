@@ -4,6 +4,8 @@ import { ChevronRight } from 'lucide-react';
 import CategoryGrid from '@/components/store/CategoryGrid';
 import ProductCard from '@/components/store/ProductCard';
 import BannerCarousel from '@/components/store/BannerCarousel';
+import Deals from '@/components/store/Deals';
+
 import {
   getSettings,
   getActiveCategories,
@@ -39,6 +41,11 @@ export default async function HomePage() {
           <CategoryGrid categories={categories as unknown as Category[]} />
         </section>
       )}
+
+       {/* Deals */}
+      <section className="max-w-7xl mx-auto px-4 py-4">
+        <Deals />
+      </section>
 
       {featured.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 py-8">

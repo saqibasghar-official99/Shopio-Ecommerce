@@ -43,12 +43,12 @@ export default async function HomePage() {
       )}
 
        {/* Deals */}
-      <section className="max-w-7xl mx-auto px-4 py-4">
+      <section className="max-w-7xl mx-auto px-4 py-1">
         <Deals />
       </section>
 
       {featured.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 py-8">
+        <section className="max-w-7xl mx-auto px-4 py-4">
           <SectionHeader title="Featured Products" href="/products?featured=true" />
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {(featured as unknown as Product[]).map((product, i) => (

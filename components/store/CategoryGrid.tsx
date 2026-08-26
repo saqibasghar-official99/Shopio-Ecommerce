@@ -74,7 +74,19 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
   if (activeCategories.length === 0) return null;
 
   return (
-    <div className="w-full overflow-x-auto scrollbar-hide">
+    <div
+      className="
+        w-full
+        overflow-x-auto
+        overflow-y-hidden
+        scrollbar-hide
+        [-ms-overflow-style:none]
+        [scrollbar-width:none]
+      "
+      style={{
+        WebkitOverflowScrolling: 'touch',
+      }}
+    >
       <div className="flex items-start gap-4 pt-2 px-1 lg:justify-center lg:gap-12">
         {activeCategories.map((category) => (
           <Link
@@ -158,6 +170,15 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
           </Link>
         ))}
       </div>
+
+      {/* Hide scrollbar in WebKit browsers */}
+      <style jsx>{`
+        div::-webkit-scrollbar {
+          display: none;
+          width: 0;
+          height: 0;
+        }
+      `}</style>
     </div>
   );
 }

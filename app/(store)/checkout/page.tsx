@@ -2123,7 +2123,7 @@ export default function CheckoutPage() {
                             {method.value ===
                               'bank' && (
                               <span className="text-[10px] font-semibold bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">
-                                SAVE 7%
+                                SAVE&nbsp;7%
                               </span>
                             )}
 

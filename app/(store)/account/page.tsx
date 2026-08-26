@@ -175,7 +175,7 @@ export default function AccountPage() {
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="rounded-lg p-6 bg-white">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-full bg-[#7A1F3D] flex items-center justify-center">
+            <div className="w-12 h-12 min-w-12 min-h-12 shrink-0 rounded-full bg-[#7A1F3D] flex items-center justify-center">
               <User className="h-6 w-6 text-white" />
             </div>
             <div>

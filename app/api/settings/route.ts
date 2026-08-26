@@ -31,7 +31,7 @@ export async function GET() {
 
     if (!raw) {
       const created = await SiteSettings.create({
-        store_name: 'ShopEase',
+        store_name: 'Veeo',
         currency: '$',
         banners: [],
         announcement_bar: { text: '', isActive: false },

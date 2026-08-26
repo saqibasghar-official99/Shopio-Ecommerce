@@ -19,7 +19,7 @@ interface CustomerData {
   city: string;
 }
 
-const AUTH_KEY = 'shopease_customer';
+const AUTH_KEY = 'Veeo_customer';
 
 export default function AccountPage() {
   const { showToast } = useToast();

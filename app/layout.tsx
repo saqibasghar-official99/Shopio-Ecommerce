@@ -6,7 +6,7 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'ShopEase - Your Online Store',
+  title: 'Veeo - Your Online Store',
   description: 'Shop the best products at great prices',
 };
 

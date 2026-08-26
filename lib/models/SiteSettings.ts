@@ -139,7 +139,7 @@ const SiteSettingsSchema =
     {
       store_name: {
         type: String,
-        default: "ShopEase",
+        default: "Veeo",
       },
 
       logo: {

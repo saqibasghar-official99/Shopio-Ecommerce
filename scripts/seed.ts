@@ -172,15 +172,15 @@ async function seed() {
 
   // Site Settings
   await SiteSettings.create({
-    store_name: 'ShopEase',
+    store_name: 'Veeo',
     logo: '',
-    phone: '+1 234 567 8900',
-    whatsapp_number: '1234567890',
+    phone: '+923471428593',
+    whatsapp_number: '+923471428593',
     whatsapp_message: 'Hi, I want to place an order',
     address: '123 Store Street, New York, NY 10001',
     currency: '$',
-    social_links: { facebook: 'https://facebook.com/shopease', instagram: 'https://instagram.com/shopease' },
-    meta_title: 'ShopEase - Your One-Stop Online Store',
+    social_links: { facebook: 'https://facebook.com/veeo', instagram: 'https://instagram.com/veeo' },
+    meta_title: 'Veeo - Your One-Stop Online Store',
     meta_desc: 'Shop the best products at great prices with free shipping on orders over $50.',
     banners: [
       { image: 'https://images.pexels.com/photos/5632399/pexels-photo-5632399.jpeg', link: '/products', isActive: true },
@@ -189,7 +189,7 @@ async function seed() {
     announcement_bar: { text: 'Free shipping on orders over $50!', isActive: true },
     shipping_policy: 'We ship within 2-3 business days. Free shipping on orders over $50.',
     return_policy: 'Returns accepted within 7 days of delivery. Items must be unused and in original packaging.',
-    about_text: 'ShopEase is your one-stop online store for quality products at great prices.',
+    about_text: 'Veeo is your one-stop online store for quality products at great prices.',
   });
   console.log('Created site settings');
 

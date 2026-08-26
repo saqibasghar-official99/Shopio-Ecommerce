@@ -237,11 +237,16 @@ export async function POST(
         // Never trust only the frontend eligibility result.
         // --------------------------------------------------------
 
+        // const order = await Order.findOne({
+        //     _id: new mongoose.Types.ObjectId(orderId),
+        //     guest_customer_id: guestCustomerId,
+        //     payment_status: 'paid',
+        //     order_status: 'delivered',
+        // }).lean();
+
         const order = await Order.findOne({
             _id: new mongoose.Types.ObjectId(orderId),
             guest_customer_id: guestCustomerId,
-            payment_status: 'paid',
-            order_status: 'delivered',
         }).lean();
 
         if (!order) {

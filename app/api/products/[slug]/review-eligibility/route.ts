@@ -57,10 +57,17 @@ export async function GET(
     // Find customer's delivered + paid orders
     // ------------------------------------------------------------
 
+    // const orders = await Order.find({
+    //   guest_customer_id: guestCustomerId,
+    //   payment_status: 'paid',
+    //   order_status: 'delivered',
+    // })
+    //   .sort({ created_at: -1 })
+    //   .lean();
+
+
     const orders = await Order.find({
       guest_customer_id: guestCustomerId,
-      payment_status: 'paid',
-      order_status: 'delivered',
     })
       .sort({ created_at: -1 })
       .lean();

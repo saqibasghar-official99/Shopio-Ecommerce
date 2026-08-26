@@ -386,7 +386,7 @@ function ProductsContent() {
                   Filters
 
                   {activeFilterCount > 0 && (
-                    <Badge className="h-4 min-w-[16px] px-1 bg-green-600 text-white text-[9px]">
+                    <Badge className="h-4 min-w-[16px] px-1 bg-[#7A1F3D] text-white text-[9px]">
                       {activeFilterCount}
                     </Badge>
                   )}

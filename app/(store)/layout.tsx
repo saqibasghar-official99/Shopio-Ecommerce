@@ -40,6 +40,7 @@
 
 
 
+
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import WhatsAppButton from '@/components/store/WhatsAppButton';
 import { getSettings } from '@/lib/server/queries';

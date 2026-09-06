@@ -8,3 +8,4 @@ export { default as SiteSettings } from './SiteSettings';
 export { default as Transaction } from './Transaction';
 export { default as Review } from './Review';
 export { default as AdminUser } from './AdminUser';
+export { default as Wishlist } from './Wishlist';

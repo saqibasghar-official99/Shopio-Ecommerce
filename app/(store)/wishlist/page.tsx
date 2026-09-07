@@ -287,7 +287,7 @@ export default function WishlistPage() {
           product.price,
         qty: quantity,
         variant: undefined,
-        stock: product.stock,
+        stock: product.stock ?? 999,
       });
 
       showToast(

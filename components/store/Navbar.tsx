@@ -1418,7 +1418,7 @@ export default function Navbar() {
                     ) =>
                       String(
                         product._id ||
-                          product.id
+                        product.id
                       ) ===
                       String(
                         wishlistId
@@ -1584,7 +1584,7 @@ export default function Navbar() {
                 (product) =>
                   String(
                     product._id ||
-                      product.id
+                    product.id
                   ) !==
                   String(
                     productId
@@ -1870,10 +1870,9 @@ export default function Navbar() {
       <header
         className={`
           sticky top-0 z-50 w-full transition-all duration-500
-          ${
-            scrolled
-              ? 'bg-white/95 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.08)] border-b border-gray-100/50'
-              : 'bg-white border-b border-gray-100/30'
+          ${scrolled
+            ? 'bg-white/90 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] border-b border-gray-100/50'
+            : 'bg-white border-b border-gray-100/30 '
           }
         `}
       >
@@ -1882,7 +1881,7 @@ export default function Navbar() {
         ==================================================== */}
 
         <div className="max-w-7xl mx-auto px-3 sm:px-4">
-          <div className="h-16 md:h-20 flex items-center gap-2 sm:gap-4">
+          <div className="h-16 md:h-14 flex items-center gap-2 sm:gap-4">
 
             {/* =================================================
                 MOBILE MENU
@@ -2042,12 +2041,12 @@ export default function Navbar() {
 
                         {wishlistIds.length >
                           0 && (
-                          <span className="absolute top-1 right-2 h-4 min-w-4 px-1 rounded-full bg-[#7A1F3D] text-white text-[8px] font-bold flex items-center justify-center">
-                            {
-                              wishlistIds.length
-                            }
-                          </span>
-                        )}
+                            <span className="absolute top-1 right-2 h-4 min-w-4 px-1 rounded-full bg-[#7A1F3D] text-white text-[8px] font-bold flex items-center justify-center">
+                              {
+                                wishlistIds.length
+                              }
+                            </span>
+                          )}
 
                         <span className="text-[10px] font-medium text-gray-600 group-hover:text-[#7A1F3D] transition-colors">
                           Wishlist
@@ -2269,11 +2268,11 @@ export default function Navbar() {
                 animate={
                   searchFocused
                     ? {
-                        scale: 1.02,
-                      }
+                      scale: 1.02,
+                    }
                     : {
-                        scale: 1,
-                      }
+                      scale: 1,
+                    }
                 }
                 transition={{
                   type: 'spring',
@@ -2287,7 +2286,7 @@ export default function Navbar() {
 
                   <Input
                     type="search"
-                    placeholder="Search for watches, earbuds & more..."
+                    placeholder="Search for earrings, bracelets & more..."
                     value={
                       searchQuery
                     }
@@ -2328,15 +2327,13 @@ export default function Navbar() {
                       border-gray-200
                       hover:border-gray-300
                       focus:bg-white
-                      focus:border-[#7A1F3D]
-                      focus:ring-2
-                      focus:ring-[#7A1F3D]/15
-                      focus-visible:ring-2
                       focus-visible:ring-[#7A1F3D]/15
                       transition-all
                       duration-300
                       [&::-webkit-search-cancel-button]:appearance-none
                       [&::-webkit-search-decoration]:appearance-none
+                      focus-visible:ring-[0.5px]
+                      focus-visible:ring-[#7A1F3D]
                     "
                   />
 
@@ -2352,7 +2349,7 @@ export default function Navbar() {
                       animate={{
                         scale: 1,
                       }}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7A1F3D] transition-colors"
+                      className="absolute right-3 top-3 -translate-y-1/2 text-gray-400 hover:text-[#7A1F3D] transition-colors"
                       aria-label="Clear search"
                     >
                       <X className="h-3.5 w-3.5" />
@@ -2466,20 +2463,20 @@ export default function Navbar() {
 
                                         {product.compare_price >
                                           product.price && (
-                                          <span className="text-xs text-gray-400 line-through">
-                                            {formatCurrency(
-                                              product.compare_price,
-                                              currency
-                                            )}
-                                          </span>
-                                        )}
+                                            <span className="text-xs text-gray-400 line-through">
+                                              {formatCurrency(
+                                                product.compare_price,
+                                                currency
+                                              )}
+                                            </span>
+                                          )}
 
                                         {product.compare_price >
                                           product.price && (
-                                          <Badge className="bg-red-500 text-white text-[8px] px-1.5 py-0 h-4">
-                                            SALE
-                                          </Badge>
-                                        )}
+                                            <Badge className="bg-red-500 text-white text-[8px] px-1.5 py-0 h-4">
+                                              SALE
+                                            </Badge>
+                                          )}
 
                                       </div>
                                     </div>
@@ -2616,14 +2613,14 @@ export default function Navbar() {
 
                   {wishlistIds.length >
                     0 && (
-                    <motion.span
-                      initial={{
-                        scale: 0,
-                      }}
-                      animate={{
-                        scale: 1,
-                      }}
-                      className="
+                      <motion.span
+                        initial={{
+                          scale: 0,
+                        }}
+                        animate={{
+                          scale: 1,
+                        }}
+                        className="
                         absolute
                         -top-1
                         -right-1
@@ -2644,12 +2641,12 @@ export default function Navbar() {
                         border-white
                         shadow-md
                       "
-                    >
-                      {
-                        wishlistIds.length
-                      }
-                    </motion.span>
-                  )}
+                      >
+                        {
+                          wishlistIds.length
+                        }
+                      </motion.span>
+                    )}
 
                   <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[9px] text-gray-500 font-semibold tracking-wide group-hover:text-[#7A1F3D] transition-colors">
                     Wishlist
@@ -2720,14 +2717,14 @@ export default function Navbar() {
                                 wishlistIds.length
                               }{' '}
                               {wishlistIds.length ===
-                              1
+                                1
                                 ? 'item'
                                 : 'items'}{' '}
                               saved
                             </p>
                           </div>
 
-                          
+
 
                         </div>
                       </div>
@@ -2759,8 +2756,8 @@ export default function Navbar() {
                                 const productId =
                                   String(
                                     product._id ||
-                                      product.id ||
-                                      ''
+                                    product.id ||
+                                    ''
                                   );
 
                                 return (
@@ -2837,13 +2834,13 @@ export default function Navbar() {
 
                                           {product.compare_price >
                                             product.price && (
-                                            <span className="text-[10px] text-gray-400 line-through">
-                                              {formatCurrency(
-                                                product.compare_price,
-                                                currency
-                                              )}
-                                            </span>
-                                          )}
+                                              <span className="text-[10px] text-gray-400 line-through">
+                                                {formatCurrency(
+                                                  product.compare_price,
+                                                  currency
+                                                )}
+                                              </span>
+                                            )}
 
                                         </div>
 
@@ -2962,7 +2959,7 @@ export default function Navbar() {
 
                 {hydrated &&
                   totalItems >
-                    0 && (
+                  0 && (
                     <motion.div
                       initial={{
                         scale: 0,

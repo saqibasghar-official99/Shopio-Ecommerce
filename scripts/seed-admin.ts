@@ -27,7 +27,7 @@ async function seedAdmin() {
     name: 'Saqib Asghar',
     email: 'admin@gmail.com',
     password_hash: '12345678',
-    phone: '+1234567890',
+    phone: '+923471428593',
     role: 'super_admin',
   });
 

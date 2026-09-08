@@ -36,11 +36,10 @@ export default async function HomePage() {
       {banners.length > 0 && <BannerCarousel banners={banners} />}
 
       {categories.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 py-8">
-          <SectionHeader title="Shop by Category" href="/products" />
-          <CategoryGrid categories={categories as unknown as Category[]} />
-        </section>
-      )}
+  <section className="max-w-7xl mx-auto px-4 py-8">
+    <CategoryGrid categories={categories as unknown as Category[]} />
+  </section>
+)}
 
        {/* Deals */}
       <section className="max-w-7xl mx-auto px-4 py-1">

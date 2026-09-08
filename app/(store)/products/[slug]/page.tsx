@@ -1058,19 +1058,19 @@ ${variantString
 
             </div>
 
-            {whatsappNumber && (
-              <Button
-                variant="outline"
-                className="bg-secondary text-sm"
-                onClick={handleWhatsAppOrder}
-                disabled={!inStock}
-              >
-                <MessageCircle className="h-4 w-4 mr-2" />
-                Order via WhatsApp
-              </Button>
-            )}
+                {whatsappNumber && (
+                  <Button
+                    variant="outline"
+                    onClick={handleWhatsAppOrder}
+                    disabled={!inStock}
+                    className="h-10 w-full rounded-xl border-[#7A1F3D] text-xs font-medium text-[#7A1F3D]"
+                  >
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    Order via WhatsApp
+                  </Button>
+                )}
 
-          </div>
+              </div>
 
           <Separator className="my-4" />
 

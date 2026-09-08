@@ -86,9 +86,15 @@ export async function GET(request: NextRequest) {
        BASE FILTER
     ======================================================== */
 
-    const filter: Record<string, unknown> = {
-      is_active: true,
-    };
+    const isActive = searchParams.get("is_active");
+
+    const filter: Record<string, unknown> = {};
+
+    if (isActive === "true") {
+      filter.is_active = true;
+    } else if (isActive === "false") {
+      filter.is_active = false;
+    }
 
     /* ========================================================
        FEATURED FILTER

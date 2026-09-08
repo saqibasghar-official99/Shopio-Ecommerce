@@ -66,7 +66,7 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
             lg:px-8
           "
         >
-          {activeCategories.map((category) => (
+          {activeCategories.map((category, index) => (
             <Link
               key={category.id}
               href={`/products?category=${category.slug}`}
@@ -85,57 +85,57 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
               {/* Image Wrapper */}
               <div
                 className="
+                  category-float
                   relative
                   flex
                   h-[88px]
                   w-[88px]
                   items-center
                   justify-center
-                  transition-all
-                  duration-500
-                  ease-out
-                  group-hover:-translate-y-1
                   sm:h-[104px]
                   sm:w-[104px]
                   lg:h-[118px]
                   lg:w-[118px]
-                  lg:group-hover:-translate-y-2
                 "
+                style={{
+                  animationDelay: `${index * 0.35}s`,
+                }}
               >
                 {/* Outer Decorative Ring */}
                 <div
                   className="
+                    category-ring
                     absolute
                     inset-0
                     rounded-full
                     border
                     border-[#7A1F3D]/10
-                    transition-all
-                    duration-500
-                    group-hover:scale-[1.08]
-                    group-hover:border-[#7A1F3D]/35
                   "
+                  style={{
+                    animationDelay: `${index * 0.25}s`,
+                  }}
                 />
 
                 {/* Dashed Inner Ring */}
                 <div
                   className="
+                    category-dashed-ring
                     absolute
                     inset-[4px]
                     rounded-full
                     border
                     border-dashed
                     border-[#7A1F3D]/10
-                    transition-all
-                    duration-700
-                    group-hover:rotate-[25deg]
-                    group-hover:border-[#7A1F3D]/30
                   "
+                  style={{
+                    animationDelay: `${index * 0.4}s`,
+                  }}
                 />
 
                 {/* Main Image Circle */}
                 <div
                   className="
+                    category-image
                     relative
                     h-[76px]
                     w-[76px]
@@ -145,9 +145,6 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                     border-white
                     bg-[#f9f1f4]
                     shadow-[0_5px_20px_rgba(122,31,61,0.10)]
-                    transition-all
-                    duration-500
-                    group-hover:shadow-[0_12px_30px_rgba(122,31,61,0.20)]
                     sm:h-[90px]
                     sm:w-[90px]
                     lg:h-[104px]
@@ -166,10 +163,7 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                         h-full
                         w-full
                         object-cover
-                        transition-transform
-                        duration-700
-                        ease-out
-                        group-hover:scale-110
+                        category-image-zoom
                       "
                     />
                   ) : (
@@ -195,15 +189,13 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                       via-transparent
                       to-white/20
                       opacity-70
-                      transition-opacity
-                      duration-500
-                      group-hover:opacity-100
                     "
                   />
 
-                  {/* Animated Shine */}
+                  {/* Continuous Shine */}
                   <div
                     className="
+                      category-shine
                       pointer-events-none
                       absolute
                       -left-[100%]
@@ -215,18 +207,17 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                       from-transparent
                       via-white/50
                       to-transparent
-                      opacity-0
-                      transition-all
-                      duration-700
-                      group-hover:left-[130%]
-                      group-hover:opacity-100
                     "
+                    style={{
+                      animationDelay: `${index * 0.7}s`,
+                    }}
                   />
                 </div>
 
                 {/* Small Decorative Dot */}
                 <span
                   className="
+                    category-dot
                     absolute
                     bottom-[3px]
                     right-[4px]
@@ -236,16 +227,13 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                     border-2
                     border-white
                     bg-[#7A1F3D]
-                    opacity-0
-                    scale-0
                     shadow-sm
-                    transition-all
-                    duration-300
-                    group-hover:scale-100
-                    group-hover:opacity-100
                     sm:bottom-[5px]
                     sm:right-[6px]
                   "
+                  style={{
+                    animationDelay: `${index * 0.3}s`,
+                  }}
                 />
               </div>
 
@@ -269,18 +257,18 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                   {category.name}
                 </span>
 
-                {/* Hover Indicator */}
+                {/* Always Animated Indicator */}
                 <span
                   className="
+                    category-indicator
                     mt-1.5
                     h-[1.5px]
-                    w-0
                     rounded-full
                     bg-[#7A1F3D]
-                    transition-all
-                    duration-300
-                    group-hover:w-5
                   "
+                  style={{
+                    animationDelay: `${index * 0.35}s`,
+                  }}
                 />
               </div>
 
@@ -303,17 +291,188 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
       </div>
 
       <style jsx>{`
-        div::-webkit-scrollbar {
-          display: none;
-          width: 0;
-          height: 0;
+        /* =========================================
+           FLOATING CATEGORY
+        ========================================= */
+
+        .category-float {
+          animation: category-float 4.5s ease-in-out infinite;
         }
 
+        @keyframes category-float {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+
+          50% {
+            transform: translateY(-5px);
+          }
+        }
+
+        /* =========================================
+           OUTER RING
+        ========================================= */
+
+        .category-ring {
+          animation: category-ring 3.5s ease-in-out infinite;
+        }
+
+        @keyframes category-ring {
+          0%,
+          100% {
+            transform: scale(1);
+            border-color: rgba(122, 31, 61, 0.1);
+          }
+
+          50% {
+            transform: scale(1.07);
+            border-color: rgba(122, 31, 61, 0.28);
+          }
+        }
+
+        /* =========================================
+           DASHED RING
+        ========================================= */
+
+        .category-dashed-ring {
+          animation: category-rotate 8s linear infinite;
+        }
+
+        @keyframes category-rotate {
+          from {
+            transform: rotate(0deg);
+          }
+
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        /* =========================================
+           IMAGE ZOOM
+        ========================================= */
+
+        .category-image-zoom {
+          animation: category-image-zoom 5s ease-in-out infinite;
+        }
+
+        @keyframes category-image-zoom {
+          0%,
+          100% {
+            transform: scale(1);
+          }
+
+          50% {
+            transform: scale(1.07);
+          }
+        }
+
+        /* =========================================
+           CONTINUOUS SHINE
+        ========================================= */
+
+        .category-shine {
+          animation: category-shine 4s ease-in-out infinite;
+        }
+
+        @keyframes category-shine {
+          0% {
+            left: -100%;
+            opacity: 0;
+          }
+
+          10% {
+            opacity: 0.8;
+          }
+
+          35% {
+            left: 130%;
+            opacity: 0.8;
+          }
+
+          36%,
+          100% {
+            left: 130%;
+            opacity: 0;
+          }
+        }
+
+        /* =========================================
+           DECORATIVE DOT
+        ========================================= */
+
+        .category-dot {
+          animation: category-dot 2.5s ease-in-out infinite;
+        }
+
+        @keyframes category-dot {
+          0%,
+          100% {
+            transform: scale(0.85);
+            opacity: 0.7;
+          }
+
+          50% {
+            transform: scale(1.15);
+            opacity: 1;
+          }
+        }
+
+        /* =========================================
+           CATEGORY INDICATOR
+        ========================================= */
+
+        .category-indicator {
+          width: 20px;
+          animation: category-indicator 3s ease-in-out infinite;
+        }
+
+        @keyframes category-indicator {
+          0%,
+          100% {
+            width: 10px;
+            opacity: 0.35;
+          }
+
+          50% {
+            width: 24px;
+            opacity: 1;
+          }
+        }
+
+        /* =========================================
+           HOVER
+           Keep hover subtle rather than controlling
+           the main animation.
+        ========================================= */
+
+        .group:hover .category-image {
+          box-shadow: 0 12px 30px rgba(122, 31, 61, 0.2);
+        }
+
+        /* =========================================
+           REDUCED MOTION
+        ========================================= */
+
         @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
+          .category-float,
+          .category-ring,
+          .category-dashed-ring,
+          .category-image-zoom,
+          .category-shine,
+          .category-dot,
+          .category-indicator {
+            animation: none !important;
+          }
+
+          .category-image-zoom {
+            transform: none !important;
+          }
+
+          .category-indicator {
+            width: 20px;
+            opacity: 1;
           }
         }
       `}</style>

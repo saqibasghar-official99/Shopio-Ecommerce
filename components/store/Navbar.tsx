@@ -2286,7 +2286,7 @@ export default function Navbar() {
 
                   <Input
                     type="search"
-                    placeholder="Search for earrings, fashion, bracelets & more..."
+                    placeholder="Search for fashion, bracelets & more..."
                     value={
                       searchQuery
                     }
@@ -2361,173 +2361,273 @@ export default function Navbar() {
 
               {/* SEARCH DROPDOWN */}
 
-              <AnimatePresence>
-                {searchOpen &&
-                  searchQuery.trim() && (
-                    <motion.div
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      variants={
-                        fadeInDown
+              {/* SEARCH DROPDOWN */}
+
+<AnimatePresence>
+  {searchOpen && searchQuery.trim() && (
+    <motion.div
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={fadeInDown}
+      transition={{ duration: 0.2 }}
+      className="
+        absolute
+        top-full
+        left-0
+        right-0
+        mt-2
+        bg-white
+        border
+        border-gray-100
+        rounded-xl
+        sm:rounded-2xl
+        shadow-2xl
+        z-50
+        overflow-hidden
+      "
+    >
+      {searchLoading ? (
+        <div className="p-5 sm:p-8 text-center">
+          <div className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 sm:mb-3 rounded-full border-2 border-gray-200 border-t-[#7A1F3D] animate-spin" />
+
+          <p className="text-[10px] sm:text-xs text-gray-400 font-medium">
+            Searching products...
+          </p>
+        </div>
+      ) : searchResults.length > 0 ? (
+        <>
+          <div className="max-h-[320px] sm:max-h-[400px] overflow-y-auto divide-y divide-gray-50">
+            {searchResults.map((product, index) => (
+              <motion.div
+                key={
+                  product.id ||
+                  product._id ||
+                  product.slug
+                }
+                initial="initial"
+                animate="animate"
+                variants={itemFade}
+                transition={{
+                  delay: index * 0.03,
+                }}
+              >
+                <Link
+                  href={`/products/${product.slug}`}
+                  onClick={() => {
+                    setSearchOpen(false);
+                    setSearchQuery('');
+                  }}
+                  className="
+                    flex
+                    items-center
+                    gap-2
+                    sm:gap-4
+                    px-2.5
+                    sm:px-4
+                    py-2
+                    sm:py-3
+                    hover:bg-gray-50/80
+                    transition-all
+                    duration-200
+                    group
+                  "
+                >
+                  {/* Product Image */}
+                  <div
+                    className="
+                      w-9
+                      h-9
+                      sm:w-12
+                      sm:h-12
+                      rounded-lg
+                      sm:rounded-xl
+                      bg-gray-100
+                      shrink-0
+                      overflow-hidden
+                      border
+                      border-gray-100
+                      group-hover:border-[#7A1F3D]/20
+                      transition-colors
+                    "
+                  >
+                    <img
+                      src={
+                        product.images?.[0] ||
+                        '/placeholder.png'
                       }
-                      transition={{
-                        duration: 0.2,
-                      }}
-                      className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-2xl z-50 overflow-hidden"
+                      alt={product.name}
+                      loading="lazy"
+                      decoding="async"
+                      className="
+                        w-full
+                        h-full
+                        object-cover
+                        group-hover:scale-105
+                        transition-transform
+                        duration-300
+                      "
+                    />
+                  </div>
+
+                  {/* Product Info */}
+                  <div className="flex-1 min-w-0">
+                    <p
+                      className="
+                        text-[11px]
+                        sm:text-sm
+                        font-medium
+                        text-gray-900
+                        truncate
+                        leading-tight
+                        group-hover:text-[#7A1F3D]
+                        transition-colors
+                      "
                     >
+                      {product.name}
+                    </p>
 
-                      {searchLoading ? (
-                        <div className="p-8 text-center">
+                    <div className="flex items-center flex-wrap gap-x-1.5 sm:gap-x-2 mt-0.5">
+                      {/* Current Price */}
+                      <span
+                        className="
+                          text-[10px]
+                          sm:text-sm
+                          font-bold
+                          text-[#7A1F3D]
+                        "
+                      >
+                        {formatCurrency(
+                          product.price,
+                          currency
+                        )}
+                      </span>
 
-                          <div className="h-8 w-8 mx-auto mb-3 rounded-full border-2 border-gray-200 border-t-[#7A1F3D] animate-spin" />
-
-                          <p className="text-xs text-gray-400 font-medium">
-                            Searching products...
-                          </p>
-
-                        </div>
-                      ) : searchResults.length >
-                        0 ? (
-                        <>
-                          <div className="max-h-[400px] overflow-y-auto divide-y divide-gray-50">
-
-                            {searchResults.map(
-                              (
-                                product,
-                                index
-                              ) => (
-                                <motion.div
-                                  key={
-                                    product.id ||
-                                    product._id ||
-                                    product.slug
-                                  }
-                                  initial="initial"
-                                  animate="animate"
-                                  variants={
-                                    itemFade
-                                  }
-                                  transition={{
-                                    delay:
-                                      index *
-                                      0.03,
-                                  }}
-                                >
-                                  <Link
-                                    href={`/products/${product.slug}`}
-                                    onClick={() => {
-                                      setSearchOpen(
-                                        false
-                                      );
-
-                                      setSearchQuery(
-                                        ''
-                                      );
-                                    }}
-                                    className="flex items-center gap-4 px-4 py-3 hover:bg-gray-50/80 transition-all duration-200 group"
-                                  >
-
-                                    <div className="w-12 h-12 rounded-xl bg-gray-100 shrink-0 overflow-hidden border border-gray-100 group-hover:border-[#7A1F3D]/20 transition-colors">
-                                      <img
-                                        src={
-                                          product
-                                            .images?.[0] ||
-                                          '/placeholder.png'
-                                        }
-                                        alt={
-                                          product.name
-                                        }
-                                        loading="lazy"
-                                        decoding="async"
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                      />
-                                    </div>
-
-                                    <div className="flex-1 min-w-0">
-
-                                      <p className="text-sm font-medium text-gray-900 truncate group-hover:text-[#7A1F3D] transition-colors">
-                                        {
-                                          product.name
-                                        }
-                                      </p>
-
-                                      <div className="flex items-baseline gap-2 mt-0.5">
-
-                                        <span className="text-sm font-bold text-[#7A1F3D]">
-                                          {formatCurrency(
-                                            product.price,
-                                            currency
-                                          )}
-                                        </span>
-
-                                        {product.compare_price >
-                                          product.price && (
-                                            <span className="text-xs text-gray-400 line-through">
-                                              {formatCurrency(
-                                                product.compare_price,
-                                                currency
-                                              )}
-                                            </span>
-                                          )}
-
-                                        {product.compare_price >
-                                          product.price && (
-                                            <Badge className="bg-red-500 text-white text-[8px] px-1.5 py-0 h-4">
-                                              SALE
-                                            </Badge>
-                                          )}
-
-                                      </div>
-                                    </div>
-
-                                    <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-[#7A1F3D] group-hover:translate-x-1 transition-all" />
-
-                                  </Link>
-                                </motion.div>
-                              )
-                            )}
-
-                          </div>
-
-                          <Link
-                            href={`/products?search=${encodeURIComponent(
-                              searchQuery.trim()
-                            )}`}
-                            onClick={() =>
-                              setSearchOpen(
-                                false
-                              )
-                            }
-                            className="block px-4 py-3.5 text-xs text-center font-semibold bg-gradient-to-r from-[#7A1F3D]/5 to-[#9B2D5A]/5 hover:from-[#7A1F3D]/10 hover:to-[#9B2D5A]/10 transition-all duration-300"
-                          >
-                            <span className="flex items-center justify-center gap-2 text-[#7A1F3D]">
-                              View all results
-                              <ArrowRight className="h-3 w-3" />
-                            </span>
-                          </Link>
-                        </>
-                      ) : (
-                        <div className="p-8 text-center">
-
-                          <div className="h-14 w-14 mx-auto mb-4 rounded-full bg-gray-50 flex items-center justify-center">
-                            <Search className="h-6 w-6 text-gray-300" />
-                          </div>
-
-                          <p className="text-sm font-semibold text-gray-700">
-                            No products found
-                          </p>
-
-                          <p className="text-xs text-gray-400 mt-1">
-                            Try adjusting your search terms
-                          </p>
-
-                        </div>
+                      {/* Compare Price */}
+                      {product.compare_price >
+                        product.price && (
+                        <span
+                          className="
+                            text-[9px]
+                            sm:text-xs
+                            text-gray-400
+                            line-through
+                          "
+                        >
+                          {formatCurrency(
+                            product.compare_price,
+                            currency
+                          )}
+                        </span>
                       )}
 
-                    </motion.div>
-                  )}
-              </AnimatePresence>
+                      {/* Sale Badge */}
+                      {product.compare_price >
+                        product.price && (
+                        <Badge
+                          className="
+                            bg-red-500
+                            text-white
+                            text-[7px]
+                            sm:text-[8px]
+                            px-1
+                            sm:px-1.5
+                            py-0
+                            h-3.5
+                            sm:h-4
+                            leading-none
+                          "
+                        >
+                          SALE
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Arrow */}
+                  <ArrowRight
+                    className="
+                      h-3
+                      w-3
+                      sm:h-4
+                      sm:w-4
+                      shrink-0
+                      text-gray-300
+                      group-hover:text-[#7A1F3D]
+                      group-hover:translate-x-1
+                      transition-all
+                    "
+                  />
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* View All Results */}
+          <Link
+            href={`/products?search=${encodeURIComponent(
+              searchQuery.trim()
+            )}`}
+            onClick={() => setSearchOpen(false)}
+            className="
+              block
+              px-3
+              sm:px-4
+              py-2.5
+              sm:py-3.5
+              text-[10px]
+              sm:text-xs
+              text-center
+              font-semibold
+              bg-gradient-to-r
+              from-[#7A1F3D]/5
+              to-[#9B2D5A]/5
+              hover:from-[#7A1F3D]/10
+              hover:to-[#9B2D5A]/10
+              transition-all
+              duration-300
+            "
+          >
+            <span className="flex items-center justify-center gap-1.5 sm:gap-2 text-[#7A1F3D]">
+              View all results
+
+              <ArrowRight className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+            </span>
+          </Link>
+        </>
+      ) : (
+        <div className="p-5 sm:p-8 text-center">
+          <div
+            className="
+              h-10
+              w-10
+              sm:h-14
+              sm:w-14
+              mx-auto
+              mb-2
+              sm:mb-4
+              rounded-full
+              bg-gray-50
+              flex
+              items-center
+              justify-center
+            "
+          >
+            <Search className="h-4 w-4 sm:h-6 sm:w-6 text-gray-300" />
+          </div>
+
+          <p className="text-xs sm:text-sm font-semibold text-gray-700">
+            No products found
+          </p>
+
+          <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
+            Try adjusting your search terms
+          </p>
+        </div>
+      )}
+    </motion.div>
+  )}
+</AnimatePresence>
             </div>
 
             {/* =================================================

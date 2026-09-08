@@ -163,7 +163,7 @@ useEffect(() => {
           Looks like you haven&apos;t added anything to your cart yet.
         </p>
         <Link href="/products">
-          <Button className="mt-6 bg-green-600 hover:bg-green-700 text-white">
+          <Button className="mt-6 bg-[#7A1F3D] hover:bg-[#5a172d] text-white">
             Browse Products
           </Button>
         </Link>

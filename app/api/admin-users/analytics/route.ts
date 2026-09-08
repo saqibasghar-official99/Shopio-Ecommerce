@@ -237,7 +237,7 @@ export async function GET(request: NextRequest) {
         message: 'Failed to load analytics',
       },
       {
-        status: 500,
+        status: 500, 
       }
     );
   }

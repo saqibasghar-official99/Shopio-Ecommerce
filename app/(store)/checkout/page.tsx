@@ -72,15 +72,16 @@ const PAYMENT_METHODS = [
 const BANK_DETAILS = {
   meezan: {
     bankName: 'Meezan Bank',
-    accountTitle: 'YOUR ACCOUNT TITLE',
-    accountNumber: 'YOUR ACCOUNT NUMBER',
-    iban: 'YOUR IBAN',
+    accountTitle: 'Muhammad Saqib',
+    accountNumber: '00300112462522',
+    iban: 'PK36MEZN0000300112462522',
   },
 
   nayapay: {
     bankName: 'NayaPay',
-    accountTitle: 'YOUR ACCOUNT TITLE',
-    accountNumber: 'YOUR NAYAPAY NUMBER',
+    accountTitle: 'Muhammad Saqib',
+    accountNumber: '03471428593',
+    iban: 'PK50NAYA1234503471428593',
   },
 };
 
@@ -242,7 +243,7 @@ export default function CheckoutPage() {
 
         setAvailableCoupons(coupons);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   /* =======================================================
@@ -343,9 +344,9 @@ export default function CheckoutPage() {
 
               return (
                 name ===
-                  'pakistan' ||
+                'pakistan' ||
                 country ===
-                  'pakistan'
+                'pakistan'
               );
             }
           );
@@ -368,7 +369,7 @@ export default function CheckoutPage() {
 
           setDeliveryZoneName(
             pakistan.name ||
-              'Pakistan'
+            'Pakistan'
           );
         }
       } catch (error) {
@@ -475,7 +476,7 @@ export default function CheckoutPage() {
 
         setDiscount(
           data.data?.discount ||
-            0
+          0
         );
 
         showToast(
@@ -484,7 +485,7 @@ export default function CheckoutPage() {
       } else {
         showToast(
           data.message ||
-            'Invalid coupon code',
+          'Invalid coupon code',
           'error'
         );
 
@@ -519,12 +520,12 @@ export default function CheckoutPage() {
   const bankTransferDiscount =
     paymentMethod === 'bank'
       ? Number(
-          (
-            subtotal *
-            (BANK_TRANSFER_DISCOUNT_PERCENT /
-              100)
-          ).toFixed(2)
-        )
+        (
+          subtotal *
+          (BANK_TRANSFER_DISCOUNT_PERCENT /
+            100)
+        ).toFixed(2)
+      )
       : 0;
 
   /* =======================================================
@@ -636,19 +637,19 @@ export default function CheckoutPage() {
               Math.min(
                 1,
                 maxWidth /
-                  image.width
+                image.width
               );
 
             const width =
               Math.round(
                 image.width *
-                  scale
+                scale
               );
 
             const height =
               Math.round(
                 image.height *
-                  scale
+                scale
               );
 
             const canvas =
@@ -1059,13 +1060,12 @@ export default function CheckoutPage() {
         items
           .map(
             (item) =>
-              `- ${item.name}${
-                item.variant
-                  ? ` (${item.variant})`
-                  : ''
+              `- ${item.name}${item.variant
+                ? ` (${item.variant})`
+                : ''
               } x${item.qty} = ${formatCurrency(
                 item.price *
-                  item.qty,
+                item.qty,
                 currency
               )}`
           )
@@ -1077,16 +1077,15 @@ export default function CheckoutPage() {
         billingSameAsShipping
           ? `*Billing Address:* Same as shipping\n`
           : `*Billing Name:* ${billingForm.name}\n` +
-            `*Billing Phone:* ${billingForm.phone}\n` +
-            `*Billing Email:* ${billingForm.email}\n` +
-            `*Billing Address:* ${billingForm.address}, ${billingForm.city}\n`;
+          `*Billing Phone:* ${billingForm.phone}\n` +
+          `*Billing Email:* ${billingForm.email}\n` +
+          `*Billing Address:* ${billingForm.address}, ${billingForm.city}\n`;
 
       const message =
         encodeURIComponent(
-          `${
-            settings?.whatsapp_message
-              ? `_${settings.whatsapp_message}_\n\n`
-              : ''
+          `${settings?.whatsapp_message
+            ? `_${settings.whatsapp_message}_\n\n`
+            : ''
           }` +
           `*🛍️ NEW ORDER*\n\n` +
           `*Order Items:*\n${orderLines}\n\n` +
@@ -1095,21 +1094,19 @@ export default function CheckoutPage() {
             subtotal,
             currency
           )}\n` +
-          `${
-            discount > 0
-              ? `*Discount:* -${formatCurrency(
-                  discount,
-                  currency
-                )}\n`
-              : ''
+          `${discount > 0
+            ? `*Discount:* -${formatCurrency(
+              discount,
+              currency
+            )}\n`
+            : ''
           }` +
-          `*Delivery:* ${
-            deliveryFee === 0
-              ? 'Free'
-              : formatCurrency(
-                  deliveryFee,
-                  currency
-                )
+          `*Delivery:* ${deliveryFee === 0
+            ? 'Free'
+            : formatCurrency(
+              deliveryFee,
+              currency
+            )
           }\n` +
           `*TOTAL: ${formatCurrency(
             total,
@@ -1122,10 +1119,9 @@ export default function CheckoutPage() {
           `*Email:* ${form.email}\n` +
           `*Shipping Address:* ${form.address}, ${form.city}\n` +
           billingDetails +
-          `${
-            notes
-              ? `*Notes:* _${notes}_\n`
-              : ''
+          `${notes
+            ? `*Notes:* _${notes}_\n`
+            : ''
           }\n` +
           `*💳 Payment:* WhatsApp Order`
         );
@@ -1267,13 +1263,13 @@ export default function CheckoutPage() {
 
                 payment_proof:
                   paymentMethod ===
-                  'bank'
+                    'bank'
                     ? paymentProof
                     : undefined,
 
                 payment_proof_name:
                   paymentMethod ===
-                  'bank'
+                    'bank'
                     ? paymentProofName
                     : undefined,
 
@@ -1313,8 +1309,8 @@ export default function CheckoutPage() {
           const existing: string[] =
             saved
               ? JSON.parse(
-                  saved
-                )
+                saved
+              )
               : [];
 
           const updated = [
@@ -1329,7 +1325,7 @@ export default function CheckoutPage() {
               updated
             )
           );
-        } catch {}
+        } catch { }
 
         clearCart();
 
@@ -1346,7 +1342,7 @@ export default function CheckoutPage() {
       } else {
         showToast(
           data.message ||
-            'Failed to place order',
+          'Failed to place order',
           'error'
         );
       }
@@ -1901,7 +1897,7 @@ export default function CheckoutPage() {
               </h2>
 
               {couponCode &&
-              discount > 0 ? (
+                discount > 0 ? (
 
                 <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-md px-3 py-2">
 
@@ -1987,64 +1983,64 @@ export default function CheckoutPage() {
                   {availableCoupons.length >
                     0 && (
 
-                    <div>
+                      <div>
 
-                      <p className="text-xs text-gray-500 mb-2">
-                        Available coupons:
-                      </p>
+                        <p className="text-xs text-gray-500 mb-2">
+                          Available coupons:
+                        </p>
 
-                      <div className="space-y-1.5">
+                        <div className="space-y-1.5">
 
-                        {availableCoupons.map(
-                          (
-                            coupon
-                          ) => (
+                          {availableCoupons.map(
+                            (
+                              coupon
+                            ) => (
 
-                            <button
-                              key={
-                                coupon.id
-                              }
-                              type="button"
-                              onClick={() =>
-                                handleApplyCoupon(
-                                  coupon.code
-                                )
-                              }
-                              className="w-full flex items-center justify-between px-3 py-2 rounded-md border border-gray-100 hover:border-green-200 hover:bg-green-50/50 transition-colors text-left"
-                            >
-
-                              <div className="flex items-center gap-2">
-
-                                <Tag className="h-3 w-3 text-green-600" />
-
-                                <span className="text-xs font-mono font-medium text-gray-900">
-                                  {
+                              <button
+                                key={
+                                  coupon.id
+                                }
+                                type="button"
+                                onClick={() =>
+                                  handleApplyCoupon(
                                     coupon.code
-                                  }
-                                </span>
+                                  )
+                                }
+                                className="w-full flex items-center justify-between px-3 py-2 rounded-md border border-gray-100 hover:border-green-200 hover:bg-green-50/50 transition-colors text-left"
+                              >
 
-                              </div>
+                                <div className="flex items-center gap-2">
 
-                              <span className="text-xs text-green-600 font-medium">
-                                {coupon.type ===
-                                'percent'
-                                  ? `${coupon.value}% off`
-                                  : `${formatCurrency(
+                                  <Tag className="h-3 w-3 text-green-600" />
+
+                                  <span className="text-xs font-mono font-medium text-gray-900">
+                                    {
+                                      coupon.code
+                                    }
+                                  </span>
+
+                                </div>
+
+                                <span className="text-xs text-green-600 font-medium">
+                                  {coupon.type ===
+                                    'percent'
+                                    ? `${coupon.value}% off`
+                                    : `${formatCurrency(
                                       coupon.value,
                                       currency
                                     )} off`}
-                              </span>
+                                </span>
 
-                            </button>
+                              </button>
 
-                          )
-                        )}
+                            )
+                          )}
+
+                        </div>
 
                       </div>
 
-                    </div>
-
-                  )}
+                    )}
 
                 </div>
 
@@ -2075,12 +2071,11 @@ export default function CheckoutPage() {
                         key={
                           method.value
                         }
-                        className={`flex items-center gap-3 p-3 rounded-md border cursor-pointer transition-colors ${
-                          paymentMethod ===
-                          method.value
+                        className={`flex items-center gap-3 p-3 rounded-md border cursor-pointer transition-colors ${paymentMethod ===
+                            method.value
                             ? 'border-[#7A1F3D] bg-[#7A1F3D]/[0.02]'
                             : 'border-gray-200 hover:border-gray-300'
-                        }`}
+                          }`}
                       >
 
                         <input
@@ -2102,12 +2097,11 @@ export default function CheckoutPage() {
                         />
 
                         <Icon
-                          className={`h-4 w-4 ${
-                            paymentMethod ===
-                            method.value
+                          className={`h-4 w-4 ${paymentMethod ===
+                              method.value
                               ? 'text-[#7A1F3D]'
                               : 'text-gray-400'
-                          }`}
+                            }`}
                         />
 
                         <div className="flex-1">
@@ -2122,10 +2116,10 @@ export default function CheckoutPage() {
 
                             {method.value ===
                               'bank' && (
-                              <span className="text-[10px] font-semibold bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">
-                                SAVE&nbsp;7%
-                              </span>
-                            )}
+                                <span className="text-[10px] font-semibold bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">
+                                  SAVE&nbsp;7%
+                                </span>
+                              )}
 
                           </div>
 
@@ -2151,185 +2145,36 @@ export default function CheckoutPage() {
               {paymentMethod ===
                 'bank' && (
 
-                <div className="mt-5 space-y-4">
+                  <div className="mt-5 space-y-4">
 
-                  {/* Discount Banner */}
+                    {/* Discount Banner */}
 
-                  <div className="rounded-lg border border-green-200 bg-green-50 p-4">
+                    <div className="rounded-lg border border-green-200 bg-green-50 p-4">
 
-                    <div className="flex items-start gap-3">
+                      <div className="flex items-start gap-3">
 
-                      <div className="mt-0.5 h-8 w-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-                        <Tag className="h-4 w-4 text-green-600" />
-                      </div>
-
-                      <div>
-
-                        <p className="text-sm font-semibold text-green-800">
-                          You save{' '}
-                          {formatCurrency(
-                            bankTransferDiscount,
-                            currency
-                          )}{' '}
-                          with Bank Transfer
-                        </p>
-
-                        <p className="text-xs text-green-700 mt-1">
-                          Get{' '}
-                          {
-                            BANK_TRANSFER_DISCOUNT_PERCENT
-                          }
-                          % OFF your order by paying through Meezan Bank or NayaPay.
-                        </p>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                  {/* Payment Instructions */}
-
-                  <div className="rounded-lg border border-gray-200 overflow-hidden">
-
-                    <div className="px-4 py-3 bg-gray-50 border-b">
-
-                      <p className="text-sm font-semibold text-gray-900">
-                        Transfer Payment To
-                      </p>
-
-                      <p className="text-xs text-gray-500 mt-0.5">
-                        Please transfer the exact discounted amount shown below.
-                      </p>
-
-                    </div>
-
-                    {/* Meezan */}
-
-                    <div className="p-4 border-b">
-
-                      <div className="flex items-center justify-between mb-3">
+                        <div className="mt-0.5 h-8 w-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                          <Tag className="h-4 w-4 text-green-600" />
+                        </div>
 
                         <div>
 
-                          <p className="text-sm font-semibold text-gray-900">
-                            Meezan Bank
+                          <p className="text-sm font-semibold text-green-800">
+                            You save{' '}
+                            {formatCurrency(
+                              bankTransferDiscount,
+                              currency
+                            )}{' '}
+                            with Bank Transfer
                           </p>
 
-                          <p className="text-xs text-gray-500">
-                            Bank Transfer
+                          <p className="text-xs text-green-700 mt-1">
+                            Get{' '}
+                            {
+                              BANK_TRANSFER_DISCOUNT_PERCENT
+                            }
+                            % OFF your order by paying through Meezan Bank or NayaPay.
                           </p>
-
-                        </div>
-
-                        <CreditCard className="h-5 w-5 text-[#7A1F3D]" />
-
-                      </div>
-
-                      <div className="space-y-2">
-
-                        <div className="flex items-center justify-between gap-3">
-
-                          <div>
-
-                            <p className="text-[10px] uppercase tracking-wide text-gray-400">
-                              Account Title
-                            </p>
-
-                            <p className="text-xs font-medium text-gray-900">
-                              {
-                                BANK_DETAILS
-                                  .meezan
-                                  .accountTitle
-                              }
-                            </p>
-
-                          </div>
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              copyBankDetail(
-                                BANK_DETAILS
-                                  .meezan
-                                  .accountTitle
-                              )
-                            }
-                            className="text-gray-400 hover:text-[#7A1F3D]"
-                            title="Copy"
-                          >
-                            <Copy className="h-3.5 w-3.5" />
-                          </button>
-
-                        </div>
-
-                        <div className="flex items-center justify-between gap-3">
-
-                          <div>
-
-                            <p className="text-[10px] uppercase tracking-wide text-gray-400">
-                              Account Number
-                            </p>
-
-                            <p className="text-xs font-medium text-gray-900 break-all">
-                              {
-                                BANK_DETAILS
-                                  .meezan
-                                  .accountNumber
-                              }
-                            </p>
-
-                          </div>
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              copyBankDetail(
-                                BANK_DETAILS
-                                  .meezan
-                                  .accountNumber
-                              )
-                            }
-                            className="text-gray-400 hover:text-[#7A1F3D]"
-                            title="Copy"
-                          >
-                            <Copy className="h-3.5 w-3.5" />
-                          </button>
-
-                        </div>
-
-                        <div className="flex items-center justify-between gap-3">
-
-                          <div>
-
-                            <p className="text-[10px] uppercase tracking-wide text-gray-400">
-                              IBAN
-                            </p>
-
-                            <p className="text-xs font-medium text-gray-900 break-all">
-                              {
-                                BANK_DETAILS
-                                  .meezan
-                                  .iban
-                              }
-                            </p>
-
-                          </div>
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              copyBankDetail(
-                                BANK_DETAILS
-                                  .meezan
-                                  .iban
-                              )
-                            }
-                            className="text-gray-400 hover:text-[#7A1F3D]"
-                            title="Copy"
-                          >
-                            <Copy className="h-3.5 w-3.5" />
-                          </button>
 
                         </div>
 
@@ -2337,289 +2182,446 @@ export default function CheckoutPage() {
 
                     </div>
 
-                    {/* NayaPay */}
+                    {/* Payment Instructions */}
 
-                    <div className="p-4">
+                    <div className="rounded-lg border border-gray-200 overflow-hidden">
 
-                      <div className="flex items-center justify-between mb-3">
-
-                        <div>
-
-                          <p className="text-sm font-semibold text-gray-900">
-                            NayaPay
-                          </p>
-
-                          <p className="text-xs text-gray-500">
-                            Instant Transfer
-                          </p>
-
-                        </div>
-
-                        <CreditCard className="h-5 w-5 text-[#7A1F3D]" />
-
-                      </div>
-
-                      <div className="space-y-2">
-
-                        <div className="flex items-center justify-between gap-3">
-
-                          <div>
-
-                            <p className="text-[10px] uppercase tracking-wide text-gray-400">
-                              Account Title
-                            </p>
-
-                            <p className="text-xs font-medium text-gray-900">
-                              {
-                                BANK_DETAILS
-                                  .nayapay
-                                  .accountTitle
-                              }
-                            </p>
-
-                          </div>
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              copyBankDetail(
-                                BANK_DETAILS
-                                  .nayapay
-                                  .accountTitle
-                              )
-                            }
-                            className="text-gray-400 hover:text-[#7A1F3D]"
-                            title="Copy"
-                          >
-                            <Copy className="h-3.5 w-3.5" />
-                          </button>
-
-                        </div>
-
-                        <div className="flex items-center justify-between gap-3">
-
-                          <div>
-
-                            <p className="text-[10px] uppercase tracking-wide text-gray-400">
-                              NayaPay Number
-                            </p>
-
-                            <p className="text-xs font-medium text-gray-900">
-                              {
-                                BANK_DETAILS
-                                  .nayapay
-                                  .accountNumber
-                              }
-                            </p>
-
-                          </div>
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              copyBankDetail(
-                                BANK_DETAILS
-                                  .nayapay
-                                  .accountNumber
-                              )
-                            }
-                            className="text-gray-400 hover:text-[#7A1F3D]"
-                            title="Copy"
-                          >
-                            <Copy className="h-3.5 w-3.5" />
-                          </button>
-
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                  {/* Amount To Transfer */}
-
-                  <div className="rounded-lg border p-3">
-
-                    <div className="flex items-center justify-between">
-
-                      <div>
-
-                        <p className="text-xs text-gray-500">
-                          Amount to Transfer
-                        </p>
-
-                        <p className="text-xl font-bold text-black mt-0.5">
-                          {formatCurrency(
-                            total,
-                            currency
-                          )}
-                        </p>
-
-                      </div>
-
-                      <CheckCircle2 className="h-6 w-6 text-green-600" />
-
-                    </div>
-
-                  </div>
-
-                  {/* Payment Screenshot */}
-
-                  <div className="rounded-lg border border-gray-200 p-4">
-
-                    <div className="flex items-start justify-between gap-3 mb-3">
-
-                      <div>
+                      <div className="px-4 py-3 bg-gray-50 border-b">
 
                         <p className="text-sm font-semibold text-gray-900">
-                          Payment Screenshot *
+                          Transfer Payment To
                         </p>
 
                         <p className="text-xs text-gray-500 mt-0.5">
-                          Upload a screenshot after completing the transfer.
+                          Please transfer the exact discounted amount shown below.
                         </p>
 
                       </div>
 
-                      <Upload className="h-4 w-4 text-gray-400 shrink-0" />
+                      {/* Meezan */}
 
-                    </div>
+                      <div className="p-4 border-b">
 
-                    {!paymentProof ? (
+                        <div className="flex items-center justify-between mb-3">
 
-                      <label className="block">
+                          <div>
 
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={
-                            handlePaymentProofChange
-                          }
-                          className="hidden"
-                          disabled={
-                            paymentProofLoading
-                          }
-                        />
+                            <p className="text-sm font-semibold text-gray-900">
+                              Meezan Bank
+                            </p>
 
-                        <div className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
-                          errors.paymentProof
-                            ? 'border-red-400 bg-red-50'
-                            : 'border-gray-200 hover:border-[#7A1F3D] hover:bg-gray-50'
-                        }`}>
+                            <p className="text-xs text-gray-500">
+                              Bank Transfer
+                            </p>
 
-                          {paymentProofLoading ? (
+                          </div>
 
-                            <div className="flex flex-col items-center">
+                          <CreditCard className="h-5 w-5 text-[#7A1F3D]" />
 
-                              <Loader2 className="h-6 w-6 text-[#7A1F3D] animate-spin" />
+                        </div>
 
-                              <p className="text-xs text-gray-500 mt-2">
-                                Processing screenshot...
+                        <div className="space-y-2">
+
+                          <div className="flex items-center justify-between gap-3">
+
+                            <div>
+
+                              <p className="text-[10px] uppercase tracking-wide text-gray-400">
+                                Account Title
+                              </p>
+
+                              <p className="text-xs font-medium text-gray-900">
+                                {
+                                  BANK_DETAILS
+                                    .meezan
+                                    .accountTitle
+                                }
                               </p>
 
                             </div>
 
-                          ) : (
+                          </div>
 
-                            <>
-                              <Upload className="h-7 w-7 mx-auto text-gray-300" />
+                          <div className="flex items-center justify-between gap-3">
 
-                              <p className="text-sm font-medium text-gray-700 mt-2">
-                                Click to upload screenshot
+                            <div>
+
+                              <p className="text-[10px] uppercase tracking-wide text-gray-400">
+                                Account Number
                               </p>
 
-                              <p className="text-[11px] text-gray-400 mt-1">
-                                JPG, PNG or WEBP • Max 8MB
+                              <p className="text-xs font-medium text-gray-900 break-all">
+                                {
+                                  BANK_DETAILS
+                                    .meezan
+                                    .accountNumber
+                                }
                               </p>
-                            </>
 
-                          )}
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                copyBankDetail(
+                                  BANK_DETAILS
+                                    .meezan
+                                    .accountNumber
+                                )
+                              }
+                              className="text-gray-400 hover:text-[#7A1F3D]"
+                              title="Copy"
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                            </button>
+
+                          </div>
+
+                          <div className="flex items-center justify-between gap-3">
+
+                            <div>
+
+                              <p className="text-[10px] uppercase tracking-wide text-gray-400">
+                                IBAN
+                              </p>
+
+                              <p className="text-xs font-medium text-gray-900 break-all">
+                                {
+                                  BANK_DETAILS
+                                    .meezan
+                                    .iban
+                                }
+                              </p>
+
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                copyBankDetail(
+                                  BANK_DETAILS
+                                    .meezan
+                                    .iban
+                                )
+                              }
+                              className="text-gray-400 hover:text-[#7A1F3D]"
+                              title="Copy"
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                            </button>
+
+                          </div>
 
                         </div>
 
-                      </label>
+                      </div>
 
-                    ) : (
+                      {/* NayaPay */}
 
-                      <div className="relative rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+                      <div className="p-4">
 
-                        <img
-                          src={
-                            paymentProof
-                          }
-                          alt="Payment proof"
-                          className="w-full max-h-72 object-contain"
-                        />
+                        <div className="flex items-center justify-between mb-3">
 
-                        <button
-                          type="button"
-                          onClick={
-                            removePaymentProof
-                          }
-                          className="absolute top-2 right-2 h-7 w-7 rounded-full bg-black/70 text-white flex items-center justify-center hover:bg-black"
-                          title="Remove screenshot"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
+                          <div>
 
-                        <div className="px-3 py-2 bg-white border-t flex items-center justify-between">
+                            <p className="text-sm font-semibold text-gray-900">
+                              NayaPay
+                            </p>
 
-                          <p className="text-xs text-gray-600 truncate">
-                            {paymentProofName}
+                            <p className="text-xs text-gray-500">
+                              Instant Transfer
+                            </p>
+
+                          </div>
+
+                          <CreditCard className="h-5 w-5 text-[#7A1F3D]" />
+
+                        </div>
+
+                        <div className="space-y-2">
+
+                          <div className="flex items-center justify-between gap-3">
+
+                            <div>
+
+                              <p className="text-[10px] uppercase tracking-wide text-gray-400">
+                                Account Title
+                              </p>
+
+                              <p className="text-xs font-medium text-gray-900">
+                                {
+                                  BANK_DETAILS
+                                    .nayapay
+                                    .accountTitle
+                                }
+                              </p>
+
+                            </div>
+
+                          </div>
+
+                          <div className="flex items-center justify-between gap-3">
+
+                            <div>
+
+                              <p className="text-[10px] uppercase tracking-wide text-gray-400">
+                                NayaPay Number
+                              </p>
+
+                              <p className="text-xs font-medium text-gray-900">
+                                {
+                                  BANK_DETAILS
+                                    .nayapay
+                                    .accountNumber
+                                }
+                              </p>
+
+                            </div>
+
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                copyBankDetail(
+                                  BANK_DETAILS
+                                    .nayapay
+                                    .accountNumber
+                                )
+                              }
+                              className="text-gray-400 hover:text-[#7A1F3D]"
+                              title="Copy"
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                            </button>
+
+                          </div>
+
+                          <div className="flex items-center justify-between gap-3">
+
+                            <div>
+
+                              <p className="text-[10px] uppercase tracking-wide text-gray-400">
+                                NayaPay IBAN
+                              </p>
+
+                              <p className="text-xs font-medium text-gray-900">
+                                {
+                                  BANK_DETAILS
+                                    .nayapay
+                                    .iban
+                                }
+                              </p>
+
+                            </div>
+
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                copyBankDetail(
+                                  BANK_DETAILS
+                                    .nayapay
+                                    .iban
+                                )
+                              }
+                              className="text-gray-400 hover:text-[#7A1F3D]"
+                              title="Copy"
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                            </button>
+
+                          </div>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    {/* Amount To Transfer */}
+
+                    <div className="rounded-lg border p-3">
+
+                      <div className="flex items-center justify-between">
+
+                        <div>
+
+                          <p className="text-xs text-gray-500">
+                            Amount to Transfer
                           </p>
 
-                          <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                          <p className="text-xl font-bold text-black mt-0.5">
+                            {formatCurrency(
+                              total,
+                              currency
+                            )}
+                          </p>
 
                         </div>
 
-                      </div>
-
-                    )}
-
-                    {errors.paymentProof && (
-                      <p className="text-xs text-red-500 mt-2">
-                        {
-                          errors.paymentProof
-                        }
-                      </p>
-                    )}
-
-                  </div>
-
-                  {/* Trust / Satisfaction */}
-
-                  <div className="rounded-lg bg-gray-50 border border-gray-100 p-3">
-
-                    <div className="space-y-2">
-
-                      <div className="flex items-center gap-2">
-
-                        <ShieldCheck className="h-3.5 w-3.5 text-green-600 shrink-0" />
-
-                        <p className="text-[11px] text-gray-600">
-                          Secure payment handling & order verification.
-                        </p>
+                        <CheckCircle2 className="h-6 w-6 text-green-600" />
 
                       </div>
 
-                      <div className="flex items-center gap-2">
+                    </div>
 
-                        <CheckCircle2 className="h-3.5 w-3.5 text-green-600 shrink-0" />
+                    {/* Payment Screenshot */}
 
-                        <p className="text-[11px] text-gray-600">
-                          Your order is confirmed after payment verification.
-                        </p>
+                    <div className="rounded-lg border border-gray-200 p-4">
+
+                      <div className="flex items-start justify-between gap-3 mb-3">
+
+                        <div>
+
+                          <p className="text-sm font-semibold text-gray-900">
+                            Payment Screenshot *
+                          </p>
+
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            Upload a screenshot after completing the transfer.
+                          </p>
+
+                        </div>
+
+                        <Upload className="h-4 w-4 text-gray-400 shrink-0" />
 
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      {!paymentProof ? (
 
-                        <MessageCircle className="h-3.5 w-3.5 text-green-600 shrink-0" />
+                        <label className="block">
 
-                        <p className="text-[11px] text-gray-600">
-                          Need help? Our support team is here for you.
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={
+                              handlePaymentProofChange
+                            }
+                            className="hidden"
+                            disabled={
+                              paymentProofLoading
+                            }
+                          />
+
+                          <div className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${errors.paymentProof
+                              ? 'border-red-400 bg-red-50'
+                              : 'border-gray-200 hover:border-[#7A1F3D] hover:bg-gray-50'
+                            }`}>
+
+                            {paymentProofLoading ? (
+
+                              <div className="flex flex-col items-center">
+
+                                <Loader2 className="h-6 w-6 text-[#7A1F3D] animate-spin" />
+
+                                <p className="text-xs text-gray-500 mt-2">
+                                  Processing screenshot...
+                                </p>
+
+                              </div>
+
+                            ) : (
+
+                              <>
+                                <Upload className="h-7 w-7 mx-auto text-gray-300" />
+
+                                <p className="text-sm font-medium text-gray-700 mt-2">
+                                  Click to upload screenshot
+                                </p>
+
+                                <p className="text-[11px] text-gray-400 mt-1">
+                                  JPG, PNG or WEBP • Max 8MB
+                                </p>
+                              </>
+
+                            )}
+
+                          </div>
+
+                        </label>
+
+                      ) : (
+
+                        <div className="relative rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+
+                          <img
+                            src={
+                              paymentProof
+                            }
+                            alt="Payment proof"
+                            className="w-full max-h-72 object-contain"
+                          />
+
+                          <button
+                            type="button"
+                            onClick={
+                              removePaymentProof
+                            }
+                            className="absolute top-2 right-2 h-7 w-7 rounded-full bg-black/70 text-white flex items-center justify-center hover:bg-black"
+                            title="Remove screenshot"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+
+                          <div className="px-3 py-2 bg-white border-t flex items-center justify-between">
+
+                            <p className="text-xs text-gray-600 truncate">
+                              {paymentProofName}
+                            </p>
+
+                            <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+
+                          </div>
+
+                        </div>
+
+                      )}
+
+                      {errors.paymentProof && (
+                        <p className="text-xs text-red-500 mt-2">
+                          {
+                            errors.paymentProof
+                          }
                         </p>
+                      )}
+
+                    </div>
+
+                    {/* Trust / Satisfaction */}
+
+                    <div className="rounded-lg bg-gray-50 border border-gray-100 p-3">
+
+                      <div className="space-y-2">
+
+                        <div className="flex items-center gap-2">
+
+                          <ShieldCheck className="h-3.5 w-3.5 text-green-600 shrink-0" />
+
+                          <p className="text-[11px] text-gray-600">
+                            Secure payment handling & order verification.
+                          </p>
+
+                        </div>
+
+                        <div className="flex items-center gap-2">
+
+                          <CheckCircle2 className="h-3.5 w-3.5 text-green-600 shrink-0" />
+
+                          <p className="text-[11px] text-gray-600">
+                            Your order is confirmed after payment verification.
+                          </p>
+
+                        </div>
+
+                        <div className="flex items-center gap-2">
+
+                          <MessageCircle className="h-3.5 w-3.5 text-green-600 shrink-0" />
+
+                          <p className="text-[11px] text-gray-600">
+                            Need help? Our support team is here for you.
+                          </p>
+
+                        </div>
 
                       </div>
 
@@ -2627,9 +2629,7 @@ export default function CheckoutPage() {
 
                   </div>
 
-                </div>
-
-              )}
+                )}
 
             </div>
 
@@ -2695,7 +2695,7 @@ export default function CheckoutPage() {
                       <span className="text-sm font-medium shrink-0">
                         {formatCurrency(
                           item.price *
-                            item.qty,
+                          item.qty,
                           currency
                         )}
                       </span>
@@ -2755,23 +2755,23 @@ export default function CheckoutPage() {
                 {bankTransferDiscount >
                   0 && (
 
-                  <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-sm">
 
-                    <span className="text-gray-500">
-                      Bank Transfer (7% OFF)
-                    </span>
+                      <span className="text-gray-500">
+                        Bank Transfer (7% OFF)
+                      </span>
 
-                    <span className="text-green-600 font-medium">
-                      -
-                      {formatCurrency(
-                        bankTransferDiscount,
-                        currency
-                      )}
-                    </span>
+                      <span className="text-green-600 font-medium">
+                        -
+                        {formatCurrency(
+                          bankTransferDiscount,
+                          currency
+                        )}
+                      </span>
 
-                  </div>
+                    </div>
 
-                )}
+                  )}
 
                 {/* Delivery */}
 
@@ -2783,12 +2783,12 @@ export default function CheckoutPage() {
 
                   <span className="font-medium">
                     {deliveryFee ===
-                    0
+                      0
                       ? 'Free'
                       : formatCurrency(
-                          deliveryFee,
-                          currency
-                        )}
+                        deliveryFee,
+                        currency
+                      )}
                   </span>
 
                 </div>
@@ -2818,25 +2818,25 @@ export default function CheckoutPage() {
 
               {paymentMethod ===
                 'bank' && (
-                <div className="mt-3 rounded-md bg-green-50 border border-green-100 px-3 py-2">
+                  <div className="mt-3 rounded-md bg-green-50 border border-green-100 px-3 py-2">
 
-                  <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center">
 
-                    <span className="text-xs font-medium text-green-700">
-                      You save
-                    </span>
+                      <span className="text-xs font-medium text-green-700">
+                        You save
+                      </span>
 
-                    <span className="text-xs font-bold text-green-700">
-                      {formatCurrency(
-                        bankTransferDiscount,
-                        currency
-                      )}
-                    </span>
+                      <span className="text-xs font-bold text-green-700">
+                        {formatCurrency(
+                          bankTransferDiscount,
+                          currency
+                        )}
+                      </span>
+
+                    </div>
 
                   </div>
-
-                </div>
-              )}
+                )}
 
               {/* Submit */}
 
@@ -2855,7 +2855,7 @@ export default function CheckoutPage() {
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
 
                     {paymentMethod ===
-                    'bank'
+                      'bank'
                       ? 'Submitting Order...'
                       : 'Placing Order...'}
                   </>
@@ -2888,10 +2888,10 @@ export default function CheckoutPage() {
 
               {paymentMethod ===
                 'bank' && (
-                <p className="text-[10px] text-center text-gray-400 mt-2 leading-relaxed">
-                  Your order will be processed after we verify your payment.
-                </p>
-              )}
+                  <p className="text-[10px] text-center text-gray-400 mt-2 leading-relaxed">
+                    Your order will be processed after we verify your payment.
+                  </p>
+                )}
 
             </div>
 

@@ -2286,7 +2286,7 @@ export default function Navbar() {
 
                   <Input
                     type="search"
-                    placeholder="Search for earrings, bracelets & more..."
+                    placeholder="Search for earrings, fashion, bracelets & more..."
                     value={
                       searchQuery
                     }

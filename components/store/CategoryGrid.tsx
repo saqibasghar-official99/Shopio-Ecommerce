@@ -215,26 +215,7 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                 </div>
 
                 {/* Small Decorative Dot */}
-                <span
-                  className="
-                    category-dot
-                    absolute
-                    bottom-[3px]
-                    right-[4px]
-                    h-2.5
-                    w-2.5
-                    rounded-full
-                    border-2
-                    border-white
-                    bg-[#7A1F3D]
-                    shadow-sm
-                    sm:bottom-[5px]
-                    sm:right-[6px]
-                  "
-                  style={{
-                    animationDelay: `${index * 0.3}s`,
-                  }}
-                />
+                
               </div>
 
               {/* Category Name */}

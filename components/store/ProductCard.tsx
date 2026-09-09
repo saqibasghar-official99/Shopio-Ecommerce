@@ -1907,7 +1907,7 @@ function ProductCardBase({
                   min-w-0
                   truncate
                   whitespace-nowrap
-                  text-[11px]
+                  text-[10px]
                   text-gray-400
                   line-through
 

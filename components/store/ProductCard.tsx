@@ -1907,11 +1907,11 @@ function ProductCardBase({
                   min-w-0
                   truncate
                   whitespace-nowrap
-                  text-[9px]
+                  text-[12px]
                   text-gray-400
                   line-through
 
-                  sm:text-[10px]
+                  sm:text-[12px]
                 "
               >
                 {formatCurrency(

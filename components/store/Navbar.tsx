@@ -2363,62 +2363,71 @@ export default function Navbar() {
 
               {/* SEARCH DROPDOWN */}
 
-<AnimatePresence>
-  {searchOpen && searchQuery.trim() && (
-    <motion.div
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={fadeInDown}
-      transition={{ duration: 0.2 }}
-      className="
-        absolute
-        top-full
-        left-0
-        right-0
-        mt-2
-        bg-white
-        border
-        border-gray-100
-        rounded-xl
-        sm:rounded-2xl
-        shadow-2xl
-        z-50
-        overflow-hidden
-      "
-    >
-      {searchLoading ? (
-        <div className="p-5 sm:p-8 text-center">
-          <div className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 sm:mb-3 rounded-full border-2 border-gray-200 border-t-[#7A1F3D] animate-spin" />
+              <AnimatePresence>
+                {searchOpen && searchQuery.trim() && (
+                  <motion.div
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    variants={fadeInDown}
+                    transition={{ duration: 0.2 }}
+                    className="
+    absolute
+    top-full
+    mt-2
+    z-50
+    overflow-hidden
+    bg-white
+    border
+    border-gray-100
+    rounded-xl
+    sm:rounded-2xl
+    shadow-2xl
 
-          <p className="text-[10px] sm:text-xs text-gray-400 font-medium">
-            Searching products...
-          </p>
-        </div>
-      ) : searchResults.length > 0 ? (
-        <>
-          <div className="max-h-[320px] sm:max-h-[400px] overflow-y-auto divide-y divide-gray-50">
-            {searchResults.map((product, index) => (
-              <motion.div
-                key={
-                  product.id ||
-                  product._id ||
-                  product.slug
-                }
-                initial="initial"
-                animate="animate"
-                variants={itemFade}
-                transition={{
-                  delay: index * 0.03,
-                }}
-              >
-                <Link
-                  href={`/products/${product.slug}`}
-                  onClick={() => {
-                    setSearchOpen(false);
-                    setSearchQuery('');
-                  }}
-                  className="
+    /* Mobile: almost full viewport width */
+    left-1/2
+    -translate-x-1/2
+    w-[calc(100vw-24px)]
+
+    /* Desktop: return to search-bar width */
+    sm:left-0
+    sm:right-0
+    sm:translate-x-0
+    sm:w-auto
+  "
+                  >
+                    {searchLoading ? (
+                      <div className="p-5 sm:p-8 text-center">
+                        <div className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 sm:mb-3 rounded-full border-2 border-gray-200 border-t-[#7A1F3D] animate-spin" />
+
+                        <p className="text-[10px] sm:text-xs text-gray-400 font-medium">
+                          Searching products...
+                        </p>
+                      </div>
+                    ) : searchResults.length > 0 ? (
+                      <>
+                        <div className="max-h-[320px] sm:max-h-[400px] overflow-y-auto divide-y divide-gray-50">
+                          {searchResults.map((product, index) => (
+                            <motion.div
+                              key={
+                                product.id ||
+                                product._id ||
+                                product.slug
+                              }
+                              initial="initial"
+                              animate="animate"
+                              variants={itemFade}
+                              transition={{
+                                delay: index * 0.03,
+                              }}
+                            >
+                              <Link
+                                href={`/products/${product.slug}`}
+                                onClick={() => {
+                                  setSearchOpen(false);
+                                  setSearchQuery('');
+                                }}
+                                className="
                     flex
                     items-center
                     gap-2
@@ -2432,10 +2441,10 @@ export default function Navbar() {
                     duration-200
                     group
                   "
-                >
-                  {/* Product Image */}
-                  <div
-                    className="
+                              >
+                                {/* Product Image */}
+                                <div
+                                  className="
                       w-9
                       h-9
                       sm:w-12
@@ -2450,16 +2459,16 @@ export default function Navbar() {
                       group-hover:border-[#7A1F3D]/20
                       transition-colors
                     "
-                  >
-                    <img
-                      src={
-                        product.images?.[0] ||
-                        '/placeholder.png'
-                      }
-                      alt={product.name}
-                      loading="lazy"
-                      decoding="async"
-                      className="
+                                >
+                                  <img
+                                    src={
+                                      product.images?.[0] ||
+                                      '/placeholder.png'
+                                    }
+                                    alt={product.name}
+                                    loading="lazy"
+                                    decoding="async"
+                                    className="
                         w-full
                         h-full
                         object-cover
@@ -2467,13 +2476,13 @@ export default function Navbar() {
                         transition-transform
                         duration-300
                       "
-                    />
-                  </div>
+                                  />
+                                </div>
 
-                  {/* Product Info */}
-                  <div className="flex-1 min-w-0">
-                    <p
-                      className="
+                                {/* Product Info */}
+                                <div className="flex-1 min-w-0">
+                                  <p
+                                    className="
                         text-[11px]
                         sm:text-sm
                         font-medium
@@ -2483,49 +2492,49 @@ export default function Navbar() {
                         group-hover:text-[#7A1F3D]
                         transition-colors
                       "
-                    >
-                      {product.name}
-                    </p>
+                                  >
+                                    {product.name}
+                                  </p>
 
-                    <div className="flex items-center flex-wrap gap-x-1.5 sm:gap-x-2 mt-0.5">
-                      {/* Current Price */}
-                      <span
-                        className="
+                                  <div className="flex items-center flex-wrap gap-x-1.5 sm:gap-x-2 mt-0.5">
+                                    {/* Current Price */}
+                                    <span
+                                      className="
                           text-[10px]
                           sm:text-sm
                           font-bold
                           text-[#7A1F3D]
                         "
-                      >
-                        {formatCurrency(
-                          product.price,
-                          currency
-                        )}
-                      </span>
+                                    >
+                                      {formatCurrency(
+                                        product.price,
+                                        currency
+                                      )}
+                                    </span>
 
-                      {/* Compare Price */}
-                      {product.compare_price >
-                        product.price && (
-                        <span
-                          className="
+                                    {/* Compare Price */}
+                                    {product.compare_price >
+                                      product.price && (
+                                        <span
+                                          className="
                             text-[9px]
                             sm:text-xs
                             text-gray-400
                             line-through
                           "
-                        >
-                          {formatCurrency(
-                            product.compare_price,
-                            currency
-                          )}
-                        </span>
-                      )}
+                                        >
+                                          {formatCurrency(
+                                            product.compare_price,
+                                            currency
+                                          )}
+                                        </span>
+                                      )}
 
-                      {/* Sale Badge */}
-                      {product.compare_price >
-                        product.price && (
-                        <Badge
-                          className="
+                                    {/* Sale Badge */}
+                                    {product.compare_price >
+                                      product.price && (
+                                        <Badge
+                                          className="
                             bg-red-500
                             text-white
                             text-[7px]
@@ -2537,16 +2546,16 @@ export default function Navbar() {
                             sm:h-4
                             leading-none
                           "
-                        >
-                          SALE
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
+                                        >
+                                          SALE
+                                        </Badge>
+                                      )}
+                                  </div>
+                                </div>
 
-                  {/* Arrow */}
-                  <ArrowRight
-                    className="
+                                {/* Arrow */}
+                                <ArrowRight
+                                  className="
                       h-3
                       w-3
                       sm:h-4
@@ -2557,19 +2566,19 @@ export default function Navbar() {
                       group-hover:translate-x-1
                       transition-all
                     "
-                  />
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+                                />
+                              </Link>
+                            </motion.div>
+                          ))}
+                        </div>
 
-          {/* View All Results */}
-          <Link
-            href={`/products?search=${encodeURIComponent(
-              searchQuery.trim()
-            )}`}
-            onClick={() => setSearchOpen(false)}
-            className="
+                        {/* View All Results */}
+                        <Link
+                          href={`/products?search=${encodeURIComponent(
+                            searchQuery.trim()
+                          )}`}
+                          onClick={() => setSearchOpen(false)}
+                          className="
               block
               px-3
               sm:px-4
@@ -2587,18 +2596,18 @@ export default function Navbar() {
               transition-all
               duration-300
             "
-          >
-            <span className="flex items-center justify-center gap-1.5 sm:gap-2 text-[#7A1F3D]">
-              View all results
+                        >
+                          <span className="flex items-center justify-center gap-1.5 sm:gap-2 text-[#7A1F3D]">
+                            View all results
 
-              <ArrowRight className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-            </span>
-          </Link>
-        </>
-      ) : (
-        <div className="p-5 sm:p-8 text-center">
-          <div
-            className="
+                            <ArrowRight className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                          </span>
+                        </Link>
+                      </>
+                    ) : (
+                      <div className="p-5 sm:p-8 text-center">
+                        <div
+                          className="
               h-10
               w-10
               sm:h-14
@@ -2612,22 +2621,22 @@ export default function Navbar() {
               items-center
               justify-center
             "
-          >
-            <Search className="h-4 w-4 sm:h-6 sm:w-6 text-gray-300" />
-          </div>
+                        >
+                          <Search className="h-4 w-4 sm:h-6 sm:w-6 text-gray-300" />
+                        </div>
 
-          <p className="text-xs sm:text-sm font-semibold text-gray-700">
-            No products found
-          </p>
+                        <p className="text-xs sm:text-sm font-semibold text-gray-700">
+                          No products found
+                        </p>
 
-          <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
-            Try adjusting your search terms
-          </p>
-        </div>
-      )}
-    </motion.div>
-  )}
-</AnimatePresence>
+                        <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
+                          Try adjusting your search terms
+                        </p>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* =================================================

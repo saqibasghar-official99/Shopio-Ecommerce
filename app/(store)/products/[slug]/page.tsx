@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -84,6 +82,19 @@ export default function ProductDetailPage() {
   const [variantSelections, setVariantSelections] =
     useState<Record<string, string>>({});
 
+  /*
+   * ============================================================
+   * IMAGE MAGNIFIER STATES
+   * ============================================================
+   */
+
+  const [isMagnifying, setIsMagnifying] = useState(false);
+
+  const [magnifierPosition, setMagnifierPosition] = useState({
+    x: 50,
+    y: 50,
+  });
+
   const currency = settings?.currency || '$';
   const whatsappNumber = settings?.whatsapp_number || '';
 
@@ -118,6 +129,7 @@ export default function ProductDetailPage() {
     setLoading(true);
     setSelectedImage(0);
     setQuantity(1);
+    setIsMagnifying(false);
 
     // Reset review state when product changes
     setReviewEligibility({
@@ -177,6 +189,47 @@ export default function ProductDetailPage() {
       .finally(() => setLoading(false));
   }, [slug]);
 
+  // ============================================================
+  // IMAGE MAGNIFIER
+  // ============================================================
+
+  const handleImageMouseMove = (
+    e: React.MouseEvent<HTMLDivElement>
+  ) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    const x =
+      ((e.clientX - rect.left) / rect.width) * 100;
+
+    const y =
+      ((e.clientY - rect.top) / rect.height) * 100;
+
+    setMagnifierPosition({
+      x: Math.max(0, Math.min(100, x)),
+      y: Math.max(0, Math.min(100, y)),
+    });
+  };
+
+  const handleImageTouchMove = (
+    e: React.TouchEvent<HTMLDivElement>
+  ) => {
+    const touch = e.touches[0];
+
+    if (!touch) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    const x =
+      ((touch.clientX - rect.left) / rect.width) * 100;
+
+    const y =
+      ((touch.clientY - rect.top) / rect.height) * 100;
+
+    setMagnifierPosition({
+      x: Math.max(0, Math.min(100, x)),
+      y: Math.max(0, Math.min(100, y)),
+    });
+  };
 
   // ============================================================
   // ANALYTICS - PRODUCT VISIT
@@ -198,7 +251,6 @@ export default function ProductDetailPage() {
           }),
         });
       } catch (error) {
-        // Analytics failure should never break the product page
         console.error(
           'Product visit tracking error:',
           error
@@ -208,6 +260,7 @@ export default function ProductDetailPage() {
 
     trackVisit();
   }, [product?.id]);
+
   // ============================================================
   // FETCH RELATED PRODUCTS
   // ============================================================
@@ -215,7 +268,9 @@ export default function ProductDetailPage() {
   useEffect(() => {
     if (!product?.category?.slug) return;
 
-    fetch(`/api/products?category=${product.category.slug}&limit=5`)
+    fetch(
+      `/api/products?category=${product.category.slug}&limit=5`
+    )
       .then((r) => r.json())
       .then((data) => {
         const items = (data.data || [])
@@ -252,7 +307,9 @@ export default function ProductDetailPage() {
 
             return p;
           })
-          .filter((p: Product) => p.slug !== product.slug);
+          .filter(
+            (p: Product) => p.slug !== product.slug
+          );
 
         setRelatedProducts(items.slice(0, 4));
       })
@@ -281,16 +338,6 @@ export default function ProductDetailPage() {
 
   // ============================================================
   // AUTOMATIC REVIEW ELIGIBILITY CHECK
-  //
-  // Automatically runs when the product is loaded.
-  //
-  // Backend checks:
-  // 1. Guest customer exists
-  // 2. Order exists
-  // 3. Product exists in order
-  // 4. Payment status = paid
-  // 5. Order status = delivered
-  // 6. Customer has not already reviewed this product/order
   // ============================================================
 
   useEffect(() => {
@@ -300,8 +347,6 @@ export default function ProductDetailPage() {
       const storedGuestCustomerId =
         localStorage.getItem('guest_customer_id');
 
-      // No guest customer ID means there is no checkout/order
-      // associated with this browser.
       if (!storedGuestCustomerId) {
         setGuestCustomerId('');
 
@@ -364,9 +409,6 @@ export default function ProductDetailPage() {
 
   // ============================================================
   // MANUAL REVIEW ELIGIBILITY CHECK
-  //
-  // This is kept as a retry option.
-  // Automatic checking happens above when the page loads.
   // ============================================================
 
   const handleCheckReviewEligibility = async () => {
@@ -494,18 +536,14 @@ export default function ProductDetailPage() {
         'Thank you! Your review has been submitted.'
       );
 
-      // Reset review form
       setReviewRating(0);
       setReviewComment('');
 
-      // Disable review form after successful submission
       setReviewEligibility({
         canReview: false,
-        message:
-          '',
+        message: '',
       });
 
-      // Refresh reviews
       const reviewsResponse = await fetch(
         `/api/products/${slug}/reviews`
       );
@@ -607,22 +645,6 @@ export default function ProductDetailPage() {
   // ============================================================
   // ADD TO CART
   // ============================================================
-
-  // const handleAddToCart = () => {
-  //   addItem({
-  //     productId: product.id,
-  //     name: product.name,
-  //     slug: product.slug,
-  //     image: images[0],
-  //     price: product.price,
-  //     comparePrice: product.compare_price,
-  //     qty: quantity,
-  //     variant: variantString || undefined,
-  //     stock: product.stock,
-  //   });
-
-  //   showToast('Product added to cart');
-  // };
 
   const handleAddToCart = async () => {
     try {
@@ -767,34 +789,175 @@ ${variantString
 
       <div className="flex flex-col md:flex-row gap-6">
 
-        {/* IMAGE */}
+        {/* ====================================================
+            IMAGE SECTION
+        ==================================================== */}
 
         <div className="md:w-5/12">
 
-          <div className="relative aspect-[4/3] bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
+          {/* ==================================================
+              MAIN IMAGE + MAGNIFIER
+          ================================================== */}
+
+          <div
+            className="
+              relative
+              aspect-[4/3]
+              bg-gray-50
+              rounded-lg
+              overflow-hidden
+              border
+              border-gray-100
+              cursor-crosshair
+              select-none
+              touch-none
+            "
+            onMouseEnter={() => {
+              setIsMagnifying(true);
+            }}
+            onMouseLeave={() => {
+              setIsMagnifying(false);
+            }}
+            onMouseMove={handleImageMouseMove}
+            onTouchStart={() => {
+              setIsMagnifying(true);
+            }}
+            onTouchMove={handleImageTouchMove}
+            onTouchEnd={() => {
+              setIsMagnifying(false);
+            }}
+          >
+
+            {/* MAIN PRODUCT IMAGE */}
 
             <img
               src={images[selectedImage]}
               alt={product.name}
-              className="w-full h-full object-contain p-2"
+              draggable={false}
+              className="
+                w-full
+                h-full
+                object-contain
+                p-2
+                pointer-events-none
+              "
             />
 
+            {/* ==================================================
+                MAGNIFIER
+            ================================================== */}
+
+            {isMagnifying && (
+              <div
+                className="
+                  absolute
+                  z-30
+                  w-40
+                  h-40
+                  md:w-52
+                  md:h-52
+                  rounded-full
+                  overflow-hidden
+                  pointer-events-none
+                  border-2
+                  border-white
+                  shadow-[0_8px_30px_rgba(0,0,0,0.28)]
+                  bg-white
+                "
+                style={{
+                  left: `${magnifierPosition.x}%`,
+                  top: `${magnifierPosition.y}%`,
+                  transform:
+                    'translate(-50%, -50%)',
+                }}
+              >
+
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage: `url(${images[selectedImage]})`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: '300% 300%',
+                    backgroundPosition: `${magnifierPosition.x}% ${magnifierPosition.y}%`,
+                  }}
+                />
+
+              </div>
+            )}
+
+            {/* ==================================================
+                DISCOUNT BADGE
+            ================================================== */}
+
             {discount > 0 && (
-              <Badge className="absolute top-2 left-0 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded">
+              <Badge
+                className="
+                  absolute
+                  top-2
+                  left-0
+                  z-40
+                  bg-red-500
+                  text-white
+                  text-[10px]
+                  px-1.5
+                  py-0.5
+                  rounded
+                "
+              >
                 -{discount}%
               </Badge>
             )}
 
+            {/* ==================================================
+                STOCK BADGE
+            ================================================== */}
+
             <Badge
               className={cn(
-                'absolute top-8 left-0 text-[10px] px-1.5 py-0.5 rounded',
+                `
+                  absolute
+                  top-8
+                  left-0
+                  z-40
+                  text-[10px]
+                  px-1.5
+                  py-0.5
+                  rounded
+                `,
                 stockBadge.color
               )}
             >
               {stockBadge.label}
             </Badge>
 
+            {/* ==================================================
+                MAGNIFIER HINT
+            ================================================== */}
+
+            <div
+              className="
+                absolute
+                bottom-2
+                right-2
+                z-40
+                bg-black/60
+                text-white
+                text-[10px]
+                px-2
+                py-1
+                rounded-md
+                pointer-events-none
+                opacity-80
+              "
+            >
+              Move to zoom
+            </div>
+
           </div>
+
+          {/* ==================================================
+              IMAGE THUMBNAILS
+          ================================================== */}
 
           {images.length > 1 && (
             <div className="flex gap-2 mt-2 overflow-x-auto pb-1">
@@ -802,11 +965,20 @@ ${variantString
               {images.map((img, index) => (
                 <button
                   key={index}
-                  onClick={() =>
-                    setSelectedImage(index)
-                  }
+                  onClick={() => {
+                    setSelectedImage(index);
+                    setIsMagnifying(false);
+                  }}
                   className={cn(
-                    'w-14 h-14 rounded-md overflow-hidden border-2 shrink-0 transition-all',
+                    `
+                      w-14
+                      h-14
+                      rounded-md
+                      overflow-hidden
+                      border-2
+                      shrink-0
+                      transition-all
+                    `,
                     index === selectedImage
                       ? 'border-green-600 ring-1 ring-green-200'
                       : 'border-gray-100 hover:border-gray-300'
@@ -825,20 +997,21 @@ ${variantString
 
         </div>
 
-        {/* PRODUCT INFO */}
+        {/* ====================================================
+            PRODUCT INFO
+        ==================================================== */}
 
         <div className="md:w-7/12">
 
           {/* PRODUCT TITLE + RATING */}
 
           <div>
+
             <h1 className="text-lg md:text-xl font-bold text-gray-900 leading-tight">
               {product.name}
             </h1>
 
             <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-1.5">
-
-              {/* RATING */}
 
               {reviewStats.count > 0 ? (
                 <>
@@ -858,15 +1031,15 @@ ${variantString
 
                   </div>
 
-                  <span className="text-gray-300">|</span>
+                  <span className="text-gray-300">
+                    |
+                  </span>
                 </>
               ) : (
                 <span className="text-xs text-gray-400">
                   No reviews yet
                 </span>
               )}
-
-              {/* CATEGORY */}
 
               {product.category && (
                 <Link
@@ -878,6 +1051,7 @@ ${variantString
               )}
 
             </div>
+
           </div>
 
           {/* PRICE */}
@@ -893,13 +1067,13 @@ ${variantString
 
             {product.compare_price >
               product.price && (
-                <span className="text-sm text-gray-400 line-through">
-                  {formatCurrency(
-                    product.compare_price,
-                    currency
-                  )}
-                </span>
-              )}
+              <span className="text-sm text-gray-400 line-through">
+                {formatCurrency(
+                  product.compare_price,
+                  currency
+                )}
+              </span>
+            )}
 
             {discount > 0 && (
               <Badge className="bg-red-50 text-red-600 text-[10px] px-1.5 py-0.5 rounded font-semibold">
@@ -909,23 +1083,29 @@ ${variantString
 
           </div>
 
-          {/* SHORT DESCRIPTION */}
-
-          {/* SHORT DESCRIPTION */}
+          {/* ==================================================
+              SHORT DESCRIPTION
+          ================================================== */}
 
           {product.short_description && (
             <div
               className="
-      mt-3
-      text-sm
-      text-gray-600
-      leading-relaxed
-      whitespace-pre-line
-      [&_strong]:font-semibold
-      [&_strong]:text-gray-900
-      [&_b]:font-semibold
-      [&_b]:text-gray-900
-    "
+                mt-3
+                text-sm
+                text-gray-600
+                leading-relaxed
+                whitespace-pre-line
+                [&_strong]:font-semibold
+                [&_strong]:text-gray-900
+                [&_b]:font-semibold
+                [&_b]:text-gray-900
+                [&_p]:mb-2
+                [&_ul]:list-disc
+                [&_ul]:pl-5
+                [&_ol]:list-decimal
+                [&_ol]:pl-5
+                [&_li]:mb-1
+              "
               dangerouslySetInnerHTML={{
                 __html: product.short_description,
               }}
@@ -934,7 +1114,9 @@ ${variantString
 
           <Separator className="my-4" />
 
-          {/* VARIANTS */}
+          {/* ==================================================
+              VARIANTS
+          ================================================== */}
 
           {product.variants &&
             product.variants.length > 0 && (
@@ -951,7 +1133,7 @@ ${variantString
                       <Select
                         value={
                           variantSelections[
-                          variant.label
+                            variant.label
                           ] ||
                           variant.options[0]
                         }
@@ -965,6 +1147,7 @@ ${variantString
                           )
                         }
                       >
+
                         <SelectTrigger className="mt-1 h-9 text-sm">
                           <SelectValue />
                         </SelectTrigger>
@@ -981,6 +1164,7 @@ ${variantString
                             )
                           )}
                         </SelectContent>
+
                       </Select>
 
                     </div>
@@ -990,7 +1174,9 @@ ${variantString
               </div>
             )}
 
-          {/* QUANTITY */}
+          {/* ==================================================
+              QUANTITY
+          ================================================== */}
 
           <div className="mb-4">
 
@@ -1047,7 +1233,9 @@ ${variantString
 
           </div>
 
-          {/* ACTION BUTTONS */}
+          {/* ==================================================
+              ACTION BUTTONS
+          ================================================== */}
 
           <div className="space-y-2">
 
@@ -1089,7 +1277,9 @@ ${variantString
 
           <Separator className="my-4" />
 
-          {/* PRODUCT META */}
+          {/* ==================================================
+              PRODUCT META
+          ================================================== */}
 
           <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
 
@@ -1144,7 +1334,9 @@ ${variantString
 
           </div>
 
-          {/* SPECIFICATIONS */}
+          {/* ==================================================
+              SPECIFICATIONS
+          ================================================== */}
 
           {product.specifications &&
             product.specifications.length > 0 && (
@@ -1162,6 +1354,7 @@ ${variantString
                         key={idx}
                         className="flex text-xs"
                       >
+
                         <span className="w-2/5 px-3 py-2 bg-gray-50 text-gray-500 font-medium shrink-0">
                           {spec.key}
                         </span>
@@ -1169,6 +1362,7 @@ ${variantString
                         <span className="px-3 py-2 text-gray-800">
                           {spec.value}
                         </span>
+
                       </div>
                     )
                   )}
@@ -1178,7 +1372,9 @@ ${variantString
               </div>
             )}
 
-          {/* TRUST BADGES */}
+          {/* ==================================================
+              TRUST BADGES
+          ================================================== */}
 
           <div className="grid grid-cols-3 gap-3 mt-4">
 
@@ -1261,6 +1457,7 @@ ${variantString
         <div className="border rounded-lg overflow-hidden">
 
           {/* HEADER */}
+
           <div className="bg-gray-50 px-4 py-2.5 border-b flex items-center justify-between">
 
             <h2 className="text-sm font-semibold text-gray-900">
@@ -1288,12 +1485,13 @@ ${variantString
           </div>
 
           {/* ==================================================
-        AUTOMATIC REVIEW ELIGIBILITY / FORM
-    ================================================== */}
+              AUTOMATIC REVIEW ELIGIBILITY / FORM
+          ================================================== */}
 
           <div className="px-4 py-3">
 
             {/* CHECKING ORDER */}
+
             {checkingReviewEligibility ? (
 
               <div className="flex items-center gap-2.5 py-1">
@@ -1301,6 +1499,7 @@ ${variantString
                 <Loader2 className="h-4 w-4 animate-spin text-[#7A1F3D]" />
 
                 <div>
+
                   <p className="text-xs font-medium text-gray-900">
                     Checking your order...
                   </p>
@@ -1308,15 +1507,12 @@ ${variantString
                   <p className="text-[11px] text-gray-500">
                     Verifying your purchase.
                   </p>
+
                 </div>
 
               </div>
 
             ) : !reviewEligibility.canReview ? (
-
-              /* ==================================================
-                 NOT ELIGIBLE
-              ================================================== */
 
               <div className="flex items-center justify-between gap-3">
 
@@ -1332,12 +1528,17 @@ ${variantString
 
                 </div>
 
-                <Button style={{ display: 'none' }}
+                <Button
+                  style={{ display: 'none' }}
                   type="button"
                   size="sm"
                   className="h-8 shrink-0 bg-[#7A1F3D] hover:bg-[#7A1F3D] text-white text-xs px-3"
-                  onClick={handleCheckReviewEligibility}
-                  disabled={checkingReviewEligibility}
+                  onClick={
+                    handleCheckReviewEligibility
+                  }
+                  disabled={
+                    checkingReviewEligibility
+                  }
                 >
                   <Star className="h-3.5 w-3.5 mr-1.5" />
                   Check Order
@@ -1346,10 +1547,6 @@ ${variantString
               </div>
 
             ) : (
-
-              /* ==================================================
-                 VERIFIED PURCHASE
-              ================================================== */
 
               <div>
 
@@ -1385,27 +1582,33 @@ ${variantString
 
                   <div className="flex items-center gap-0.5">
 
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() =>
-                          setReviewRating(star)
-                        }
-                        className="p-0.5"
-                        aria-label={`Rate ${star} star${star > 1 ? 's' : ''
-                          }`}
-                      >
-                        <Star
-                          className={cn(
-                            'h-5 w-5 transition-colors',
-                            star <= reviewRating
-                              ? 'fill-yellow-400 text-yellow-400'
-                              : 'text-gray-300'
-                          )}
-                        />
-                      </button>
-                    ))}
+                    {[1, 2, 3, 4, 5].map(
+                      (star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() =>
+                            setReviewRating(star)
+                          }
+                          className="p-0.5"
+                          aria-label={`Rate ${star} star${star > 1
+                            ? 's'
+                            : ''
+                            }`}
+                        >
+
+                          <Star
+                            className={cn(
+                              'h-5 w-5 transition-colors',
+                              star <= reviewRating
+                                ? 'fill-yellow-400 text-yellow-400'
+                                : 'text-gray-300'
+                            )}
+                          />
+
+                        </button>
+                      )
+                    )}
 
                   </div>
 
@@ -1436,7 +1639,7 @@ ${variantString
                     }
                     placeholder="Write your experience..."
                     rows={2}
-                    className="w-full mt-1 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs outline-none resize-none "
+                    className="w-full mt-1 rounded-md border border-gray-300 px-2.5 py-1.5 text-xs outline-none resize-none"
                   />
 
                 </div>
@@ -1472,8 +1675,8 @@ ${variantString
           </div>
 
           {/* ==================================================
-        EXISTING REVIEWS
-    ================================================== */}
+              EXISTING REVIEWS
+          ================================================== */}
 
           <div className="px-4 py-3 border-t">
 
@@ -1535,6 +1738,7 @@ ${variantString
         </div>
 
       </div>
+
       {/* ======================================================
           RELATED PRODUCTS
       ====================================================== */}

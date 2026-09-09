@@ -2364,12 +2364,12 @@ export default function Navbar() {
               <AnimatePresence>
                 {searchOpen && searchQuery.trim() && (
                   <motion.div
-  initial="initial"
-  animate="animate"
-  exit="exit"
-  variants={fadeInDown}
-  transition={{ duration: 0.2 }}
-  className="
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    variants={fadeInDown}
+                    transition={{ duration: 0.2 }}
+                    className="
     absolute
     top-full
     mt-2
@@ -2394,7 +2394,7 @@ export default function Navbar() {
 
     max-w-full
   "
->
+                  >
                     {searchLoading ? (
                       <div className="p-5 sm:p-8 text-center">
                         <div className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 sm:mb-3 rounded-full border-2 border-gray-200 border-t-[#7A1F3D] animate-spin" />

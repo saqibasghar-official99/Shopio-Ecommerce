@@ -614,11 +614,11 @@ export default function Footer() {
               </div>
 
               <div className="min-w-0">
-                <p className="text-[11px] sm:text-xs font-semibold text-gray-900">
+                <p className="text-[11px] sm:text-sm font-semibold text-gray-900">
                   Fast Delivery
                 </p>
 
-                <p className="text-[9px] sm:text-[10px] text-gray-500 truncate">
+                <p className="text-[9px] sm:text-[12px] text-gray-500 truncate">
                   Quick & reliable shipping
                 </p>
               </div>
@@ -634,11 +634,11 @@ export default function Footer() {
               </div>
 
               <div className="min-w-0">
-                <p className="text-[11px] sm:text-xs font-semibold text-gray-900">
+                <p className="text-[11px] sm:text-sm font-semibold text-gray-900">
                   Easy Returns
                 </p>
 
-                <p className="text-[9px] sm:text-[10px] text-gray-500 truncate">
+                <p className="text-[9px] sm:text-[12px] text-gray-500 truncate">
                   Hassle-free returns
                 </p>
               </div>
@@ -654,11 +654,11 @@ export default function Footer() {
               </div>
 
               <div className="min-w-0">
-                <p className="text-[11px] sm:text-xs font-semibold text-gray-900">
+                <p className="text-[11px] sm:text-sm font-semibold text-gray-900">
                   Secure Shopping
                 </p>
 
-                <p className="text-[9px] sm:text-[10px] text-gray-500 truncate">
+                <p className="text-[9px] sm:text-[12px] text-gray-500 truncate">
                   Safe & secure checkout
                 </p>
               </div>
@@ -674,11 +674,11 @@ export default function Footer() {
               </div>
 
               <div className="min-w-0">
-                <p className="text-[11px] sm:text-xs font-semibold text-gray-900">
+                <p className="text-[11px] sm:text-sm font-semibold text-gray-900">
                   Customer Support
                 </p>
 
-                <p className="text-[9px] sm:text-[10px] text-gray-500 truncate">
+                <p className="text-[9px] sm:text-[12px] text-gray-500 truncate">
                   We're here to help
                 </p>
               </div>
@@ -712,7 +712,7 @@ export default function Footer() {
               {storeName}
             </Link>
 
-            <p className="mt-2.5 text-[11px] sm:text-xs text-gray-500 leading-relaxed max-w-xs">
+            <p className="mt-2.5 text-[11px] sm:text-sm text-gray-500 leading-relaxed max-w-xs">
               {aboutText}
             </p>
 
@@ -775,7 +775,7 @@ export default function Footer() {
 
               <Link
                 href="/"
-                className="group flex items-center gap-1 text-[11px] sm:text-xs text-gray-500 hover:text-[#7A1F3D] transition-colors"
+                className="group flex items-center gap-1 text-[11px] sm:text-sm text-gray-500 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3 text-gray-300 group-hover:text-[#7A1F3D] transition-colors" />
                 Home
@@ -783,7 +783,7 @@ export default function Footer() {
 
               <Link
                 href="/products"
-                className="group flex items-center gap-1 text-[11px] sm:text-xs text-gray-500 hover:text-[#7A1F3D] transition-colors"
+                className="group flex items-center gap-1 text-[11px] sm:text-sm text-gray-500 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3 text-gray-300 group-hover:text-[#7A1F3D] transition-colors" />
                 All Products
@@ -791,7 +791,7 @@ export default function Footer() {
 
               <Link
                 href="/cart"
-                className="group flex items-center gap-1 text-[11px] sm:text-xs text-gray-500 hover:text-[#7A1F3D] transition-colors"
+                className="group flex items-center gap-1 text-[11px] sm:text-sm text-gray-500 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3 text-gray-300 group-hover:text-[#7A1F3D] transition-colors" />
                 Shopping Cart
@@ -799,7 +799,7 @@ export default function Footer() {
 
               <Link
                 href="/account"
-                className="group flex items-center gap-1 text-[11px] sm:text-xs text-gray-500 hover:text-[#7A1F3D] transition-colors"
+                className="group flex items-center gap-1 text-[11px] sm:text-sm text-gray-500 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3 text-gray-300 group-hover:text-[#7A1F3D] transition-colors" />
                 My Account
@@ -807,7 +807,7 @@ export default function Footer() {
 
               <Link
                 href="/orders"
-                className="group flex items-center gap-1 text-[11px] sm:text-xs text-gray-500 hover:text-[#7A1F3D] transition-colors"
+                className="group flex items-center gap-1 text-[11px] sm:text-sm text-gray-500 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3 text-gray-300 group-hover:text-[#7A1F3D] transition-colors" />
                 Track Order
@@ -831,7 +831,7 @@ export default function Footer() {
 
               <Link
                 href="/policies"
-                className="group flex items-center gap-1 text-[11px] sm:text-xs text-gray-500 hover:text-[#7A1F3D] transition-colors"
+                className="group flex items-center gap-1 text-[11px] sm:text-sm text-gray-500 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3 text-gray-300 group-hover:text-[#7A1F3D]" />
                 Shipping Information
@@ -839,7 +839,7 @@ export default function Footer() {
 
               <Link
                 href="/policies"
-                className="group flex items-center gap-1 text-[11px] sm:text-xs text-gray-500 hover:text-[#7A1F3D] transition-colors"
+                className="group flex items-center gap-1 text-[11px] sm:text-sm text-gray-500 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3 text-gray-300 group-hover:text-[#7A1F3D]" />
                 Returns & Refunds
@@ -847,7 +847,7 @@ export default function Footer() {
 
               <Link
                 href="/policies"
-                className="group flex items-center gap-1 text-[11px] sm:text-xs text-gray-500 hover:text-[#7A1F3D] transition-colors"
+                className="group flex items-center gap-1 text-[11px] sm:text-sm text-gray-500 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3 text-gray-300 group-hover:text-[#7A1F3D]" />
                 Privacy Policy
@@ -855,7 +855,7 @@ export default function Footer() {
 
               <Link
                 href="/terms"
-                className="group flex items-center gap-1 text-[11px] sm:text-xs text-gray-500 hover:text-[#7A1F3D] transition-colors"
+                className="group flex items-center gap-1 text-[11px] sm:text-sm text-gray-500 hover:text-[#7A1F3D] transition-colors"
               >
                 <ChevronRight className="h-3 w-3 text-gray-300 group-hover:text-[#7A1F3D]" />
                 Terms & Conditions
@@ -886,7 +886,7 @@ export default function Footer() {
                     <MapPin className="h-3.5 w-3.5 text-[#7A1F3D]" />
                   </div>
 
-                  <p className="text-[11px] sm:text-xs text-gray-500 leading-relaxed pt-0.5">
+                  <p className="text-[11px] sm:text-sm text-gray-500 leading-relaxed pt-0.5">
                     {address}
                   </p>
 
@@ -898,7 +898,7 @@ export default function Footer() {
               {phone && (
                 <a
                   href={`tel:${cleanPhone}`}
-                  className="flex items-center gap-2.5 text-[11px] sm:text-xs text-gray-500 hover:text-[#7A1F3D] transition-colors"
+                  className="flex items-center gap-2.5 text-[11px] sm:text-sm text-gray-500 hover:text-[#7A1F3D] transition-colors"
                 >
 
                   <div className="h-7 w-7 shrink-0 rounded-md bg-[#7A1F3D]/[0.07] flex items-center justify-center">
@@ -917,7 +917,7 @@ export default function Footer() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 text-[11px] sm:text-xs text-gray-500 hover:text-[#7A1F3D] transition-colors"
+                  className="flex items-center gap-2.5 text-[11px] sm:text-sm text-gray-500 hover:text-[#7A1F3D] transition-colors"
                 >
 
                   <div className="h-7 w-7 shrink-0 rounded-md bg-[#7A1F3D]/[0.07] flex items-center justify-center">
@@ -957,11 +957,11 @@ export default function Footer() {
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5">
 
-          <p className="text-[9px] sm:text-[10px] text-gray-400 text-center sm:text-left">
+          <p className="text-[9px] sm:text-[12px] text-gray-400 text-center sm:text-left">
             © {year} {storeName}. All rights reserved.
           </p>
 
-          <div className="flex items-center gap-4 text-[9px] sm:text-[10px] text-gray-400">
+          <div className="flex items-center gap-4 text-[9px] sm:text-[12px] text-gray-400">
 
             <Link
               href="/privacy"

@@ -2361,17 +2361,15 @@ export default function Navbar() {
 
               {/* SEARCH DROPDOWN */}
 
-              {/* SEARCH DROPDOWN */}
-
               <AnimatePresence>
                 {searchOpen && searchQuery.trim() && (
                   <motion.div
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    variants={fadeInDown}
-                    transition={{ duration: 0.2 }}
-                    className="
+  initial="initial"
+  animate="animate"
+  exit="exit"
+  variants={fadeInDown}
+  transition={{ duration: 0.2 }}
+  className="
     absolute
     top-full
     mt-2
@@ -2384,23 +2382,24 @@ export default function Navbar() {
     sm:rounded-2xl
     shadow-2xl
 
-    /* Mobile: almost full viewport width */
-    left-1/2
-    -translate-x-1/2
-    w-[calc(100vw-24px)]
+    /* Mobile */
+    left-0
+    right-0
+    w-full
 
-    /* Desktop: return to search-bar width */
+    /* Desktop */
     sm:left-0
     sm:right-0
-    sm:translate-x-0
     sm:w-auto
+
+    max-w-full
   "
-                  >
+>
                     {searchLoading ? (
                       <div className="p-5 sm:p-8 text-center">
                         <div className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 sm:mb-3 rounded-full border-2 border-gray-200 border-t-[#7A1F3D] animate-spin" />
 
-                        <p className="text-[10px] sm:text-xs text-gray-400 font-medium">
+                        <p className="text-[10px] sm:text-sm text-gray-400 font-medium">
                           Searching products...
                         </p>
                       </div>
@@ -2483,7 +2482,7 @@ export default function Navbar() {
                                 <div className="flex-1 min-w-0">
                                   <p
                                     className="
-                        text-[11px]
+                        text-[14px]
                         sm:text-sm
                         font-medium
                         text-gray-900
@@ -2517,7 +2516,7 @@ export default function Navbar() {
                                       product.price && (
                                         <span
                                           className="
-                            text-[9px]
+                            text-[11px]
                             sm:text-xs
                             text-gray-400
                             line-through

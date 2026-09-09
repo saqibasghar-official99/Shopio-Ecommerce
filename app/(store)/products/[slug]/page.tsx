@@ -911,10 +911,25 @@ ${variantString
 
           {/* SHORT DESCRIPTION */}
 
+          {/* SHORT DESCRIPTION */}
+
           {product.short_description && (
-            <p className="text-sm text-gray-600 mt-3 leading-relaxed">
-              {product.short_description}
-            </p>
+            <div
+              className="
+      mt-3
+      text-sm
+      text-gray-600
+      leading-relaxed
+      whitespace-pre-line
+      [&_strong]:font-semibold
+      [&_strong]:text-gray-900
+      [&_b]:font-semibold
+      [&_b]:text-gray-900
+    "
+              dangerouslySetInnerHTML={{
+                __html: product.short_description,
+              }}
+            />
           )}
 
           <Separator className="my-4" />
@@ -1058,19 +1073,19 @@ ${variantString
 
             </div>
 
-                {whatsappNumber && (
-                  <Button
-                    variant="outline"
-                    onClick={handleWhatsAppOrder}
-                    disabled={!inStock}
-                    className="h-10 w-full rounded-xl border-[#7A1F3D] text-xs font-medium text-[#7A1F3D]"
-                  >
-                    <MessageCircle className="mr-2 h-4 w-4" />
-                    Order via WhatsApp
-                  </Button>
-                )}
+            {whatsappNumber && (
+              <Button
+                variant="outline"
+                onClick={handleWhatsAppOrder}
+                disabled={!inStock}
+                className="h-10 w-full rounded-xl border-[#7A1F3D] text-xs font-medium text-[#7A1F3D]"
+              >
+                <MessageCircle className="mr-2 h-4 w-4" />
+                Order via WhatsApp
+              </Button>
+            )}
 
-              </div>
+          </div>
 
           <Separator className="my-4" />
 

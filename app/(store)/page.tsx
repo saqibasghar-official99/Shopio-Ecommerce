@@ -49,7 +49,7 @@ export default async function HomePage() {
       {featured.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 py-4">
           <SectionHeader title="Featured Products" href="/products?featured=true" />
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1">
             {(featured as unknown as Product[]).map((product, i) => (
               <ProductCard key={product.id} product={product} priority={i < 4} />
             ))}
@@ -60,7 +60,7 @@ export default async function HomePage() {
       {newArrivals.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 py-8">
           <SectionHeader title="New Arrivals" href="/products?sort=newest" />
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1">
             {(newArrivals as unknown as Product[]).map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

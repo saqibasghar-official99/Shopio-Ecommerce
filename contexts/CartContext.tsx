@@ -88,7 +88,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setItems(prev => prev.map(i =>
       i.productId === productId && i.variant === variant ? { ...i, qty } : i
     ));
-  }, [removeItem]);
+  }, [removeItem]); 
 
   const clearCart = useCallback(() => {
     setItems([]);

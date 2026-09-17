@@ -90,7 +90,8 @@ export default async function HomePage() {
             className="
               grid
               grid-cols-2
-              gap-2
+              gap-x-2
+    gap-y-6
               sm:grid-cols-3
               lg:grid-cols-4
               xl:grid-cols-5

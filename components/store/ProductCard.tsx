@@ -602,7 +602,7 @@ function ProductCardBase({
           >
             {/* STOCK */}
 
-            <Badge
+            <Badge style={{display: 'none'}}
               className="
                 flex
                 h-5

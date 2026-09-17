@@ -1143,10 +1143,8 @@ export default function Navbar() {
 
                         {wishlistIds.length >
                           0 && (
-                            <span className="absolute top-1 right-2 h-4 min-w-4 px-1 rounded-full bg-[#7A1F3D] text-white text-[8px] font-bold flex items-center justify-center">
-                              {
-                                wishlistIds.length
-                              }
+                            <span className="absolute top-1 right-1.5 w-4 h-4 rounded-full bg-[#7A1F3D] text-white text-[8px] font-bold leading-none flex items-center justify-center">
+                              {wishlistIds.length}
                             </span>
                           )}
 
@@ -1824,37 +1822,31 @@ export default function Navbar() {
                   {wishlistIds.length >
                     0 && (
                       <motion.span
-                        initial={{
-                          scale: 0,
-                        }}
-                        animate={{
-                          scale: 1,
-                        }}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
                         className="
-                        absolute
-                        -top-1
-                        -right-1
-                        h-5
-                        min-w-[20px]
-                        px-1
-                        flex
-                        items-center
-                        justify-center
-                        rounded-full
-                        bg-gradient-to-r
-                        from-[#7A1F3D]
-                        to-[#9B2D5A]
-                        text-white
-                        text-[9px]
-                        font-bold
-                        border-2
-                        border-white
-                        shadow-md
-                      "
+    absolute
+    -top-1.5
+    -right-1.5
+    w-5
+    h-5
+    flex
+    items-center
+    justify-center
+    rounded-full
+    bg-gradient-to-r
+    from-[#7A1F3D]
+    to-[#9B2D5A]
+    text-white
+    text-[9px]
+    font-bold
+    leading-none
+    border-2
+    border-white
+    shadow-md
+  "
                       >
-                        {
-                          wishlistIds.length
-                        }
+                        {wishlistIds.length}
                       </motion.span>
                     )}
 

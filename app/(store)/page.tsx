@@ -26,8 +26,8 @@ export default async function HomePage() {
   const [settings, categories, featured, newArrivals] = await Promise.all([
     getSettings(),
     getActiveCategories(),
-    getFeaturedProducts(8),
-    getNewArrivals(8),
+    getFeaturedProducts(12),
+    getNewArrivals(20),
   ]);
 
   const banners = (settings?.banners || []).filter(

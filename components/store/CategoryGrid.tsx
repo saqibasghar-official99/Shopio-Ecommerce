@@ -38,34 +38,36 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
 
       {/* Categories */}
       <div
-        className="
-          w-full
-          overflow-x-auto
-          overflow-y-hidden
-          scrollbar-hide
-          [-ms-overflow-style:none]
-          [scrollbar-width:none]
-        "
-        style={{
-          WebkitOverflowScrolling: 'touch',
-        }}
-      >
-        <div
   className="
-    flex
-    items-start
-    justify-start
-    gap-7
-    px-2
-    pb-4
-    pt-3
-    sm:gap-9
-    sm:px-3
-    lg:justify-center
-    lg:gap-12
-    lg:px-4
+    w-full
+    overflow-x-auto
+    overflow-y-hidden
+    scrollbar-hide
+    [-ms-overflow-style:none]
+    [scrollbar-width:none]
   "
+  style={{
+    WebkitOverflowScrolling: 'touch',
+  }}
 >
+  <div
+    className="
+      flex
+      w-max
+      min-w-full
+      items-start
+      justify-start
+      gap-7
+      px-6
+      pb-4
+      pt-4
+      sm:gap-9
+      sm:px-8
+      lg:justify-center
+      lg:gap-12
+      lg:px-10
+    "
+  >
           {activeCategories.map((category, index) => (
             <Link
               key={category.id}

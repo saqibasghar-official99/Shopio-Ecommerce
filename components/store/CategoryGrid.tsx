@@ -71,32 +71,32 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
               key={category.id}
               href={`/products?category=${category.slug}`}
               className="
-                group
-                flex
-                w-[96px]
-                flex-shrink-0
-                flex-col
-                items-center
-                outline-none
-                sm:w-[112px]
-                lg:w-[128px]
-              "
+    group
+    flex
+    w-[112px]
+    flex-shrink-0
+    flex-col
+    items-center
+    outline-none
+    sm:w-[136px]
+    lg:w-[156px]
+  "
             >
               {/* Image Wrapper */}
               <div
                 className="
-                  category-float
-                  relative
-                  flex
-                  h-[88px]
-                  w-[88px]
-                  items-center
-                  justify-center
-                  sm:h-[104px]
-                  sm:w-[104px]
-                  lg:h-[118px]
-                  lg:w-[118px]
-                "
+      category-float
+      relative
+      flex
+      h-[112px]
+      w-[112px]
+      items-center
+      justify-center
+      sm:h-[130px]
+      sm:w-[130px]
+      lg:h-[150px]
+      lg:w-[150px]
+    "
                 style={{
                   animationDelay: `${index * 0.35}s`,
                 }}
@@ -104,13 +104,13 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                 {/* Outer Decorative Ring */}
                 <div
                   className="
-                    category-ring
-                    absolute
-                    inset-0
-                    rounded-full
-                    border
-                    border-[#7A1F3D]/10
-                  "
+        category-ring
+        absolute
+        inset-0
+        rounded-full
+        border
+        border-[#7A1F3D]/10
+      "
                   style={{
                     animationDelay: `${index * 0.25}s`,
                   }}
@@ -119,14 +119,14 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                 {/* Dashed Inner Ring */}
                 <div
                   className="
-                    category-dashed-ring
-                    absolute
-                    inset-[4px]
-                    rounded-full
-                    border
-                    border-dashed
-                    border-[#7A1F3D]/10
-                  "
+        category-dashed-ring
+        absolute
+        inset-[5px]
+        rounded-full
+        border
+        border-dashed
+        border-[#7A1F3D]/10
+      "
                   style={{
                     animationDelay: `${index * 0.4}s`,
                   }}
@@ -135,21 +135,21 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                 {/* Main Image Circle */}
                 <div
                   className="
-                    category-image
-                    relative
-                    h-[76px]
-                    w-[76px]
-                    overflow-hidden
-                    rounded-full
-                    border-[3px]
-                    border-white
-                    bg-[#f9f1f4]
-                    shadow-[0_5px_20px_rgba(122,31,61,0.10)]
-                    sm:h-[90px]
-                    sm:w-[90px]
-                    lg:h-[104px]
-                    lg:w-[104px]
-                  "
+        category-image
+        relative
+        h-[98px]
+        w-[98px]
+        overflow-hidden
+        rounded-full
+        border-[3px]
+        border-white
+        bg-[#f9f1f4]
+        shadow-[0_6px_24px_rgba(122,31,61,0.11)]
+        sm:h-[114px]
+        sm:w-[114px]
+        lg:h-[132px]
+        lg:w-[132px]
+      "
                 >
                   {category.image ? (
                     <img
@@ -158,114 +158,97 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                       loading="lazy"
                       decoding="async"
                       className="
-                        absolute
-                        inset-0
-                        h-full
-                        w-full
-                        object-cover
-                        category-image-zoom
-                      "
+            absolute
+            inset-0
+            h-full
+            w-full
+            object-cover
+            category-image-zoom
+          "
                     />
                   ) : (
                     <div
                       className="
-                        absolute
-                        inset-0
-                        bg-gradient-to-br
-                        from-[#fff8fa]
-                        via-[#f8e9ef]
-                        to-[#ead1da]
-                      "
+            absolute
+            inset-0
+            bg-gradient-to-br
+            from-[#fff8fa]
+            via-[#f8e9ef]
+            to-[#ead1da]
+          "
                     />
                   )}
 
                   {/* Image Overlay */}
                   <div
                     className="
-                      absolute
-                      inset-0
-                      bg-gradient-to-t
-                      from-[#7A1F3D]/10
-                      via-transparent
-                      to-white/20
-                      opacity-70
-                    "
+          absolute
+          inset-0
+          bg-gradient-to-t
+          from-[#7A1F3D]/10
+          via-transparent
+          to-white/20
+          opacity-70
+        "
                   />
 
                   {/* Continuous Shine */}
                   <div
                     className="
-                      category-shine
-                      pointer-events-none
-                      absolute
-                      -left-[100%]
-                      top-0
-                      h-full
-                      w-[55%]
-                      rotate-[18deg]
-                      bg-gradient-to-r
-                      from-transparent
-                      via-white/50
-                      to-transparent
-                    "
+          category-shine
+          pointer-events-none
+          absolute
+          -left-[100%]
+          top-0
+          h-full
+          w-[55%]
+          rotate-[18deg]
+          bg-gradient-to-r
+          from-transparent
+          via-white/50
+          to-transparent
+        "
                     style={{
                       animationDelay: `${index * 0.7}s`,
                     }}
                   />
                 </div>
-
-                {/* Small Decorative Dot */}
-                
               </div>
 
               {/* Category Name */}
-              <div className="mt-3 flex min-h-[38px] flex-col items-center">
+              <div className="mt-4 flex min-h-[42px] flex-col items-center">
                 <span
                   className="
-                    text-center
-                    text-[11px]
-                    font-semibold
-                    leading-tight
-                    tracking-wide
-                    text-gray-800
-                    transition-colors
-                    duration-300
-                    group-hover:text-[#7A1F3D]
-                    sm:text-xs
-                    lg:text-sm
-                  "
+        text-center
+        text-[11px]
+        font-semibold
+        leading-tight
+        tracking-wide
+        text-gray-800
+        transition-colors
+        duration-300
+        group-hover:text-[#7A1F3D]
+        sm:text-xs
+        lg:text-sm
+      "
                 >
                   {category.name}
                 </span>
 
-                {/* Always Animated Indicator */}
+                {/* Indicator */}
                 <span
                   className="
-                    category-indicator
-                    mt-1.5
-                    h-[1.5px]
-                    rounded-full
-                    bg-[#7A1F3D]
-                  "
+        category-indicator
+        mt-2
+        h-[1.5px]
+        rounded-full
+        bg-[#7A1F3D]
+      "
                   style={{
                     animationDelay: `${index * 0.35}s`,
                   }}
                 />
               </div>
-
-              {/* Keyboard Focus */}
-              <span
-                className="
-                  pointer-events-none
-                  absolute
-                  rounded-full
-                  ring-2
-                  ring-[#7A1F3D]/0
-                  ring-offset-2
-                  transition-all
-                  group-focus-visible:ring-[#7A1F3D]/40
-                "
-              />
             </Link>
           ))}
         </div>

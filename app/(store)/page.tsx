@@ -119,7 +119,7 @@ export default async function HomePage() {
       bg-[#7A1F3D]
       px-4
       py-2
-      my-2
+      mt-2
       text-[11px]
       font-medium
       tracking-wide

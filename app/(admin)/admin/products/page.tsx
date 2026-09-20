@@ -68,12 +68,12 @@ interface MongoProduct {
   images?: string[];
 
   category_id:
-    | string
-    | {
-        _id: string;
-        name: string;
-        slug: string;
-      };
+  | string
+  | {
+    _id: string;
+    name: string;
+    slug: string;
+  };
 
   category?: {
     _id: string;
@@ -369,8 +369,8 @@ export default function AdminProductsPage() {
 
           setTotal(
             pagination.total ??
-              json.total ??
-              mapped.length
+            json.total ??
+            mapped.length
           );
         }
       } catch (err) {
@@ -504,7 +504,7 @@ export default function AdminProductsPage() {
         if (!response.ok) {
           throw new Error(
             data.message ||
-              "Bulk import failed."
+            "Bulk import failed."
           );
         }
 
@@ -765,10 +765,19 @@ export default function AdminProductsPage() {
               s.value.trim()
           ),
 
-        variants:
-          form.variants.filter(
+        variants: form.variants
+          .map((v) => ({
+            ...v,
+            label: v.label.trim(),
+            options: v.options
+              .join(",")
+              .split(",")
+              .map((o) => o.trim())
+              .filter(Boolean),
+          }))
+          .filter(
             (v) =>
-              v.label.trim() &&
+              v.label &&
               v.options.length > 0
           ),
       };
@@ -811,7 +820,7 @@ export default function AdminProductsPage() {
 
         alert(
           errData.message ||
-            "Failed to save product."
+          "Failed to save product."
         );
       }
     } catch (err) {
@@ -933,43 +942,69 @@ export default function AdminProductsPage() {
     }));
   };
 
+  // const updateVariantGroup = (
+  //   idx: number,
+  //   field:
+  //     | "label"
+  //     | "options",
+  //   value: string
+  // ) => {
+  //   setForm((prev) => ({
+  //     ...prev,
+  //     variants:
+  //       prev.variants.map(
+  //         (v, i) =>
+  //           i === idx
+  //             ? field ===
+  //               "options"
+  //               ? {
+  //                   ...v,
+  //                   options:
+  //                     value
+  //                       .split(
+  //                         ","
+  //                       )
+  //                       .map(
+  //                         (o) =>
+  //                           o.trim()
+  //                       )
+  //                       .filter(
+  //                         Boolean
+  //                       ),
+  //                 }
+  //               : {
+  //                   ...v,
+  //                   label:
+  //                     value,
+  //                 }
+  //             : v
+  //       ),
+  //   }));
+  // };
+
+
+
   const updateVariantGroup = (
     idx: number,
-    field:
-      | "label"
-      | "options",
+    field: "label" | "options",
     value: string
   ) => {
     setForm((prev) => ({
       ...prev,
-      variants:
-        prev.variants.map(
-          (v, i) =>
-            i === idx
-              ? field ===
-                "options"
-                ? {
-                    ...v,
-                    options:
-                      value
-                        .split(
-                          ","
-                        )
-                        .map(
-                          (o) =>
-                            o.trim()
-                        )
-                        .filter(
-                          Boolean
-                        ),
-                  }
-                : {
-                    ...v,
-                    label:
-                      value,
-                  }
-              : v
-        ),
+      variants: prev.variants.map((v, i) =>
+        i === idx
+          ? field === "options"
+            ? {
+              ...v,
+              // Keep the text exactly as the user types it
+              options: [value],
+            }
+            : {
+              ...v,
+              label: value,
+            }
+          : v
+      ),
     }));
   };
 
@@ -1017,10 +1052,10 @@ export default function AdminProductsPage() {
           (s, i) =>
             i === idx
               ? {
-                  ...s,
-                  [field]:
-                    value,
-                }
+                ...s,
+                [field]:
+                  value,
+              }
               : s
         ),
     }));
@@ -1083,11 +1118,11 @@ export default function AdminProductsPage() {
       ) => {
         const cat =
           row.category as
-            | Record<
-                string,
-                unknown
-              >
-            | undefined;
+          | Record<
+            string,
+            unknown
+          >
+          | undefined;
 
         return cat?.name
           ? (cat.name as string)
@@ -1155,8 +1190,8 @@ export default function AdminProductsPage() {
               stock <= 0
                 ? "text-red-600"
                 : stock <= 10
-                ? "text-yellow-600"
-                : "text-green-600"
+                  ? "text-yellow-600"
+                  : "text-green-600"
             )}
           >
             {stock}
@@ -1176,11 +1211,11 @@ export default function AdminProductsPage() {
       ) => {
         const specs =
           row.specifications as
-            | {
-                key: string;
-                value: string;
-              }[]
-            | undefined;
+          | {
+            key: string;
+            value: string;
+          }[]
+          | undefined;
 
         const count =
           specs?.length || 0;
@@ -1493,8 +1528,8 @@ export default function AdminProductsPage() {
                           editingSlug
                             ? prev.slug
                             : slugify(
-                                name
-                              ),
+                              name
+                            ),
                       })
                     );
                   }}
@@ -1651,7 +1686,7 @@ export default function AdminProductsPage() {
                       type="number"
                       value={
                         form[
-                          key as keyof ProductForm
+                        key as keyof ProductForm
                         ] as string
                       }
                       onChange={(
@@ -1896,7 +1931,7 @@ export default function AdminProductsPage() {
                       uploadingImage ||
                       form.images
                         .length >=
-                        5
+                      5
                     }
                   />
 
@@ -1965,44 +2000,44 @@ export default function AdminProductsPage() {
 
               {form.images
                 .length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {form.images.map(
-                    (
-                      url,
-                      idx
-                    ) => (
-                      <div
-                        key={idx}
-                        className="relative"
-                      >
-                        <img
-                          src={url}
-                          alt=""
-                          className="h-14 w-14 rounded border object-cover"
-                        />
-
-                        {idx ===
-                          0 && (
-                          <span className="absolute bottom-0 left-0 right-0 bg-green-600 text-white text-[8px] text-center py-0.5 rounded-b font-medium">
-                            Main
-                          </span>
-                        )}
-
-                        <button
-                          onClick={() =>
-                            removeImage(
-                              idx
-                            )
-                          }
-                          className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-white"
+                  <div className="flex flex-wrap gap-2">
+                    {form.images.map(
+                      (
+                        url,
+                        idx
+                      ) => (
+                        <div
+                          key={idx}
+                          className="relative"
                         >
-                          <X className="h-2.5 w-2.5" />
-                        </button>
-                      </div>
-                    )
-                  )}
-                </div>
-              )}
+                          <img
+                            src={url}
+                            alt=""
+                            className="h-14 w-14 rounded border object-cover"
+                          />
+
+                          {idx ===
+                            0 && (
+                              <span className="absolute bottom-0 left-0 right-0 bg-green-600 text-white text-[8px] text-center py-0.5 rounded-b font-medium">
+                                Main
+                              </span>
+                            )}
+
+                          <button
+                            onClick={() =>
+                              removeImage(
+                                idx
+                              )
+                            }
+                            className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-white"
+                          >
+                            <X className="h-2.5 w-2.5" />
+                          </button>
+                        </div>
+                      )
+                    )}
+                  </div>
+                )}
             </div>
 
             <Separator />
@@ -2207,8 +2242,8 @@ export default function AdminProductsPage() {
                 {saving
                   ? "Saving..."
                   : editingSlug
-                  ? "Update Product"
-                  : "Create Product"}
+                    ? "Update Product"
+                    : "Create Product"}
               </Button>
             </div>
           </div>
@@ -2310,85 +2345,85 @@ export default function AdminProductsPage() {
 
             {bulkImportMode ===
               "file" && (
-              <div className="space-y-2">
-                <Label className="text-sm">
-                  Product File
-                </Label>
-
-                <Input
-                  type="file"
-                  accept=".csv,.xlsx,.xls"
-                  onChange={(
-                    e
-                  ) => {
-                    setBulkImportFile(
-                      e.target
-                        .files?.[0] ||
-                        null
-                    );
-
-                    setBulkImportResult(
-                      null
-                    );
-                  }}
-                  className="text-xs"
-                  disabled={
-                    bulkImporting
-                  }
-                />
-
-                {bulkImportFile && (
-                  <p className="text-xs text-gray-500">
-                    Selected:{" "}
-                    <span className="font-medium">
-                      {
-                        bulkImportFile.name
-                      }
-                    </span>
-                  </p>
-                )}
-              </div>
-            )}
-
-            {/* URL */}
-
-            {bulkImportMode ===
-              "url" && (
-              <div className="space-y-2">
-                <Label className="text-sm">
-                  Excel Sheet URL
-                </Label>
-
-                <div className="relative">
-                  <LinkIcon className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+                <div className="space-y-2">
+                  <Label className="text-sm">
+                    Product File
+                  </Label>
 
                   <Input
-                    value={
-                      bulkImportUrl
-                    }
-                    onChange={(e) => {
-                      setBulkImportUrl(
+                    type="file"
+                    accept=".csv,.xlsx,.xls"
+                    onChange={(
+                      e
+                    ) => {
+                      setBulkImportFile(
                         e.target
-                          .value
+                          .files?.[0] ||
+                        null
                       );
 
                       setBulkImportResult(
                         null
                       );
                     }}
-                    className="h-9 pl-8 text-xs"
-                    placeholder="https://1drv.ms/x/..."
+                    className="text-xs"
                     disabled={
                       bulkImporting
                     }
                   />
-                </div>
 
-                <p className="text-[10px] leading-4 text-gray-400">
-                  The Excel file must be publicly accessible without requiring a Microsoft login.
-                </p>
-              </div>
-            )}
+                  {bulkImportFile && (
+                    <p className="text-xs text-gray-500">
+                      Selected:{" "}
+                      <span className="font-medium">
+                        {
+                          bulkImportFile.name
+                        }
+                      </span>
+                    </p>
+                  )}
+                </div>
+              )}
+
+            {/* URL */}
+
+            {bulkImportMode ===
+              "url" && (
+                <div className="space-y-2">
+                  <Label className="text-sm">
+                    Excel Sheet URL
+                  </Label>
+
+                  <div className="relative">
+                    <LinkIcon className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+
+                    <Input
+                      value={
+                        bulkImportUrl
+                      }
+                      onChange={(e) => {
+                        setBulkImportUrl(
+                          e.target
+                            .value
+                        );
+
+                        setBulkImportResult(
+                          null
+                        );
+                      }}
+                      className="h-9 pl-8 text-xs"
+                      placeholder="https://1drv.ms/x/..."
+                      disabled={
+                        bulkImporting
+                      }
+                    />
+                  </div>
+
+                  <p className="text-[10px] leading-4 text-gray-400">
+                    The Excel file must be publicly accessible without requiring a Microsoft login.
+                  </p>
+                </div>
+              )}
 
             {/* STRUCTURE */}
 
@@ -2434,7 +2469,7 @@ export default function AdminProductsPage() {
               <div className="rounded-md border bg-blue-50 p-3">
                 <p className="text-xs font-medium text-blue-700">
                   {bulkImportMode ===
-                  "url"
+                    "url"
                     ? "Downloading Excel sheet, importing products and uploading images to Cloudinary..."
                     : "Importing products and uploading images to Cloudinary..."}
                 </p>
@@ -2486,36 +2521,36 @@ export default function AdminProductsPage() {
                 {bulkImportResult
                   .errors
                   .length > 0 && (
-                  <div className="max-h-40 overflow-y-auto rounded border bg-red-50 p-2">
-                    <p className="mb-2 text-xs font-medium text-red-700">
-                      Failed rows
-                    </p>
+                    <div className="max-h-40 overflow-y-auto rounded border bg-red-50 p-2">
+                      <p className="mb-2 text-xs font-medium text-red-700">
+                        Failed rows
+                      </p>
 
-                    {bulkImportResult.errors.map(
-                      (error) => (
-                        <div
-                          key={`${error.row}-${error.name}`}
-                          className="mb-2 text-[11px] text-red-600"
-                        >
-                          <strong>
-                            Row{" "}
+                      {bulkImportResult.errors.map(
+                        (error) => (
+                          <div
+                            key={`${error.row}-${error.name}`}
+                            className="mb-2 text-[11px] text-red-600"
+                          >
+                            <strong>
+                              Row{" "}
+                              {
+                                error.row
+                              }
+                            </strong>
+
+                            {error.name &&
+                              ` — ${error.name}`}
+
+                            :{" "}
                             {
-                              error.row
+                              error.error
                             }
-                          </strong>
-
-                          {error.name &&
-                            ` — ${error.name}`}
-
-                          :{" "}
-                          {
-                            error.error
-                          }
-                        </div>
-                      )
-                    )}
-                  </div>
-                )}
+                          </div>
+                        )
+                      )}
+                    </div>
+                  )}
               </div>
             )}
 
@@ -2544,7 +2579,7 @@ export default function AdminProductsPage() {
                 disabled={
                   bulkImporting ||
                   (bulkImportMode ===
-                  "file"
+                    "file"
                     ? !bulkImportFile
                     : !bulkImportUrl.trim())
                 }

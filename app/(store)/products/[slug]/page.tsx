@@ -1067,13 +1067,13 @@ ${variantString
 
             {product.compare_price >
               product.price && (
-              <span className="text-sm text-gray-400 line-through">
-                {formatCurrency(
-                  product.compare_price,
-                  currency
-                )}
-              </span>
-            )}
+                <span className="text-sm text-gray-400 line-through">
+                  {formatCurrency(
+                    product.compare_price,
+                    currency
+                  )}
+                </span>
+              )}
 
             {discount > 0 && (
               <Badge className="bg-red-50 text-red-600 text-[10px] px-1.5 py-0.5 rounded font-semibold">
@@ -1118,57 +1118,283 @@ ${variantString
               VARIANTS
           ================================================== */}
 
+          {/* ==================================================
+    VARIANTS
+================================================== */}
+
           {product.variants &&
             product.variants.length > 0 && (
-              <div className="space-y-3 mb-4">
+              <div className="mb-5 space-y-4">
 
-                {product.variants.map(
-                  (variant) => (
-                    <div key={variant.label}>
+                {/* VARIANT HEADER */}
 
-                      <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">
-                        {variant.label}
-                      </label>
+                <div className="flex items-center justify-between gap-3">
 
-                      <Select
-                        value={
-                          variantSelections[
-                            variant.label
-                          ] ||
-                          variant.options[0]
-                        }
-                        onValueChange={(value) =>
-                          setVariantSelections(
-                            (prev) => ({
-                              ...prev,
-                              [variant.label]:
-                                value,
-                            })
-                          )
-                        }
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900">
+                      Choose your options
+                    </h3>
+
+                    <p className="text-[11px] text-gray-500 mt-0.5">
+                      Select the option you want before adding to cart.
+                    </p>
+                  </div>
+
+                  {Object.keys(variantSelections).length > 0 && (
+                    <span className="hidden sm:inline-flex shrink-0 items-center rounded-full bg-[#7A1F3D]/5 px-2.5 py-1 text-[10px] font-medium text-[#7A1F3D]">
+                      {Object.keys(variantSelections).length}{' '}
+                      selected
+                    </span>
+                  )}
+
+                </div>
+
+                {/* VARIANT GROUPS */}
+
+                <div className="space-y-4">
+
+                  {product.variants.map((variant) => {
+
+                    const selected =
+                      variantSelections[variant.label] ||
+                      variant.options[0];
+
+                    return (
+                      <div
+                        key={variant.label}
+                        className="
+                rounded-xl
+                border
+                border-gray-200
+                bg-white
+                p-3
+                sm:p-4
+                transition-all
+              "
                       >
 
-                        <SelectTrigger className="mt-1 h-9 text-sm">
-                          <SelectValue />
-                        </SelectTrigger>
+                        {/* GROUP TITLE */}
 
-                        <SelectContent>
-                          {variant.options.map(
-                            (option) => (
-                              <SelectItem
+                        <div className="flex items-center justify-between gap-2 mb-3">
+
+                          <div className="min-w-0">
+
+                            <div className="flex items-center gap-2">
+
+                              <span className="text-xs sm:text-sm font-semibold text-gray-900">
+                                {variant.label}
+                              </span>
+
+                              <span className="text-[9px] sm:text-[10px] font-medium text-gray-400">
+                                {variant.options.length}{' '}
+                                {variant.options.length === 1
+                                  ? 'option'
+                                  : 'options'}
+                              </span>
+
+                            </div>
+
+                            {/* CURRENT SELECTION */}
+
+                            <p className="mt-1 text-[10px] sm:text-[11px] text-gray-500 truncate">
+                              Selected:{' '}
+                              <span className="font-medium text-[#7A1F3D]">
+                                {selected}
+                              </span>
+                            </p>
+
+                          </div>
+
+                          {/* CHECK ICON */}
+
+                          <CheckCircle className="h-4 w-4 shrink-0 text-[#7A1F3D]" />
+
+                        </div>
+
+                        {/* OPTIONS */}
+
+                        <div
+                          className="
+                  grid
+                  grid-cols-1
+                  sm:grid-cols-2
+                  gap-2
+                "
+                        >
+
+                          {variant.options.map((option) => {
+
+                            const isSelected =
+                              selected === option;
+
+                            return (
+                              <button
                                 key={option}
-                                value={option}
+                                type="button"
+                                onClick={() =>
+                                  setVariantSelections(
+                                    (prev) => ({
+                                      ...prev,
+                                      [variant.label]:
+                                        option,
+                                    })
+                                  )
+                                }
+                                aria-pressed={isSelected}
+                                className={cn(
+                                  `
+                          relative
+                          w-full
+                          min-h-11
+                          rounded-lg
+                          border
+                          px-3
+                          py-2.5
+                          text-left
+                          text-xs
+                          sm:text-sm
+                          font-medium
+                          transition-all
+                          duration-200
+                          ease-out
+                          outline-none
+                          active:scale-[0.98]
+                          focus-visible:ring-2
+                          focus-visible:ring-[#7A1F3D]/30
+                        `,
+                                  isSelected
+                                    ? `
+                            border-[#7A1F3D]
+                            bg-[#7A1F3D]/5
+                            text-[#7A1F3D]
+                            shadow-sm
+                          `
+                                    : `
+                            border-gray-200
+                            bg-gray-50/50
+                            text-gray-700
+                            hover:border-[#7A1F3D]/40
+                            hover:bg-[#7A1F3D]/[0.02]
+                          `
+                                )}
                               >
-                                {option}
-                              </SelectItem>
-                            )
-                          )}
-                        </SelectContent>
 
-                      </Select>
+                                <span className="flex items-center gap-2">
+
+                                  {/* RADIO INDICATOR */}
+
+                                  <span
+                                    className={cn(
+                                      `
+                              flex
+                              h-4
+                              w-4
+                              shrink-0
+                              items-center
+                              justify-center
+                              rounded-full
+                              border
+                              transition-all
+                              duration-200
+                            `,
+                                      isSelected
+                                        ? `
+                                border-[#7A1F3D]
+                                bg-[#7A1F3D]
+                              `
+                                        : `
+                                border-gray-300
+                                bg-white
+                              `
+                                    )}
+                                  >
+
+                                    {isSelected && (
+                                      <span className="h-1.5 w-1.5 rounded-full bg-white" />
+                                    )}
+
+                                  </span>
+
+                                  {/* OPTION TEXT */}
+
+                                  <span
+                                    className="
+                            min-w-0
+                            flex-1
+                            leading-snug
+                            break-words
+                          "
+                                  >
+                                    {option}
+                                  </span>
+
+                                  {/* SELECTED CHECK */}
+
+                                  {isSelected && (
+                                    <CheckCircle
+                                      className="
+                              h-4
+                              w-4
+                              shrink-0
+                              text-[#7A1F3D]
+                            "
+                                    />
+                                  )}
+
+                                </span>
+
+                              </button>
+                            );
+                          })}
+
+                        </div>
+
+                      </div>
+                    );
+                  })}
+
+                </div>
+
+                {/* SELECTED VARIANT SUMMARY */}
+
+                {variantString && (
+                  <div
+                    className="
+            flex
+            items-start
+            gap-2
+            rounded-lg
+            border
+            border-[#7A1F3D]/10
+            bg-[#7A1F3D]/[0.035]
+            px-3
+            py-2.5
+          "
+                  >
+
+                    <CheckCircle
+                      className="
+              h-4
+              w-4
+              shrink-0
+              mt-0.5
+              text-[#7A1F3D]
+            "
+                    />
+
+                    <div className="min-w-0">
+
+                      <p className="text-[10px] font-semibold uppercase tracking-wide text-[#7A1F3D]">
+                        Your selection
+                      </p>
+
+                      <p className="mt-0.5 text-xs leading-relaxed text-gray-700 break-words">
+                        {variantString}
+                      </p>
 
                     </div>
-                  )
+
+                  </div>
                 )}
 
               </div>
@@ -1178,36 +1404,131 @@ ${variantString
               QUANTITY
           ================================================== */}
 
-          <div className="mb-4">
+          {/* ==================================================
+    QUANTITY
+================================================== */}
 
-            <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">
-              Quantity
-            </label>
+          <div className="mb-5">
 
-            <div className="flex items-center gap-3 mt-1">
+            {/* HEADER */}
 
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9"
+            <div className="flex items-center justify-between mb-2">
+
+              <div>
+                <div className="flex items-center gap-2">
+
+                  <h3 className="text-sm font-semibold text-gray-900">
+                    Quantity
+                  </h3>
+
+                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[9px] font-medium text-gray-500">
+                    {quantity === 1 ? '1 item' : `${quantity} items`}
+                  </span>
+
+                </div>
+
+                <p className="mt-0.5 text-[10px] text-gray-500">
+                  Select quantity
+                </p>
+              </div>
+
+              {inStock && (
+                <div className="flex items-center gap-1.5">
+
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-60" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                  </span>
+
+                  <span className="text-[10px] font-medium text-green-600">
+                    {product.stock} available
+                  </span>
+
+                </div>
+              )}
+
+            </div>
+
+
+            {/* COMPACT QUANTITY CONTROL */}
+
+            <div
+              className="
+    inline-flex
+    h-11
+    items-center
+    rounded-xl
+    border
+    border-gray-200
+    bg-white
+    p-1
+    shadow-sm
+    transition-all
+    duration-200
+    hover:border-[#7A1F3D]/30
+    hover:shadow-[0_3px_12px_rgba(122,31,61,0.08)]
+  "
+            >
+
+              {/* MINUS */}
+
+              <button
+                type="button"
                 onClick={() =>
                   setQuantity((q) =>
                     Math.max(1, q - 1)
                   )
                 }
                 disabled={quantity <= 1}
+                aria-label="Decrease quantity"
+                className={cn(
+                  `
+        flex
+        h-9
+        w-9
+        items-center
+        justify-center
+        rounded-lg
+        transition-all
+        duration-200
+        active:scale-90
+      `,
+                  quantity <= 1
+                    ? 'cursor-not-allowed text-gray-300'
+                    : 'text-gray-600 hover:bg-[#7A1F3D]/5 hover:text-[#7A1F3D]'
+                )}
               >
                 <Minus className="h-4 w-4" />
-              </Button>
+              </button>
 
-              <span className="w-10 text-center text-sm font-medium border rounded-md h-9 flex items-center justify-center">
-                {quantity}
-              </span>
+              {/* QUANTITY + ITEMS */}
 
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9"
+              <div
+                className="
+      flex
+      min-w-[52px]
+      flex-col
+      items-center
+      justify-center
+      border-x
+      border-gray-100
+      px-2
+      leading-none
+    "
+              >
+                <span className="text-sm font-bold text-gray-900">
+                  {quantity}
+                </span>
+
+                <span className="mt-0.5 text-[7px] font-bold tracking-[0.10em] text-gray-800">
+                  {quantity === 1 ? 'ITEM' : 'ITEMS'}
+                </span>
+              </div>
+
+              {/* PLUS */}
+
+              <button
+                type="button"
                 onClick={() =>
                   setQuantity((q) =>
                     Math.min(
@@ -1219,17 +1540,38 @@ ${variantString
                 disabled={
                   quantity >= product.stock
                 }
+                aria-label="Increase quantity"
+                className={cn(
+                  `
+        flex
+        h-9
+        w-9
+        items-center
+        justify-center
+        rounded-lg
+        transition-all
+        duration-200
+        active:scale-90
+      `,
+                  quantity >= product.stock
+                    ? 'cursor-not-allowed text-gray-300'
+                    : 'text-gray-600 hover:bg-[#7A1F3D] hover:text-white'
+                )}
               >
                 <Plus className="h-4 w-4" />
-              </Button>
-
-              {inStock && (
-                <span className="text-xs text-gray-400">
-                  {product.stock} available
-                </span>
-              )}
+              </button>
 
             </div>
+
+            {/* HELPER TEXT */}
+
+            {inStock && (
+              <p className="mt-1.5 text-[10px] text-gray-400">
+                {quantity >= product.stock
+                  ? 'Maximum available quantity selected'
+                  : `${product.stock - quantity} more available`}
+              </p>
+            )}
 
           </div>
 

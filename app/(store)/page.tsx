@@ -104,6 +104,50 @@ export default async function HomePage() {
               />
             ))}
           </div>
+
+          <div className="mt-5 flex justify-center">
+  <Link
+    href="/products"
+    className="
+      group
+      inline-flex
+      items-center
+      gap-1.5
+      rounded-full
+      border
+      border-gray-200
+      bg-[#7A1F3D]
+      px-4
+      py-2
+      my-2
+      text-[11px]
+      font-medium
+      tracking-wide
+      text-white
+      shadow-sm
+      transition-all
+      duration-300
+      ease-out
+      hover:border-[#7A1F3D]/30
+      hover:bg-[#7A1F3D]
+      hover:text-white
+      hover:shadow-md
+      active:scale-95
+    "
+  >
+    <span>Explore More</span>
+
+    <ChevronRight
+      className="
+        h-3.5
+        w-3.5
+        transition-transform
+        duration-300
+        group-hover:translate-x-0.5
+      "
+    />
+  </Link>
+</div>
         </section>
       )}
 

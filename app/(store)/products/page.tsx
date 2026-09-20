@@ -32,7 +32,7 @@ const SORT_OPTIONS = [
   { value: 'best-selling', label: 'Best Selling' },
 ];
 
-const PRODUCTS_PER_PAGE = 12;
+const PRODUCTS_PER_PAGE = 22;
 
 export default function ProductsPage() {
   return (
@@ -499,7 +499,7 @@ function ProductsContent() {
                         }
                         className={cn(
                           'h-8 w-8 text-xs p-0',
-                          p === page && 'bg-green-600 hover:bg-green-700'
+                          p === page && 'bg-[#7A1F3D] text-white hover:bg-[#7A1F3D]'
                         )}
                       >
                         {p}

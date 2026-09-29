@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-export default function PoliciesPage() {
+export default function PrivacyPage() {
   return (
     <main className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
@@ -11,109 +11,155 @@ export default function PoliciesPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-2xl sm:text-3xl font-semibold text-[#7A1F3D]">
-            Our Policies
+            Privacy Policy
           </h1>
 
           <p className="mt-2 text-xs text-gray-500">
-            Simple, transparent policies for a smooth shopping experience.
+            How Veeo Store collects, uses, and protects customer information.
           </p>
         </div>
 
         <div className="space-y-6 text-xs sm:text-sm text-gray-600">
 
-          {/* Shipping Policy */}
+          {/* Introduction */}
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">
-              Shipping Policy
-            </h2>
-
-            <ul className="space-y-1.5 list-disc pl-5">
-              <li>We currently deliver across Pakistan.</li>
-              <li>Orders are normally dispatched within 1–2 business days.</li>
-              <li>Delivery usually takes 2–5 business days after dispatch.</li>
-              <li>Delivery times may vary depending on your location and courier conditions.</li>
-              <li>Customers will receive order/tracking updates when available.</li>
-              <li>Please provide a complete and accurate delivery address and phone number.</li>
-              <li>Orders may be delayed during public holidays, sales, or unforeseen courier issues.</li>
-            </ul>
-          </section>
-
-          {/* Return Policy */}
-          <section>
-            <h2 className="text-base font-semibold text-gray-900 mb-2">
-              Return & Exchange Policy
-            </h2>
-
-            <ul className="space-y-1.5 list-disc pl-5">
-              <li>We accept return or exchange requests within 7 days of delivery.</li>
-              <li>Items must be unused, undamaged, and returned in their original packaging.</li>
-              <li>Products showing signs of use, damage, or missing accessories may not be eligible.</li>
-              <li>For damaged or incorrect items, contact us as soon as possible with clear photos/videos.</li>
-              <li>Return requests must be approved before sending any item back.</li>
-              <li>Return shipping may be the customer's responsibility unless the item is damaged or incorrect.</li>
-              <li>Refunds, where applicable, are processed after the returned product is inspected.</li>
-            </ul>
-          </section>
-
-          {/* Order Policy */}
-          <section>
-            <h2 className="text-base font-semibold text-gray-900 mb-2">
-              Order Policy
-            </h2>
-
-            <ul className="space-y-1.5 list-disc pl-5">
-              <li>Please check your order details carefully before confirming your purchase.</li>
-              <li>Orders may be cancelled before dispatch by contacting us.</li>
-              <li>Once an order has been dispatched, cancellation may not be possible.</li>
-              <li>Cash on Delivery orders may require confirmation before dispatch.</li>
-              <li>Repeated refused or fake orders may be restricted.</li>
-            </ul>
-          </section>
-
-          {/* Product Policy */}
-          <section>
-            <h2 className="text-base font-semibold text-gray-900 mb-2">
-              Product Policy
-            </h2>
-
-            <ul className="space-y-1.5 list-disc pl-5">
-              <li>Product images are provided for illustration and may have minor differences due to lighting or screens.</li>
-              <li>Product specifications are mentioned on the respective product page.</li>
-              <li>Please check product details carefully before placing your order.</li>
-            </ul>
-          </section>
-
-          {/* About Us */}
-          <section>
-            <h2 className="text-base font-semibold text-gray-900 mb-2">
-              About Us
+              1. Introduction
             </h2>
 
             <p className="leading-6">
-              Veeo Store brings together stylish watches, earbuds, and everyday
-              accessories at affordable prices. We focus on offering quality
-              products, simple shopping, reliable delivery, and customer
-              satisfaction.
+              Veeo Store respects your privacy and is committed to protecting
+              the personal information you provide when using our website,
+              placing an order, or contacting us.
+            </p>
+          </section>
+
+          {/* Information We Collect */}
+          <section>
+            <h2 className="text-base font-semibold text-gray-900 mb-2">
+              2. Information We Collect
+            </h2>
+
+            <ul className="space-y-1.5 list-disc pl-5">
+              <li>Name and contact information.</li>
+              <li>Phone number and delivery address.</li>
+              <li>Order and transaction information.</li>
+              <li>Information you provide when contacting customer support.</li>
+              <li>Technical information required to operate and improve our website.</li>
+            </ul>
+          </section>
+
+          {/* How We Use Information */}
+          <section>
+            <h2 className="text-base font-semibold text-gray-900 mb-2">
+              3. How We Use Your Information
+            </h2>
+
+            <ul className="space-y-1.5 list-disc pl-5">
+              <li>To process and fulfill orders.</li>
+              <li>To arrange delivery and provide order updates.</li>
+              <li>To communicate with customers regarding their orders.</li>
+              <li>To provide customer support.</li>
+              <li>To improve our products, services, and website.</li>
+              <li>To prevent fraud or misuse of our services.</li>
+            </ul>
+          </section>
+
+          {/* Payment Information */}
+          <section>
+            <h2 className="text-base font-semibold text-gray-900 mb-2">
+              4. Payment Information
+            </h2>
+
+            <p className="leading-6">
+              Payment information may be processed through third-party payment
+              service providers. Veeo Store does not intentionally store
+              complete payment card details on its own systems.
+            </p>
+          </section>
+
+          {/* Sharing Information */}
+          <section>
+            <h2 className="text-base font-semibold text-gray-900 mb-2">
+              5. Sharing of Information
+            </h2>
+
+            <p className="leading-6">
+              We may share necessary customer information with trusted service
+              providers, such as courier and payment service providers, when
+              required to process and fulfill an order or provide our services.
+            </p>
+          </section>
+
+          {/* Data Security */}
+          <section>
+            <h2 className="text-base font-semibold text-gray-900 mb-2">
+              6. Data Security
+            </h2>
+
+            <p className="leading-6">
+              We take reasonable measures to protect customer information from
+              unauthorized access, misuse, alteration, or disclosure. However,
+              no online system can be guaranteed to be completely secure.
+            </p>
+          </section>
+
+          {/* Cookies */}
+          <section>
+            <h2 className="text-base font-semibold text-gray-900 mb-2">
+              7. Cookies
+            </h2>
+
+            <p className="leading-6">
+              Our website may use cookies and similar technologies to maintain
+              functionality, improve user experience, and understand website
+              usage.
+            </p>
+          </section>
+
+          {/* Customer Rights */}
+          <section>
+            <h2 className="text-base font-semibold text-gray-900 mb-2">
+              8. Your Information
+            </h2>
+
+            <p className="leading-6">
+              If you have questions about the personal information we hold
+              about you or wish to request an update or correction, please
+              contact us through the contact information available on our
+              website.
+            </p>
+          </section>
+
+          {/* Policy Changes */}
+          <section>
+            <h2 className="text-base font-semibold text-gray-900 mb-2">
+              9. Changes to This Policy
+            </h2>
+
+            <p className="leading-6">
+              We may update this Privacy Policy when necessary. Any changes
+              will be posted on this page.
             </p>
           </section>
 
           {/* Contact */}
           <section className="border-t pt-5">
             <h2 className="text-base font-semibold text-gray-900 mb-2">
-              Need Help?
+              Contact Us
             </h2>
 
             <p className="leading-6">
-              If you have any questions regarding your order, shipping, return,
-              or exchange, please contact our support team through the contact
-              information provided on our website.
+              If you have any questions about this Privacy Policy, please
+              contact Veeo Store through the contact information available on
+              our website.
             </p>
           </section>
 
         </div>
 
         {/* Footer Navigation */}
-        <div className="mt-8 pt-5 border-t flex justify-center gap-5 text-xs">
+        <div className="mt-8 pt-5 border-t flex flex-wrap justify-center gap-5 text-xs">
           <Link
             href="/"
             className="text-gray-500 hover:text-[#7A1F3D]"
@@ -126,6 +172,20 @@ export default function PoliciesPage() {
             className="text-gray-500 hover:text-[#7A1F3D]"
           >
             Products
+          </Link>
+
+          <Link
+            href="/returns"
+            className="text-gray-500 hover:text-[#7A1F3D]"
+          >
+            Returns & Refunds
+          </Link>
+
+          <Link
+            href="/terms"
+            className="text-gray-500 hover:text-[#7A1F3D]"
+          >
+            Terms & Conditions
           </Link>
 
           <Link

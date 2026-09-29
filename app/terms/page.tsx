@@ -34,17 +34,42 @@ export default function TermsPage() {
             </p>
           </section>
 
+          {/* Business Information */}
+          <section>
+            <h2 className="text-base font-semibold text-gray-900 mb-2">
+              2. Business Information
+            </h2>
+
+            <p className="leading-6">
+              Veeo Store is an online retail business operating in Pakistan.
+              Our registered business address is:
+            </p>
+
+            <p className="mt-2 leading-6 font-medium text-gray-900">
+              Dak Khana Chak no.119/7DR, Chak no.117/7DR, Tehsil Chichawatni, District Sahiwal, Punjab, Pakistan.
+            </p>
+          </section>
+
           {/* Products */}
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">
-              2. Products & Pricing
+              3. Products & Pricing
             </h2>
 
             <ul className="space-y-1.5 list-disc pl-5">
-              <li>Product descriptions, images, and specifications are provided as accurately as possible.</li>
-              <li>Minor differences in product color or appearance may occur due to lighting or screen settings.</li>
+              <li>
+                Product descriptions, images, and specifications are provided
+                as accurately as possible.
+              </li>
+              <li>
+                Minor differences in product color or appearance may occur due
+                to lighting or screen settings.
+              </li>
               <li>Prices may change without prior notice.</li>
-              <li>We reserve the right to correct pricing or product information errors.</li>
+              <li>
+                We reserve the right to correct pricing or product information
+                errors.
+              </li>
               <li>Product availability may change at any time.</li>
             </ul>
           </section>
@@ -52,21 +77,31 @@ export default function TermsPage() {
           {/* Orders */}
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">
-              3. Orders
+              4. Orders
             </h2>
 
             <ul className="space-y-1.5 list-disc pl-5">
-              <li>Customers must provide accurate name, phone number, and delivery address.</li>
-              <li>We may contact customers to confirm an order before dispatch.</li>
-              <li>We reserve the right to cancel or refuse suspicious, duplicate, or fraudulent orders.</li>
-              <li>Orders cannot always be cancelled after dispatch.</li>
+              <li>
+                Customers must provide accurate name, phone number, and
+                delivery address.
+              </li>
+              <li>
+                We may contact customers to confirm an order before dispatch.
+              </li>
+              <li>
+                We reserve the right to cancel or refuse suspicious, duplicate,
+                or fraudulent orders.
+              </li>
+              <li>
+                Orders cannot always be cancelled after dispatch.
+              </li>
             </ul>
           </section>
 
           {/* Payment */}
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">
-              4. Payment
+              5. Payment
             </h2>
 
             <p className="leading-6">
@@ -79,30 +114,32 @@ export default function TermsPage() {
           {/* Shipping */}
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">
-              5. Shipping & Delivery
+              6. Shipping & Delivery
             </h2>
 
             <p className="leading-6">
-              Delivery times are estimates and may vary depending on location,
-              courier operations, weather, holidays, or other unforeseen
-              circumstances. Veeo Store is not responsible for delays caused by
-              third-party courier services.
+              Orders are normally dispatched within 1–2 business days, and
+              delivery usually takes 2–5 business days after dispatch.
+              Delivery times may vary depending on location, courier
+              operations, weather, holidays, or other unforeseen circumstances.
+              Veeo Store is not responsible for delays caused by third-party
+              courier services.
             </p>
           </section>
 
           {/* Returns */}
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">
-              6. Returns & Exchanges
+              7. Returns & Exchanges
             </h2>
 
             <p className="leading-6">
               Returns and exchanges are subject to our{' '}
               <Link
-                href="/policies"
+                href="/returns"
                 className="text-[#7A1F3D] font-medium hover:underline"
               >
-                Return Policy
+                Returns & Refunds Policy
               </Link>
               . Products must meet the applicable return conditions before a
               return or exchange can be approved.
@@ -112,20 +149,28 @@ export default function TermsPage() {
           {/* Website Usage */}
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">
-              7. Website Usage
+              8. Website Usage
             </h2>
 
             <ul className="space-y-1.5 list-disc pl-5">
-              <li>Do not use the website for unlawful or fraudulent activities.</li>
-              <li>Do not attempt to interfere with or damage the website or its services.</li>
-              <li>Website content, branding, images, and design may not be copied or used without permission.</li>
+              <li>
+                Do not use the website for unlawful or fraudulent activities.
+              </li>
+              <li>
+                Do not attempt to interfere with or damage the website or its
+                services.
+              </li>
+              <li>
+                Website content, branding, images, and design may not be copied
+                or used without permission.
+              </li>
             </ul>
           </section>
 
           {/* Intellectual Property */}
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">
-              8. Intellectual Property
+              9. Intellectual Property
             </h2>
 
             <p className="leading-6">
@@ -138,7 +183,7 @@ export default function TermsPage() {
           {/* Liability */}
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">
-              9. Limitation of Liability
+              10. Limitation of Liability
             </h2>
 
             <p className="leading-6">
@@ -149,10 +194,24 @@ export default function TermsPage() {
             </p>
           </section>
 
+          {/* Governing Law */}
+          <section>
+            <h2 className="text-base font-semibold text-gray-900 mb-2">
+              11. Governing Law & Jurisdiction
+            </h2>
+
+            <p className="leading-6">
+              These Terms & Conditions are governed by the laws of the Islamic
+              Republic of Pakistan. Any disputes arising in connection with
+              these Terms shall be subject to the jurisdiction of the courts of{' '}
+              <strong>Chichawatni, Punjab</strong>, Pakistan.
+            </p>
+          </section>
+
           {/* Changes */}
           <section>
             <h2 className="text-base font-semibold text-gray-900 mb-2">
-              10. Changes to These Terms
+              12. Changes to These Terms
             </h2>
 
             <p className="leading-6">
@@ -178,7 +237,7 @@ export default function TermsPage() {
         </div>
 
         {/* Footer Navigation */}
-        <div className="mt-8 pt-5 border-t flex justify-center gap-5 text-xs">
+        <div className="mt-8 pt-5 border-t flex flex-wrap justify-center gap-5 text-xs">
           <Link
             href="/"
             className="text-gray-500 hover:text-[#7A1F3D]"
@@ -194,10 +253,17 @@ export default function TermsPage() {
           </Link>
 
           <Link
-            href="/policies"
+            href="/returns"
             className="text-gray-500 hover:text-[#7A1F3D]"
           >
-            Store Policies
+            Returns & Refunds
+          </Link>
+
+          <Link
+            href="/privacy"
+            className="text-gray-500 hover:text-[#7A1F3D]"
+          >
+            Privacy Policy
           </Link>
 
           <Link

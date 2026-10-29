@@ -155,7 +155,7 @@ export default function SellerLoginPage() {
             >
               <BadgeCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" />
               <span>
-                Application received. Verify your email before signing in; seller features become available after approval.
+                Application received. Verify your email before signing in; seller tools become available automatically within two minutes of registration.
               </span>
             </div>
           )}

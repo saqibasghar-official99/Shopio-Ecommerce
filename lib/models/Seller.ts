@@ -9,6 +9,7 @@ export interface ISeller extends Document {
   password_hash: string;
   referral_code: string;
   status: SellerStatus;
+  auto_approve_at?: Date;
   email_verified: boolean;
   email_otp_hash?: string;
   email_otp_expires_at?: Date;
@@ -39,6 +40,7 @@ const SellerSchema = new Schema<ISeller>(
       default: 'pending',
       index: true,
     },
+    auto_approve_at: { type: Date },
     email_verified: { type: Boolean, required: true, default: true },
     email_otp_hash: { type: String, select: false },
     email_otp_expires_at: { type: Date, select: false },
@@ -57,6 +59,7 @@ const SellerSchema = new Schema<ISeller>(
 );
 
 SellerSchema.index({ email: 1 }, { unique: true });
+SellerSchema.index({ status: 1, auto_approve_at: 1 });
 
 const cachedSellerModel = mongoose.models.Seller;
 if (
@@ -64,7 +67,8 @@ if (
   (
     !cachedSellerModel.schema.path('email_verified') ||
     !cachedSellerModel.schema.path('email_otp_hash') ||
-    !cachedSellerModel.schema.path('password_reset_otp_hash')
+    !cachedSellerModel.schema.path('password_reset_otp_hash') ||
+    !cachedSellerModel.schema.path('auto_approve_at')
   )
 ) {
   delete mongoose.models.Seller;

@@ -415,7 +415,7 @@ export default function SellerDashboardPage() {
           <h1 className="mt-4 text-xl font-bold capitalize text-gray-900">Seller application {seller.status}</h1>
           <p className="mt-3 text-sm leading-relaxed text-gray-600">
             {seller.status === 'pending'
-              ? 'Your account is waiting for admin approval. You will be able to access seller tools once it is approved.'
+              ? 'Your account is being approved automatically. You will be able to access seller tools within two minutes of registration.'
               : 'Your seller access is unavailable. Please contact Veeo support.'}
           </p>
           <button onClick={() => void logout()} className="mt-6 inline-flex items-center gap-2 rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium hover:bg-gray-50">

@@ -290,7 +290,7 @@ export default function SellerRegistrationPage() {
               </button>
 
               <p className="pt-1 text-center text-[11px] leading-relaxed text-gray-500">
-                By applying you agree to Veeo’s seller terms. Applications are reviewed by our team.
+                By applying you agree to Veeo’s seller terms. Seller accounts are approved automatically within two minutes.
               </p>
             </form>
           )}

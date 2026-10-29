@@ -42,6 +42,7 @@ export async function POST(request: NextRequest) {
       password_hash: await hashSellerPassword(password),
       referral_code,
       status: 'pending',
+      auto_approve_at: new Date(now.getTime() + 60_000),
       email_verified: false,
       email_otp_expires_at: new Date(now.getTime() + SELLER_OTP_TTL_MS),
       email_otp_attempts: 0,

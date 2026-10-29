@@ -361,6 +361,7 @@ export async function POST(
       }
       const duplicateOrder = await Order.findOne({ seller_id: seller._id, seller_request_id: requestId });
       if (duplicateOrder) {
+        await createSellerCommission(duplicateOrder);
         await createSellerProfitLedger(duplicateOrder);
         return NextResponse.json({ success: true, data: duplicateOrder, duplicate: true }, { status: 200 });
       }
@@ -1252,6 +1253,7 @@ export async function POST(
         if (isDuplicateRequest) {
           const existingOrder = await Order.findOne({ seller_id: sellerOrderContext.sellerId, seller_request_id: sellerOrderContext.requestId });
           if (existingOrder) {
+            await createSellerCommission(existingOrder);
             await createSellerProfitLedger(existingOrder);
             return NextResponse.json({ success: true, data: existingOrder, duplicate: true }, { status: 200 });
           }

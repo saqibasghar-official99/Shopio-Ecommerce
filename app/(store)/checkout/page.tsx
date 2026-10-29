@@ -60,7 +60,7 @@ const PAYMENT_METHODS = [
     value: 'whatsapp',
     label: 'WhatsApp Order',
     icon: MessageCircle,
-    description: 'Complete order via WhatsApp',
+    description: 'Save your order request, then confirm via WhatsApp',
   },
 ];
 
@@ -1035,113 +1035,11 @@ export default function CheckoutPage() {
       return;
     }
 
-    /* =====================================================
-       WHATSAPP ORDER
-    ===================================================== */
-
-    if (
-      paymentMethod ===
-      'whatsapp'
-    ) {
-      const whatsappNumber =
-        settings?.whatsapp_number ||
-        '';
-
-      if (!whatsappNumber) {
-        showToast(
-          'WhatsApp ordering not available',
-          'error'
-        );
-
-        return;
-      }
-
-      const orderLines =
-        items
-          .map(
-            (item) =>
-              `- ${item.name}${item.variant
-                ? ` (${item.variant})`
-                : ''
-              } x${item.qty} = ${formatCurrency(
-                item.price *
-                item.qty,
-                currency
-              )}`
-          )
-          .join(
-            '\n'
-          );
-
-      const billingDetails =
-        billingSameAsShipping
-          ? `*Billing Address:* Same as shipping\n`
-          : `*Billing Name:* ${billingForm.name}\n` +
-          `*Billing Phone:* ${billingForm.phone}\n` +
-          `*Billing Email:* ${billingForm.email}\n` +
-          `*Billing Address:* ${billingForm.address}, ${billingForm.city}\n`;
-
-      const message =
-        encodeURIComponent(
-          `${settings?.whatsapp_message
-            ? `_${settings.whatsapp_message}_\n\n`
-            : ''
-          }` +
-          `*🛍️ NEW ORDER*\n\n` +
-          `*Order Items:*\n${orderLines}\n\n` +
-          `━━━━━━━━━━━━━━━━\n` +
-          `*Subtotal:* ${formatCurrency(
-            subtotal,
-            currency
-          )}\n` +
-          `${discount > 0
-            ? `*Discount:* -${formatCurrency(
-              discount,
-              currency
-            )}\n`
-            : ''
-          }` +
-          `*Delivery:* ${deliveryFee === 0
-            ? 'Free'
-            : formatCurrency(
-              deliveryFee,
-              currency
-            )
-          }\n` +
-          `*TOTAL: ${formatCurrency(
-            total,
-            currency
-          )}*\n` +
-          `━━━━━━━━━━━━━━━━\n\n` +
-          `*👤 Customer Details*\n` +
-          `*Name:* ${form.name}\n` +
-          `*Phone:* ${form.phone}\n` +
-          `*Email:* ${form.email}\n` +
-          `*Shipping Address:* ${form.address}, ${form.city}\n` +
-          billingDetails +
-          `${notes
-            ? `*Notes:* _${notes}_\n`
-            : ''
-          }\n` +
-          `*💳 Payment:* WhatsApp Order`
-        );
-
-      const formattedWhatsAppNumber =
-        formatWhatsAppNumber(
-          whatsappNumber
-        );
-
-      window.open(
-        `https://wa.me/${formattedWhatsAppNumber}?text=${message}`,
-        '_blank'
-      );
-
+    const whatsappNumber = settings?.whatsapp_number || '';
+    if (paymentMethod === 'whatsapp' && !whatsappNumber) {
+      showToast('WhatsApp ordering not available', 'error');
       return;
     }
-
-    /* =====================================================
-       NORMAL ORDER
-    ===================================================== */
 
     setSubmitting(true);
 
@@ -1329,16 +1227,54 @@ export default function CheckoutPage() {
 
         clearCart();
 
+        if (paymentMethod === 'whatsapp') {
+          const orderLines = items
+            .map((item) =>
+              `- ${item.name}${item.variant ? ` (${item.variant})` : ''} x${item.qty} = ${formatCurrency(item.price * item.qty, currency)}`
+            )
+            .join('\n');
+          const billingDetails = billingSameAsShipping
+            ? '*Billing Address:* Same as shipping\n'
+            : `*Billing Name:* ${billingForm.name}\n` +
+              `*Billing Phone:* ${billingForm.phone}\n` +
+              `*Billing Email:* ${billingForm.email}\n` +
+              `*Billing Address:* ${billingForm.address}, ${billingForm.city}\n`;
+          const trackingUrl = new URL(`/order/${data.data.order_number}`, window.location.origin).toString();
+          const message = encodeURIComponent(
+            `${settings?.whatsapp_message ? `_${settings.whatsapp_message}_\n\n` : ''}` +
+            `*🛍️ NEW ORDER REQUEST*\n` +
+            `*Order number:* ${data.data.order_number}\n\n` +
+            `*Order Items:*\n${orderLines}\n\n` +
+            `━━━━━━━━━━━━━━━━\n` +
+            `*Subtotal:* ${formatCurrency(subtotal, currency)}\n` +
+            `${discount > 0 ? `*Discount:* -${formatCurrency(discount, currency)}\n` : ''}` +
+            `*Delivery:* ${deliveryFee === 0 ? 'Free' : formatCurrency(deliveryFee, currency)}\n` +
+            `*TOTAL: ${formatCurrency(total, currency)}*\n` +
+            `━━━━━━━━━━━━━━━━\n\n` +
+            `*👤 Customer Details*\n` +
+            `*Name:* ${form.name}\n` +
+            `*Phone:* ${form.phone}\n` +
+            `*Email:* ${form.email}\n` +
+            `*Shipping Address:* ${form.address}, ${form.city}\n` +
+            billingDetails +
+            `${notes ? `*Notes:* _${notes}_\n` : ''}\n` +
+            `*💳 Payment:* WhatsApp Order\n` +
+            `*Track order:* ${trackingUrl}\n\n` +
+            `This order request is pending confirmation.`
+          );
+          const formattedWhatsAppNumber = formatWhatsAppNumber(whatsappNumber);
+          showToast('Order request saved. Continue in WhatsApp to confirm it.');
+          window.location.assign(`https://wa.me/${formattedWhatsAppNumber}?text=${message}`);
+          return;
+        }
+
         showToast(
-          paymentMethod ===
-            'bank'
+          paymentMethod === 'bank'
             ? 'Order submitted! Payment will be verified shortly.'
             : 'Order placed successfully!'
         );
 
-        router.push(
-          `/order/${data.data.order_number}`
-        );
+        router.push(`/order/${data.data.order_number}`);
       } else {
         showToast(
           data.message ||

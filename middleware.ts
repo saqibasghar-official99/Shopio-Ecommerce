@@ -4,7 +4,7 @@ export function middleware(request: NextRequest) {
   const referral = request.nextUrl.searchParams.get('ref');
   const response = NextResponse.next();
 
-  if (referral && !request.cookies.has('veeo_referral')) {
+  if (referral) {
     const code = referral.trim().toUpperCase();
     if (/^[A-Z0-9-]{4,32}$/.test(code)) {
       response.cookies.set('veeo_referral', code, {

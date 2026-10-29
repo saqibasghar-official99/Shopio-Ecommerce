@@ -32,9 +32,7 @@ export default function SellersAdminPage() {
   const [payouts, setPayouts] = useState<any[]>([]);
   const [claims, setClaims] = useState<any[]>([]);
   const [detail, setDetail] = useState<any>(null);
-  const [settings, setSettings] = useState({ default_commission_rate: 0, monthly_sales_threshold: 3, monthly_gift_limit: 2 });
-  const [productRates, setProductRates] = useState('[]');
-  const [categoryRates, setCategoryRates] = useState('[]');
+  const [settings, setSettings] = useState({ monthly_sales_threshold: 3, monthly_gift_limit: 2 });
   const [statistics, setStatistics] = useState<any>({});
   const [statusFilter, setStatusFilter] = useState('all');
   const [search, setSearch] = useState('');
@@ -62,9 +60,10 @@ export default function SellersAdminPage() {
         throw new Error(sellerData.message || programData.message || giftData.message || payoutData.message || claimData.message || 'Failed to load seller management data.');
       }
       setSellers(sellerData.data || []);
-      setSettings(programData.data.program);
-      setProductRates(JSON.stringify(programData.data.program.product_rates || [], null, 2));
-      setCategoryRates(JSON.stringify(programData.data.program.category_rates || [], null, 2));
+      setSettings({
+        monthly_sales_threshold: programData.data.program.monthly_sales_threshold,
+        monthly_gift_limit: programData.data.program.monthly_gift_limit,
+      });
       setStatistics(programData.data.statistics || {});
       setGifts(giftData.data || []);
       setPayouts(payoutData.data || []);
@@ -120,19 +119,10 @@ export default function SellersAdminPage() {
 
   const saveSettings = async (event: FormEvent) => {
     event.preventDefault();
-    let product_rates: unknown;
-    let category_rates: unknown;
-    try {
-      product_rates = JSON.parse(productRates);
-      category_rates = JSON.parse(categoryRates);
-      if (!Array.isArray(product_rates) || !Array.isArray(category_rates)) throw new Error('Rate overrides must be JSON arrays.');
-    } catch (error) {
-      return setMessage(error instanceof Error ? error.message : 'Commission overrides must be valid JSON arrays.');
-    }
     const response = await fetch('/api/admin/seller-program', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...settings, product_rates, category_rates }),
+      body: JSON.stringify(settings),
     });
     const result = await response.json();
     setMessage(response.ok ? 'Seller programme settings saved.' : result.message || 'Could not save settings.');
@@ -254,9 +244,9 @@ export default function SellersAdminPage() {
       <section className="rounded-lg border bg-white p-4 shadow-sm">
         <h2 className="mb-3 text-base font-semibold">Programme rules & commission rates</h2>
         <form onSubmit={saveSettings} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <label className="text-xs font-medium text-gray-600">Default commission rate (%)
-            <input type="number" min="0" max="100" step="0.01" value={settings.default_commission_rate} onChange={(e) => setSettings({ ...settings, default_commission_rate: Number(e.target.value) })} className="mt-1 w-full rounded-md border px-3 py-2 text-sm" />
-          </label>
+          <div className="rounded-md border bg-gray-50 px-3 py-2 text-sm text-gray-700">
+            Fixed commission rate: <strong>15%</strong>
+          </div>
           <label className="text-xs font-medium text-gray-600">Qualifying delivered sales / month
             <input type="number" min="1" value={settings.monthly_sales_threshold} onChange={(e) => setSettings({ ...settings, monthly_sales_threshold: Number(e.target.value) })} className="mt-1 w-full rounded-md border px-3 py-2 text-sm" />
           </label>
@@ -264,14 +254,8 @@ export default function SellersAdminPage() {
             <input type="number" min="0" value={settings.monthly_gift_limit} onChange={(e) => setSettings({ ...settings, monthly_gift_limit: Number(e.target.value) })} className="mt-1 w-full rounded-md border px-3 py-2 text-sm" />
           </label>
           <div className="flex items-end"><button className="w-full rounded-md bg-green-700 px-3 py-2 text-sm font-semibold text-white hover:bg-green-800">Save rules</button></div>
-          <label className="text-xs font-medium text-gray-600 sm:col-span-2">Product commission overrides (JSON array: product_id, rate)
-            <textarea value={productRates} onChange={(e) => setProductRates(e.target.value)} className="mt-1 h-24 w-full rounded-md border px-3 py-2 font-mono text-xs" />
-          </label>
-          <label className="text-xs font-medium text-gray-600 sm:col-span-2">Category commission overrides (JSON array: category_id, rate)
-            <textarea value={categoryRates} onChange={(e) => setCategoryRates(e.target.value)} className="mt-1 h-24 w-full rounded-md border px-3 py-2 font-mono text-xs" />
-          </label>
         </form>
-        <p className="mt-2 text-xs text-gray-500">Product overrides take precedence over category overrides, which take precedence over the default. Gift eligibility resets by calendar month in Asia/Karachi.</p>
+        <p className="mt-2 text-xs text-gray-500">Commission is 15% on eligible product sales. Seller-placed orders at the regular product price earn 15%; a seller-set markup is paid as markup instead, with no additional commission. Gift eligibility resets by calendar month in Asia/Karachi.</p>
       </section>
 
       <section className="overflow-hidden rounded-lg border bg-white shadow-sm">

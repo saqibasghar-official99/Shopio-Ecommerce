@@ -84,6 +84,7 @@ const navigation = [
   { key: 'orders', label: 'My Orders', icon: ShoppingBag },
   { key: 'earnings', label: 'My Earnings', icon: Wallet },
   { key: 'payouts', label: 'Payouts', icon: CreditCard },
+  { key: 'guide', label: 'How It Works', icon: HelpCircle },
   { key: 'rewards', label: 'Seller Rewards', icon: Gift },
   { key: 'marketing', label: 'Marketing Tools', icon: Megaphone },
   { key: 'profile', label: 'Profile & Settings', icon: Settings },
@@ -415,7 +416,7 @@ export default function SellerDashboardPage() {
           <h1 className="mt-4 text-xl font-bold capitalize text-gray-900">Seller application {seller.status}</h1>
           <p className="mt-3 text-sm leading-relaxed text-gray-600">
             {seller.status === 'pending'
-              ? 'Your account is being approved automatically. You will be able to access seller tools within two minutes of registration.'
+              ? 'Your account is being approved automatically after reviewing. You will be able to access seller tools within seconds of registration.'
               : 'Your seller access is unavailable. Please contact Veeo support.'}
           </p>
           <button onClick={() => void logout()} className="mt-6 inline-flex items-center gap-2 rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium hover:bg-gray-50">
@@ -572,19 +573,105 @@ export default function SellerDashboardPage() {
           {/* OVERVIEW */}
           {tab === 'overview' && dashboard && <section className="space-y-6">
             {/* Hero banner */}
-            <div className="relative overflow-hidden rounded-2xl p-6 text-white shadow-lg sm:p-8" style={{ background: `linear-gradient(135deg, ${BRAND} 0%, #9d2b52 55%, #5c152e 100%)` }}>
-              <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10" />
-              <div className="absolute -bottom-12 right-24 h-32 w-32 rounded-full bg-white/5" />
-              <div className="relative">
-                <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
-                  <Sparkles className="h-3.5 w-3.5" /> Seller Dashboard
-                </div>
-                <h1 className="mt-3 text-2xl font-bold sm:text-[28px]">Welcome back, {seller.name}!</h1>
-                <p className="mt-1.5 text-sm text-white/80">Here's how your referral business is performing · {dashboard.month_key} (Asia/Karachi)</p>
-                <div className="mt-5 flex flex-wrap gap-3">
-                  <button onClick={() => setTab('products')} className="inline-flex items-center gap-2 rounded bg-white px-6 py-2 mt-4 text font-semibold shadow-sm transition hover:bg-white/90" style={{ color: BRAND }}>
-                    <Package className="h-4 w-4" /> Browse Products
-                  </button>
+            <div
+              className="relative overflow-hidden rounded-[28px] text-white shadow-[0_28px_60px_-24px_rgba(122,31,61,0.55)]"
+              style={{ background: `linear-gradient(135deg, ${BRAND} 0%, #9d2b52 55%, #5c152e 100%)` }}
+            >
+              {/* Spotlight beam */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 opacity-60"
+                style={{
+                  background: 'radial-gradient(60% 80% at 15% 0%, rgba(255,255,255,0.18), transparent 60%)',
+                }}
+              />
+              {/* Oversized watermark "01" */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-6 -bottom-16 select-none font-black leading-none tracking-tighter text-white/[0.06]"
+                style={{ fontSize: 220 }}
+              >
+                {dashboard.month_key?.slice(0, 2) || 'SE'}
+              </span>
+              {/* Concentric rings bottom-right */}
+              <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full border border-white/10" />
+              <div aria-hidden="true" className="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full border border-white/10" />
+              <div aria-hidden="true" className="pointer-events-none absolute -bottom-8 -right-8 h-24 w-24 rounded-full border border-white/15" />
+              {/* Grain */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 opacity-[0.055]"
+                style={{
+                  backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)',
+                  backgroundSize: '22px 22px',
+                  maskImage: 'radial-gradient(70% 70% at 30% 0%, black, transparent)',
+                  WebkitMaskImage: 'radial-gradient(70% 70% at 30% 0%, black, transparent)',
+                }}
+              />
+
+              {/* Angled brand ribbon */}
+              <div
+                className="pointer-events-none absolute -left-6 top-0 h-full w-[45%] origin-top-left -skew-x-[12deg]"
+                style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0))' }}
+              />
+
+              <div className="relative p-6 sm:p-10">
+                <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr] lg:items-end">
+                  {/* Left — text stack */}
+                  <div className="min-w-0">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold">
+                      <Sparkles className="h-3.5 w-3.5" /> Seller Dashboard
+                    </div>
+
+                    <h2 className="mt-5 text-[20px] font-semibold leading-[1.08] tracking-[-0.03em] sm:text-[40px]">
+                      Welcome back,
+                      <br />
+                      <span className="text-white/95">{seller.name}</span>
+                      <span style={{ color: 'rgba(255,255,255,0.35)' }}>.</span>
+                    </h2>
+
+                    <p className="mt-3 max-w-full text-sm leading-relaxed text-white/70">
+                      Here's how your referral business is performing ·{' '}
+                      <span className="font-medium text-white/90">{dashboard.month_key}</span>{' '}
+                      <span className="text-white/45">(Asia/Karachi)</span>
+                    </p>
+                  </div>
+
+                  {/* Right — floating CTA card w/ mini stats */}
+                  <div className="lg:ml-auto lg:w-full lg:max-w-[280px]">
+                    <div className="rounded-2xl bg-white/[0.07] p-4 ring-1 ring-white/15 backdrop-blur-md">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-semibold tracking-[0.1em] text-white/55">
+                          Next Step
+                        </span>
+                        <span
+                          className="flex h-6 w-6 items-center justify-center rounded-full"
+                          style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+                        >
+                          <Sparkles className="h-3 w-3 text-white/80" />
+                        </span>
+                      </div>
+                      <p className="mt-2 text-sm leading-snug text-white/80">
+                        Find a fresh product to share and keep your momentum going.
+                      </p>
+                      <button
+                        onClick={() => setTab('products')}
+                        className="group/btn mt-4 flex w-full items-center justify-between gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold shadow-[0_14px_30px_-14px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_36px_-14px_rgba(0,0,0,0.55)] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                        style={{ color: BRAND }}
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          <Package className="h-4 w-4" />
+                          Browse Products
+                        </span>
+                        <span
+                          className="flex h-6 w-6 items-center justify-center rounded-full transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
+                          style={{ backgroundColor: `${BRAND}14` }}
+                        >
+                          <ArrowUpRight className="h-3.5 w-3.5" style={{ color: BRAND }} />
+                        </span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -600,97 +687,97 @@ export default function SellerDashboardPage() {
             </div>
 
             {dashboard.reward_threshold > 0 && (() => {
-  const total = dashboard.reward_threshold;
-  const done = Math.min(dashboard.reward_progress_sales, total);
-  const pct = total ? Math.round((done / total) * 100) : 0;
-  const remaining = total - done;
-  const complete = done >= total;
-  const R = 54;
-  const C = 2 * Math.PI * R;
+              const total = dashboard.reward_threshold;
+              const done = Math.min(dashboard.reward_progress_sales, total);
+              const pct = total ? Math.round((done / total) * 100) : 0;
+              const remaining = total - done;
+              const complete = done >= total;
+              const R = 54;
+              const C = 2 * Math.PI * R;
 
-  return (
-    <div
-      className="relative overflow-hidden rounded-2xl border bg-white p-5 shadow-sm sm:p-6"
-      style={{ borderColor: '#7A1F3D26' }}
-    >
-      <div
-        className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full opacity-40 blur-3xl"
-        style={{ background: `radial-gradient(circle, ${BRAND}33, transparent 70%)` }}
-      />
-      <div className="relative flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-8">
-        {/* Radial */}
-        <div className="relative h-36 w-36 shrink-0">
-          <svg viewBox="0 0 140 140" className="h-full w-full -rotate-90">
-            <circle cx="70" cy="70" r={R} fill="none" stroke="#F3E7EC" strokeWidth="10" />
-            <circle
-              cx="70"
-              cy="70"
-              r={R}
-              fill="none"
-              stroke="url(#brandGrad)"
-              strokeWidth="10"
-              strokeLinecap="round"
-              strokeDasharray={C}
-              strokeDashoffset={C - (C * done) / total}
-              style={{ transition: 'stroke-dashoffset 0.9s ease' }}
-            />
-            <defs>
-              <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor={BRAND} />
-                <stop offset="100%" stopColor="#b83a63" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <Trophy className="h-5 w-5" style={{ color: BRAND }} />
-            <span className="mt-1 text-2xl font-bold text-gray-900">{pct}%</span>
-            <span className="text-[10px] uppercase tracking-wider text-gray-400">complete</span>
-          </div>
-        </div>
+              return (
+                <div
+                  className="relative overflow-hidden rounded-2xl border bg-white p-5 shadow-sm sm:p-6"
+                  style={{ borderColor: '#7A1F3D26' }}
+                >
+                  <div
+                    className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full opacity-40 blur-3xl"
+                    style={{ background: `radial-gradient(circle, ${BRAND}33, transparent 70%)` }}
+                  />
+                  <div className="relative flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-8">
+                    {/* Radial */}
+                    <div className="relative h-36 w-36 shrink-0">
+                      <svg viewBox="0 0 140 140" className="h-full w-full -rotate-90">
+                        <circle cx="70" cy="70" r={R} fill="none" stroke="#F3E7EC" strokeWidth="10" />
+                        <circle
+                          cx="70"
+                          cy="70"
+                          r={R}
+                          fill="none"
+                          stroke="url(#brandGrad)"
+                          strokeWidth="10"
+                          strokeLinecap="round"
+                          strokeDasharray={C}
+                          strokeDashoffset={C - (C * done) / total}
+                          style={{ transition: 'stroke-dashoffset 0.9s ease' }}
+                        />
+                        <defs>
+                          <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stopColor={BRAND} />
+                            <stop offset="100%" stopColor="#b83a63" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <Trophy className="h-5 w-5" style={{ color: BRAND }} />
+                        <span className="mt-1 text-2xl font-bold text-gray-900">{pct}%</span>
+                        <span className="text-[10px] uppercase tracking-wider text-gray-400">complete</span>
+                      </div>
+                    </div>
 
-        {/* Text */}
-        <div className="min-w-0 flex-1 text-center sm:text-left">
-          <p className="flex items-center justify-center gap-2 text-sm font-semibold text-gray-900 sm:justify-start">
-            Reward Journey
-            {complete && (
-              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white"
-                style={{ background: `linear-gradient(135deg, ${BRAND}, #b83a63)` }}>
-                <Sparkles className="h-3 w-3" /> Unlocked
-              </span>
-            )}
-          </p>
-          <p className="mt-1 text-xs text-gray-500">
-            <span className="font-semibold text-gray-800">{done}</span> of{' '}
-            <span className="font-semibold text-gray-800">{total}</span> qualifying sales
-            {!complete && <> · <span style={{ color: BRAND }} className="font-semibold">{remaining} more</span> to next gift</>}
-          </p>
+                    {/* Text */}
+                    <div className="min-w-0 flex-1 text-center sm:text-left">
+                      <p className="flex items-center justify-center gap-2 text-sm font-semibold text-gray-900 sm:justify-start">
+                        Reward Journey
+                        {complete && (
+                          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white"
+                            style={{ background: `linear-gradient(135deg, ${BRAND}, #b83a63)` }}>
+                            <Sparkles className="h-3 w-3" /> Unlocked
+                          </span>
+                        )}
+                      </p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        <span className="font-semibold text-gray-800">{done}</span> of{' '}
+                        <span className="font-semibold text-gray-800">{total}</span> qualifying sales
+                        {!complete && <> · <span style={{ color: BRAND }} className="font-semibold">{remaining} more</span> to next gift</>}
+                      </p>
 
-          {/* Mini milestone dots */}
-          <div className="mt-3 flex items-center gap-1.5">
-            {Array.from({ length: Math.min(total, 10) }).map((_, i) => (
-              <span
-                key={i}
-                className="h-1.5 flex-1 rounded-full transition-all"
-                style={{
-                  backgroundColor: i < done ? BRAND : '#EDE6E9',
-                  boxShadow: i < done ? `0 0 6px #7A1F3D66` : 'none',
-                }}
-              />
-            ))}
-          </div>
+                      {/* Mini milestone dots */}
+                      <div className="mt-3 flex items-center gap-1.5">
+                        {Array.from({ length: Math.min(total, 10) }).map((_, i) => (
+                          <span
+                            key={i}
+                            className="h-1.5 flex-1 rounded-full transition-all"
+                            style={{
+                              backgroundColor: i < done ? BRAND : '#EDE6E9',
+                              boxShadow: i < done ? `0 0 6px #7A1F3D66` : 'none',
+                            }}
+                          />
+                        ))}
+                      </div>
 
-          <button
-            onClick={() => setTab('rewards')}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:opacity-90"
-            style={{ background: `linear-gradient(135deg, ${BRAND}, #9d2b52)` }}
-          >
-            <Gift className="h-3.5 w-3.5" /> View rewards <ArrowUpRight className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-})()}
+                      <button
+                        onClick={() => setTab('rewards')}
+                        className="mt-4 inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:opacity-90"
+                        style={{ background: `linear-gradient(135deg, ${BRAND}, #9d2b52)` }}
+                      >
+                        <Gift className="h-3.5 w-3.5" /> View rewards <ArrowUpRight className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Recent orders */}
             <div className="overflow-hidden rounded-2xl border bg-white shadow-sm" style={{ borderColor: '#7A1F3D1F' }}>
@@ -771,6 +858,16 @@ export default function SellerDashboardPage() {
                   <span className="block text-xs text-white/70">Available earnings</span>
                   <span className="mt-1 block text-xl font-bold">PKR {availableBalance.toFixed(2)}</span>
                 </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm">
+              <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-emerald-700" />
+              <div>
+                <p className="font-semibold text-emerald-900">Deposits are processed weekly</p>
+                <p className="mt-1 text-xs leading-5 text-emerald-800">
+                  Veeo staff process available earnings once each week to your reviewed default payout method. Earnings become available after an order is delivered and paid; bank or wallet processing times may vary.
+                </p>
               </div>
             </div>
 
@@ -1035,12 +1132,12 @@ export default function SellerDashboardPage() {
             <SectionBanner
               icon={Megaphone}
               title="Marketing tools"
-              description="Copy a product link or ready-to-share promotional message. Attribution follows the first valid referral for 30 days."
+              description="Copy a product link or ready-to-share promotional message. The latest valid referral link opened is credited for 30 days."
             />
             <div className="mb-5 flex items-center gap-3 rounded-xl border p-4 text-sm" style={{ borderColor: '#7A1F3D26', backgroundColor: '#7A1F3D08' }}>
               <Sparkles className="h-5 w-5 shrink-0" style={{ color: BRAND }} />
               <div className="text-gray-700">
-                Your referral code: <strong className="font-mono" style={{ color: BRAND }}>{seller.referral_code}</strong> · Referrals use first-touch attribution for 30 days.
+                Your referral code: <strong className="font-mono" style={{ color: BRAND }}>{seller.referral_code}</strong> · The latest referral link used is credited for 30 days.
               </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
@@ -1073,6 +1170,201 @@ export default function SellerDashboardPage() {
               ))}
             </div>
           </section>}
+
+          {/* SELLER GUIDE */}
+          {tab === 'guide' && (
+            <section className="space-y-8">
+              <SectionBanner
+                icon={HelpCircle}
+                title="How selling works"
+                description="A quick guide to sharing products, placing customer orders, and getting paid."
+              />
+
+              {/* Metro-map style journey */}
+              <div
+                className="relative overflow-hidden rounded-[32px] px-5 py-10 sm:px-10 sm:py-14"
+                style={{
+                  background: `linear-gradient(160deg, #FFFFFF 0%, ${BRAND}08 55%, ${BRAND}12 100%)`,
+                  border: `1px solid ${BRAND}1F`,
+                }}
+              >
+                {/* Decorative dotted texture */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 opacity-[0.4]"
+                  style={{
+                    backgroundImage: `radial-gradient(${BRAND}33 1px, transparent 1px)`,
+                    backgroundSize: '22px 22px',
+                    maskImage: 'radial-gradient(70% 60% at 50% 0%, black, transparent)',
+                    WebkitMaskImage: 'radial-gradient(70% 60% at 50% 0%, black, transparent)',
+                  }}
+                />
+                {/* Big soft brand orb */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full blur-3xl"
+                  style={{ background: `${BRAND}22` }}
+                />
+
+                <div className="relative">
+                  {/* Header row */}
+                  <div className="mb-10 flex flex-wrap items-end justify-between gap-4 sm:mb-12">
+                    <div className="max-w-xl">
+
+                      <h2 className="mt-3 text-2xl font-semibold tracking-[-0.025em] text-gray-900 sm:text-3xl">
+                        Your path from <span style={{ color: BRAND }}>share</span> to payout
+                      </h2>
+                    </div>
+                    <p className="max-w-xs text-sm text-gray-500">
+                      Four connected stops. Follow the line — no detours.
+                    </p>
+                  </div>
+
+                  {/* The route */}
+                  <div className="relative">
+                    {/* Curved connector — visible on md+ */}
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 1200 220"
+                      preserveAspectRatio="none"
+                      className="pointer-events-none absolute inset-x-0 top-16 hidden h-40 w-full md:block"
+                    >
+                      <defs>
+                        <linearGradient id="routeGrad" x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%" stopColor={BRAND} stopOpacity="0.75" />
+                          <stop offset="50%" stopColor={BRAND} stopOpacity="0.35" />
+                          <stop offset="100%" stopColor={BRAND} stopOpacity="0.75" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M 90 40 C 260 40, 260 180, 430 180 S 700 40, 870 40 S 1110 180, 1110 180"
+                        fill="none"
+                        stroke="url(#routeGrad)"
+                        strokeWidth="2"
+                        strokeDasharray="3 7"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+
+                    {/* Stops */}
+                    <div className="grid gap-6 md:grid-cols-4 md:gap-4">
+                      {[
+                        {
+                          icon: Share2,
+                          step: '01',
+                          label: 'Distribute',
+                          title: 'Share your product link',
+                          body: 'Share a referral link on WhatsApp, TikTok, Instagram, or Facebook. Latest valid link is credited for 30 days.',
+                          cta: 'Open Marketing',
+                          target: 'marketing',
+                        },
+                        {
+                          icon: ShoppingBag,
+                          step: '02',
+                          label: 'Convert',
+                          title: 'Place an order for a customer',
+                          body: 'Use Place for Customer. Earn 15% at regular price, or set a higher price to keep the markup instead.',
+                          cta: 'Browse Products',
+                          target: 'products',
+                        },
+                        {
+                          icon: Percent,
+                          step: '03',
+                          label: 'Track',
+                          title: 'Track orders and earnings',
+                          body: 'My Orders shows attributed purchases. Earnings stay pending until delivery and payment.',
+                          cta: 'View Orders',
+                          target: 'orders',
+                        },
+                        {
+                          icon: Wallet,
+                          step: '04',
+                          label: 'Get paid',
+                          title: 'Set up weekly payouts',
+                          body: 'Add a bank or mobile-wallet you own as default. Veeo processes payouts weekly.',
+                          cta: 'Set up Payouts',
+                          target: 'payouts',
+                        },
+                      ].map(({ icon: Icon, step, label, title, body, cta, target }) => (
+                        <div key={step} className="group relative flex flex-col items-center text-center md:items-start md:text-left">
+                          {/* Stop marker */}
+                          <div
+                            className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-[0_10px_30px_-12px_rgba(16,24,40,0.25)] ring-1 transition-transform duration-300 group-hover:-translate-y-1"
+                            style={{ ["--tw-ring-color" as string]: `${BRAND}26` } as React.CSSProperties}
+                          >
+                            <span
+                              className="flex h-12 w-12 items-center justify-center rounded-full"
+                              style={{ background: `linear-gradient(145deg, ${BRAND}1F, ${BRAND}0A)`, color: BRAND }}
+                            >
+                              <Icon className="h-5 w-5" strokeWidth={1.9} />
+                            </span>
+                            {/* Step badge */}
+                            <span
+                              className="absolute -right-1 -top-1 flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 text-[10px] font-bold text-white shadow-sm"
+                              style={{ backgroundColor: BRAND }}
+                            >
+                              {step}
+                            </span>
+                          </div>
+
+                          <div className="mt-5 w-full">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: `${BRAND}B3` }}>
+                              {label}
+                            </p>
+                            <h3 className="mt-1.5 text-[15px] font-semibold leading-snug text-gray-900">
+                              {title}
+                            </h3>
+                            <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
+                              {body}
+                            </p>
+                            <button
+                              onClick={() => setTab(target)}
+                              className="mt-3 inline-flex items-center gap-1 text-[13px] font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 rounded"
+                              style={{ color: BRAND }}
+                            >
+                              {cta}
+                              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Bottom celebration strip */}
+                  <div
+                    className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl px-5 py-4 backdrop-blur-sm"
+                    style={{ backgroundColor: 'rgba(255,255,255,0.7)', border: `1px solid ${BRAND}1A` }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex -space-x-2">
+                        {[Share2, ShoppingBag, Percent, Wallet].map((I, idx) => (
+                          <span
+                            key={idx}
+                            className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white"
+                            style={{ backgroundColor: `${BRAND}1F`, color: BRAND }}
+                          >
+                            <I className="h-3.5 w-3.5" />
+                          </span>
+                        ))}
+                      </div>
+                      <p className="text-sm text-gray-700">
+                        <span className="font-semibold text-gray-900">15% commission</span> · pending until delivered & paid
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setTab('payouts')}
+                      className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                      style={{ backgroundColor: BRAND, boxShadow: `0 12px 26px -12px ${BRAND}80` }}
+                    >
+                      Start earning
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
 
           {/* PROFILE */}
 
@@ -1521,11 +1813,10 @@ function SellerToast({ toast, onDismiss }: { toast: SellerToastMessage | null; o
         key={toast.id}
         role={toast.type === 'error' ? 'alert' : 'status'}
         aria-live={toast.type === 'error' ? 'assertive' : 'polite'}
-        className={`pointer-events-auto flex items-start gap-3 rounded-xl border px-4 py-3 text-sm shadow-lg ${
-          toast.type === 'success'
+        className={`pointer-events-auto flex items-start gap-3 rounded-xl border px-4 py-3 text-sm shadow-lg ${toast.type === 'success'
             ? 'border-green-200 bg-white text-gray-800'
             : 'border-red-200 bg-white text-red-800'
-        }`}
+          }`}
       >
         <span className={`mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full ${toast.type === 'success' ? 'bg-green-600' : 'bg-red-600'}`} />
         <span className="min-w-0 flex-1">{toast.message}</span>

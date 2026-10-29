@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 import { Order, Product, SellerAuditLog, SellerCommission, SellerProgram } from '@/lib/models';
-import type { ICommissionRate } from '@/lib/models/SellerProgram';
+
+const SELLER_COMMISSION_RATE = 15;
 
 export async function getSellerProgram() {
   return SellerProgram.findOneAndUpdate(
     { key: 'default' },
-    { $setOnInsert: { key: 'default', monthly_sales_threshold: 3, monthly_gift_limit: 2, default_commission_rate: 0 } },
+    { $setOnInsert: { key: 'default', monthly_sales_threshold: 3, monthly_gift_limit: 2, default_commission_rate: SELLER_COMMISSION_RATE } },
     { new: true, upsert: true, setDefaultsOnInsert: true }
   );
 }
@@ -15,14 +16,23 @@ export async function createSellerCommission(order: {
   order_number: string;
   seller_order?: boolean;
   seller_id?: mongoose.Types.ObjectId | null;
-  items: Array<{ productId: string; unitPrice: number; qty: number }>;
+  items: Array<{
+    productId: string;
+    unitPrice: number;
+    originalUnitPrice?: number;
+    sellerProfit?: number;
+    qty: number;
+  }>;
   subtotal: number;
   discount: number;
   bank_transfer_discount?: number;
 }) {
-  if (!order.seller_id || order.seller_order) return;
+  if (!order.seller_id) return;
 
-  const program = await getSellerProgram();
+  if (order.seller_order && order.items.some(
+    (item) => Number(item.unitPrice) > Number(item.originalUnitPrice ?? item.unitPrice)
+  )) return;
+
   const ids = order.items
     .map((item) => item.productId)
     .filter((id) => mongoose.Types.ObjectId.isValid(id));
@@ -32,19 +42,17 @@ export async function createSellerCommission(order: {
     const product = productsById.get(item.productId);
     const qty = Number(item.qty);
     if (!product || !Number.isInteger(qty) || qty < 1) return [];
-    const value = Number(product.price) * qty;
-    const categoryId = String(product.category_id);
-    const productRate = program.product_rates.find((rule: ICommissionRate) => rule.product_id === item.productId);
-    const categoryRate = program.category_rates.find((rule: ICommissionRate) => rule.category_id === categoryId);
-    return [{ value, rate: productRate?.rate ?? categoryRate?.rate ?? program.default_commission_rate }];
+    const unitPrice = order.seller_order
+      ? Number(item.originalUnitPrice ?? product.price)
+      : Number(product.price);
+    if (!Number.isFinite(unitPrice) || unitPrice < 0) return [];
+    return [{ value: unitPrice * qty }];
   });
   const gross = lines.reduce((sum, line) => sum + line.value, 0);
   const discount = Math.max(0, Number(order.discount || 0) + Number(order.bank_transfer_discount || 0));
   const buyerNetMerchandise = Math.max(0, Number(order.subtotal) - discount);
   const eligibleAmount = Math.min(gross, buyerNetMerchandise);
-  const amount = gross > 0
-    ? lines.reduce((sum, line) => sum + (line.value * eligibleAmount / gross) * line.rate / 100, 0)
-    : 0;
+  const amount = Number((eligibleAmount * SELLER_COMMISSION_RATE / 100).toFixed(2));
   await SellerCommission.updateOne(
     { order_id: order._id },
     {
@@ -56,7 +64,7 @@ export async function createSellerCommission(order: {
         eligible_amount: Number(eligibleAmount.toFixed(2)),
         amount: Number(amount.toFixed(2)),
         original_amount: Number(amount.toFixed(2)),
-        rate: gross > 0 ? Number((amount / eligibleAmount * 100 || 0).toFixed(4)) : 0,
+        rate: eligibleAmount > 0 ? SELLER_COMMISSION_RATE : 0,
         status: 'pending',
       },
     },
@@ -69,14 +77,24 @@ export async function createSellerProfitLedger(order: {
   order_number: string;
   seller_id?: mongoose.Types.ObjectId | null;
   subtotal: number;
-  items: Array<{ sellerProfit?: number; qty: number }>;
+  items: Array<{
+    sellerProfit?: number;
+    originalUnitPrice?: number;
+    unitPrice?: number;
+    qty: number;
+  }>;
 }) {
   if (!order.seller_id) return;
   const profit = order.items.reduce(
-    (sum, item) => sum + Math.max(0, Number(item.sellerProfit || 0)) * Number(item.qty || 0),
+    (sum, item) => {
+      const unitProfit = item.originalUnitPrice === undefined
+        ? Number(item.sellerProfit || 0)
+        : Math.max(0, Number(item.unitPrice || 0) - Number(item.originalUnitPrice));
+      return sum + unitProfit * Number(item.qty || 0);
+    },
     0
   );
-  if (!Number.isFinite(profit) || profit < 0) return;
+  if (!Number.isFinite(profit) || profit <= 0) return;
   const eligibleAmount = Math.max(0, Number(order.subtotal || 0));
   await SellerCommission.updateOne(
     { order_id: order._id },

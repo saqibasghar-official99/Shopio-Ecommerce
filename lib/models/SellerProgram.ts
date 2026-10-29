@@ -29,7 +29,7 @@ const CommissionRateSchema = new Schema<ICommissionRate>(
 const SellerProgramSchema = new Schema<ISellerProgram>(
   {
     key: { type: String, default: 'default', unique: true },
-    default_commission_rate: { type: Number, default: 0, min: 0, max: 100 },
+    default_commission_rate: { type: Number, default: 15, min: 0, max: 100 },
     product_rates: { type: [CommissionRateSchema], default: [] },
     category_rates: { type: [CommissionRateSchema], default: [] },
     monthly_sales_threshold: { type: Number, default: 3, min: 1 },

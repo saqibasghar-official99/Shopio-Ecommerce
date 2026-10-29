@@ -392,9 +392,12 @@ export async function POST(
       const variantSelections: Array<{ label: string; value: string }> = [];
       for (const variant of product.variants || []) {
         if (!variant.options.length) continue;
-        const value = typeof suppliedVariants[variant.label] === 'string'
-          ? suppliedVariants[variant.label].trim()
-          : '';
+        const suppliedValue: unknown = suppliedVariants[variant.label];
+
+        const value =
+          typeof suppliedValue === 'string'
+            ? suppliedValue.trim()
+            : '';
         if (!variant.options.includes(value)) {
           return NextResponse.json({ success: false, data: null, message: `Choose a valid option for ${variant.label}.` }, { status: 400 });
         }
@@ -426,7 +429,13 @@ export async function POST(
       if (!zone) {
         return NextResponse.json({ success: false, data: null, message: 'Choose an available delivery zone.' }, { status: 400 });
       }
-      if (zone.cities.length && !zone.cities.some((city) => city.trim().toLowerCase() === customerCity.toLowerCase())) {
+      if (
+        zone.cities.length &&
+        !zone.cities.some(
+          (city: string) =>
+            city.trim().toLowerCase() === customerCity.toLowerCase()
+        )
+      ) {
         return NextResponse.json({ success: false, data: null, message: 'The selected delivery zone is not available for this city.' }, { status: 400 });
       }
       if (body.payment_method && body.payment_method !== 'cod') {
@@ -632,7 +641,7 @@ export async function POST(
     if (
       paymentProofValue &&
       typeof paymentProofValue ===
-        'string'
+      'string'
     ) {
       // --------------------------------------------------
       // Validate base64 image
@@ -666,7 +675,7 @@ export async function POST(
       const estimatedSize =
         Math.ceil(
           (base64Data.length * 3) /
-            4
+          4
         );
 
       const maxFileSize =
@@ -912,7 +921,7 @@ export async function POST(
         const maxUsed =
           coupon.max_uses > 0 &&
           coupon.used_count >=
-            coupon.max_uses;
+          coupon.max_uses;
 
         const minOrderMet =
           subtotal >=

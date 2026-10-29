@@ -581,7 +581,7 @@ export default function SellerDashboardPage() {
                 </div>
                 <h1 className="mt-3 text-2xl font-bold sm:text-[28px]">Welcome back, {seller.name}!</h1>
                 <p className="mt-1.5 text-sm text-white/80">Here's how your referral business is performing · {dashboard.month_key} (Asia/Karachi)</p>
-                <div c  lassName="mt-5 flex flex-wrap gap-3">
+                <div className="mt-5 flex flex-wrap gap-3">
                   <button onClick={() => setTab('products')} className="inline-flex items-center gap-2 rounded bg-white px-6 py-2 mt-4 text font-semibold shadow-sm transition hover:bg-white/90" style={{ color: BRAND }}>
                     <Package className="h-4 w-4" /> Browse Products
                   </button>

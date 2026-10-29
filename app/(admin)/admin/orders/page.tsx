@@ -953,7 +953,11 @@ export default function AdminOrdersPage() {
       ) =>
         <div>
           <span>{formatCurrency(row.total as number)}</span>
-          {row.seller_order && <p className="text-[10px] text-gray-500">COD to collect</p>}
+          {Boolean(row.seller_order) && (
+            <p className="text-[10px] text-gray-500">
+              COD to collect
+            </p>
+          )}
         </div>,
     },
 

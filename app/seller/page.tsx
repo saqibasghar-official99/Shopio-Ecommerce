@@ -1095,26 +1095,108 @@ export default function SellerDashboardPage() {
               </div>
             </div>
             <h2 className="mb-3 flex items-center gap-2 text-base font-semibold text-gray-900"><Gift className="h-4.5 w-4.5" style={{ color: BRAND }} /> Available gifts</h2>
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {rewards.gifts.map((gift: any) => (
-                <div key={gift._id} className="group overflow-hidden rounded-2xl border bg-white shadow-sm transition-shadow hover:shadow-md" style={{ borderColor: '#7A1F3D1F' }}>
-                  {gift.image_url && <Image src={gift.image_url} alt="" width={800} height={600} unoptimized className="h-44 w-full object-cover transition-transform group-hover:scale-105" />}
-                  <div className="p-4">
-                    <h3 className="text-sm font-semibold text-gray-900">{gift.name}</h3>
-                    <p className="mt-1 line-clamp-2 text-sm text-gray-600">{gift.description}</p>
-                    <div className="mt-3 flex items-center gap-1.5 text-xs text-gray-500"><Layers className="h-3.5 w-3.5" /> {gift.stock} in stock</div>
-                    <button
-                      onClick={() => void claimGift(gift._id)}
-                      disabled={!rewards.available_claims}
-                      className="mt-3 w-full rounded-lg px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition disabled:cursor-not-allowed disabled:bg-gray-300"
-                      style={rewards.available_claims ? { background: `linear-gradient(135deg, ${BRAND}, #9d2b52)` } : undefined}
-                    >
-                      Claim gift
-                    </button>
-                  </div>
-                </div>
-              ))}
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+  {rewards.gifts.map((gift: any) => {
+    const outOfStock = gift.stock <= 0;
+    const disabled = !rewards.available_claims || outOfStock;
+
+    return (
+      <article
+        key={gift._id}
+        className="group relative flex flex-col overflow-hidden rounded-3xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_2px_4px_rgba(16,24,40,0.05),0_24px_48px_-16px_rgba(16,24,40,0.20)]"
+        style={{
+          borderColor: `${BRAND}1F`,
+          boxShadow: '0 1px 2px rgba(16,24,40,0.04), 0 12px 32px -16px rgba(16,24,40,0.14)',
+        }}
+      >
+        {/* Image area */}
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
+          {gift.image_url ? (
+            <>
+              <Image
+                src={gift.image_url}
+                alt=""
+                width={800}
+                height={600}
+                unoptimized
+                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+              />
+              {/* brand tinted grade + bottom fade for legibility */}
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background: `linear-gradient(180deg, ${BRAND}00 45%, ${BRAND}40 100%)`,
+                }}
+              />
+            </>
+          ) : (
+            <div
+              className="flex h-full w-full items-center justify-center"
+              style={{ background: `linear-gradient(135deg, ${BRAND}12, ${BRAND}05)` }}
+            >
+              <Gift className="h-10 w-10" style={{ color: `${BRAND}66` }} />
             </div>
+          )}
+
+          {/* Stock pill — floating on image */}
+          <span
+            className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold shadow-sm backdrop-blur-md"
+            style={{ color: outOfStock ? '#9CA3AF' : BRAND }}
+          >
+            <Layers className="h-3 w-3" />
+            {outOfStock ? 'Out of stock' : `${gift.stock} in stock`}
+          </span>
+
+          {/* Claimable indicator */}
+          {rewards.available_claims && !outOfStock && (
+            <span
+              className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm"
+              style={{ background: `linear-gradient(135deg, ${BRAND}, #9d2b52)` }}
+            >
+              <Sparkles className="h-3 w-3" /> Ready
+            </span>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="flex flex-1 flex-col p-5">
+          <h3 className="text-[15px] font-semibold leading-snug tracking-[-0.01em] text-gray-900">
+            {gift.name}
+          </h3>
+          <p className="mt-1.5 line-clamp-2 text-[13px] leading-relaxed text-gray-500">
+            {gift.description}
+          </p>
+
+          <div className="mt-auto pt-4">
+            <button
+              onClick={() => void claimGift(gift._id)}
+              disabled={disabled}
+              className="group/btn relative w-full overflow-hidden rounded-xl px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_-12px_rgba(122,31,61,0.7)] transition-all duration-300 enabled:hover:-translate-y-0.5 enabled:hover:shadow-[0_14px_28px_-12px_rgba(122,31,61,0.8)] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              style={
+                !disabled
+                  ? { background: `linear-gradient(135deg, ${BRAND}, #9d2b52)` }
+                  : undefined
+              }
+            >
+              {!disabled && (
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full"
+                />
+              )}
+              <span className="relative inline-flex items-center justify-center gap-1.5">
+                {outOfStock ? 'Out of stock' : !rewards.available_claims ? 'Not available yet' : 'Claim gift'}
+                {!disabled && (
+                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                )}
+              </span>
+            </button>
+          </div>
+        </div>
+      </article>
+    );
+  })}
+</div>
             <h2 className="mb-3 mt-6 flex items-center gap-2 text-base font-semibold text-gray-900"><CalendarDays className="h-4.5 w-4.5" style={{ color: BRAND }} /> Reward history</h2>
             <div className="space-y-2">
               {rewards.history.map((claim: any) => (

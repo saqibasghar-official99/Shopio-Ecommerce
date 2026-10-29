@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Flame, LayoutDashboard, ShoppingBag, Package, FolderTree, Users, Ticket, MapPin, ChartBar as BarChart3, FileText, Settings, X, UserCog, Star } from 'lucide-react';
+import { Flame, LayoutDashboard, ShoppingBag, Package, FolderTree, Users, Ticket, MapPin, ChartBar as BarChart3, FileText, Settings, X, UserCog, Star, Store } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -13,6 +13,7 @@ const navItems = [
   { label: 'Categories', href: '/admin/categories', icon: FolderTree },
   { label: 'Deals', href: '/admin/deals', icon: Flame },
   { label: 'Customers', href: '/admin/customers', icon: Users },
+  { label: 'Sellers', href: '/admin/sellers', icon: Store },
   { label: 'Coupons', href: '/admin/coupons', icon: Ticket },
   { label: 'Reviews', href: '/admin/reviews', icon: Star },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },

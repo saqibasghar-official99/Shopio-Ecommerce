@@ -5,9 +5,14 @@ import {
   Customer,
   Coupon,
   DeliveryZone,
+  Product,
+  Seller,
+  SellerCommission,
 } from '@/lib/models';
 import { getAdminFromRequest } from '@/lib/auth';
+import { getSellerFromRequest } from '@/lib/seller-auth';
 import cloudinary from '@/lib/cloudinary';
+import { createSellerCommission, createSellerProfitLedger } from '@/lib/server/sellers';
 
 // =========================================================
 // GET /api/orders
@@ -324,6 +329,146 @@ export async function POST(
       };
     } else {
       body = await request.json();
+    }
+
+    let sellerOrderContext: {
+      sellerId: string;
+      referralCode: string;
+      sellerName: string;
+      productId: string;
+      quantity: number;
+      requestId: string;
+    } | null = null;
+
+    if (body.seller_order === true) {
+      const seller = await getSellerFromRequest();
+      if (!seller) {
+        return NextResponse.json({ success: false, data: null, message: 'Seller sign-in is required.' }, { status: 401 });
+      }
+      if (seller.status !== 'approved') {
+        return NextResponse.json({ success: false, data: null, message: 'Only approved sellers can place customer orders.' }, { status: 403 });
+      }
+
+      const productId = String(body.product_id || '');
+      const requestId = String(body.seller_request_id || '');
+      const quantity = Number(body.quantity);
+      const sellingPrice = Number(body.seller_selling_price);
+      if (!/^[a-f\d]{24}$/i.test(productId)) {
+        return NextResponse.json({ success: false, data: null, message: 'Select a valid product.' }, { status: 400 });
+      }
+      if (!/^[a-f\d]{8}-[a-f\d]{4}-[1-8][a-f\d]{3}-[89ab][a-f\d]{3}-[a-f\d]{12}$/i.test(requestId)) {
+        return NextResponse.json({ success: false, data: null, message: 'Invalid order request. Please reopen the order form and retry.' }, { status: 400 });
+      }
+      const duplicateOrder = await Order.findOne({ seller_id: seller._id, seller_request_id: requestId });
+      if (duplicateOrder) {
+        await createSellerProfitLedger(duplicateOrder);
+        return NextResponse.json({ success: true, data: duplicateOrder, duplicate: true }, { status: 200 });
+      }
+
+      const product = await Product.findOne({ _id: productId, is_active: true })
+        .select('name slug price compare_price images stock variants')
+        .lean();
+      if (!product) {
+        return NextResponse.json({ success: false, data: null, message: 'This product is no longer available.' }, { status: 404 });
+      }
+      if (!Number.isInteger(quantity) || quantity < 1 || quantity > 50) {
+        return NextResponse.json({ success: false, data: null, message: 'Quantity must be between 1 and 50.' }, { status: 400 });
+      }
+      if (product.stock < quantity) {
+        return NextResponse.json({ success: false, data: null, message: 'There is not enough stock to place this order.' }, { status: 409 });
+      }
+      if (
+        !Number.isFinite(sellingPrice) ||
+        sellingPrice < product.price ||
+        sellingPrice > 10000000 ||
+        Number(sellingPrice.toFixed(2)) !== sellingPrice
+      ) {
+        return NextResponse.json({ success: false, data: null, message: 'Selling price must be a valid amount at or above the current Veeo product price.' }, { status: 400 });
+      }
+
+      const suppliedVariants = body.variant_selections && typeof body.variant_selections === 'object'
+        ? body.variant_selections as Record<string, unknown>
+        : {};
+      const variantSelections: Array<{ label: string; value: string }> = [];
+      for (const variant of product.variants || []) {
+        if (!variant.options.length) continue;
+        const value = typeof suppliedVariants[variant.label] === 'string'
+          ? suppliedVariants[variant.label].trim()
+          : '';
+        if (!variant.options.includes(value)) {
+          return NextResponse.json({ success: false, data: null, message: `Choose a valid option for ${variant.label}.` }, { status: 400 });
+        }
+        variantSelections.push({ label: variant.label, value });
+      }
+
+      const customerName = String(body.customer_name || '').trim();
+      const customerPhone = String(body.customer_phone || '').trim();
+      const customerEmail = String(body.customer_email || '').trim();
+      const customerAddress = String(body.customer_address || '').trim();
+      const customerCity = String(body.customer_city || '').trim();
+      if (!customerName || customerName.length > 120 || !customerPhone || customerPhone.length > 30 || !customerAddress || customerAddress.length > 500 || !customerCity || customerCity.length > 100) {
+        return NextResponse.json({ success: false, data: null, message: 'Enter a valid customer name, phone, delivery address, and city.' }, { status: 400 });
+      }
+      if (customerEmail && (customerEmail.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail))) {
+        return NextResponse.json({ success: false, data: null, message: 'Enter a valid customer email address.' }, { status: 400 });
+      }
+      const sellerEmail = String(seller.email || '').trim().toLowerCase();
+      const sellerPhone = String(seller.phone || '').replace(/\D/g, '').slice(-10);
+      const customerPhoneDigits = customerPhone.replace(/\D/g, '').slice(-10);
+      if (
+        (customerEmail && customerEmail.toLowerCase() === sellerEmail) ||
+        (sellerPhone && customerPhoneDigits === sellerPhone)
+      ) {
+        return NextResponse.json({ success: false, data: null, message: 'Seller self-purchases are not eligible for seller profit.' }, { status: 400 });
+      }
+      const zoneName = String(body.delivery_zone || '').trim();
+      const zone = await DeliveryZone.findOne({ name: zoneName, is_active: true }).select('name cities');
+      if (!zone) {
+        return NextResponse.json({ success: false, data: null, message: 'Choose an available delivery zone.' }, { status: 400 });
+      }
+      if (zone.cities.length && !zone.cities.some((city) => city.trim().toLowerCase() === customerCity.toLowerCase())) {
+        return NextResponse.json({ success: false, data: null, message: 'The selected delivery zone is not available for this city.' }, { status: 400 });
+      }
+      if (body.payment_method && body.payment_method !== 'cod') {
+        return NextResponse.json({ success: false, data: null, message: 'Seller-placed orders currently support Cash on Delivery only.' }, { status: 400 });
+      }
+
+      body.customer_name = customerName;
+      body.customer_phone = customerPhone;
+      body.customer_email = customerEmail;
+      body.customer_address = customerAddress;
+      body.customer_city = customerCity;
+      body.delivery_zone = zone.name;
+      body.billing_same_as_shipping = true;
+      body.guest_customer_id = '';
+      body.payment_method = 'cod';
+      body.coupon_code = '';
+      body.bank_transfer_discount = 0;
+      body.payment_proof = '';
+      body.payment_reference = '';
+      body.notes = 'Seller-placed customer order';
+      body.is_guest = true;
+      body.items = [{
+        productId: String(product._id),
+        name: product.name,
+        slug: product.slug,
+        image: product.images[0] || '',
+        unitPrice: sellingPrice,
+        comparePrice: product.compare_price || 0,
+        qty: quantity,
+        originalUnitPrice: product.price,
+        sellerSellingPrice: sellingPrice,
+        sellerProfit: Number((sellingPrice - product.price).toFixed(2)),
+        variantSelections,
+      }];
+      sellerOrderContext = {
+        sellerId: String(seller._id),
+        referralCode: seller.referral_code,
+        sellerName: seller.name,
+        productId: String(product._id),
+        quantity,
+        requestId,
+      };
     }
 
     // =====================================================
@@ -697,6 +842,30 @@ export async function POST(
     const order_number =
       `ORD-${Date.now()}-${randomSuffix}`;
 
+    let seller_id = sellerOrderContext?.sellerId || null;
+    let seller_referral_code = '';
+    let seller_name = sellerOrderContext?.sellerName || '';
+    if (sellerOrderContext) {
+      seller_referral_code = sellerOrderContext.referralCode;
+    } else {
+      const referralCode = request.cookies.get('veeo_referral')?.value?.trim().toUpperCase();
+      if (referralCode && /^[A-Z0-9-]{4,32}$/.test(referralCode)) {
+        const referringSeller = await Seller.findOne({ referral_code: referralCode, status: 'approved' }).select('_id name referral_code email phone');
+        const normalizedEmail = customer_email.toLowerCase();
+        const normalizedPhone = customer_phone.replace(/\D/g, '');
+        const sellerPhone = String(referringSeller?.phone || '').replace(/\D/g, '');
+        const isSelfPurchase = Boolean(referringSeller && (
+          (normalizedEmail && normalizedEmail === referringSeller.email.toLowerCase()) ||
+          (normalizedPhone && sellerPhone && normalizedPhone === sellerPhone)
+        ));
+        if (referringSeller && !isSelfPurchase) {
+          seller_id = referringSeller._id;
+          seller_referral_code = referringSeller.referral_code;
+          seller_name = referringSeller.name;
+        }
+      }
+    }
+
     // =====================================================
     // CALCULATE SUBTOTAL
     // =====================================================
@@ -713,6 +882,7 @@ export async function POST(
       subtotal +=
         unitPrice * qty;
     }
+    if (sellerOrderContext) subtotal = Number(subtotal.toFixed(2));
 
     // =====================================================
     // APPLY COUPON DISCOUNT
@@ -909,13 +1079,29 @@ export async function POST(
     // CREATE ORDER
     // =====================================================
 
-    const order =
-      await Order.create({
+    if (sellerOrderContext) {
+      const stockReservation = await Product.updateOne(
+        { _id: sellerOrderContext.productId, is_active: true, stock: { $gte: sellerOrderContext.quantity } },
+        { $inc: { stock: -sellerOrderContext.quantity } }
+      );
+      if (!stockReservation.modifiedCount) {
+        return NextResponse.json({ success: false, data: null, message: 'Product stock changed. Refresh the catalogue and try again.' }, { status: 409 });
+      }
+    }
+
+    let order;
+    try {
+      order = await Order.create({
         // --------------------------------------------------
         // Order identification
         // --------------------------------------------------
 
         order_number,
+        seller_id,
+        seller_referral_code,
+        seller_name,
+        seller_order: Boolean(sellerOrderContext),
+        ...(sellerOrderContext ? { seller_request_id: sellerOrderContext.requestId } : {}),
 
         // --------------------------------------------------
         // Customer
@@ -1047,6 +1233,26 @@ export async function POST(
         notes:
           notes || '',
       });
+    } catch (error) {
+      if (sellerOrderContext) {
+        await Product.updateOne(
+          { _id: sellerOrderContext.productId },
+          { $inc: { stock: sellerOrderContext.quantity } }
+        );
+        const isDuplicateRequest = typeof error === 'object' && error !== null && 'code' in error && error.code === 11000;
+        if (isDuplicateRequest) {
+          const existingOrder = await Order.findOne({ seller_id: sellerOrderContext.sellerId, seller_request_id: sellerOrderContext.requestId });
+          if (existingOrder) {
+            await createSellerProfitLedger(existingOrder);
+            return NextResponse.json({ success: true, data: existingOrder, duplicate: true }, { status: 200 });
+          }
+        }
+      }
+      throw error;
+    }
+
+    await createSellerCommission(order);
+    if (sellerOrderContext) await createSellerProfitLedger(order);
 
     // =====================================================
     // UPDATE COUPON USAGE

@@ -416,237 +416,239 @@ export default function BannerCarousel({
   };
 
   return (
-    <div className="relative w-full overflow-hidden bg-black">
-      <div
-        className="
-          flex
-          transition-transform
-          duration-500
-          ease-in-out
-        "
-        style={{
-          transform: `translateX(-${current * 100
-            }%)`,
-        }}
-      >
-        {activeBanners.map(
-          (banner, index) => {
-            const isVideo =
-              banner.type ===
-              "video";
+    <div className="relative w-full px-4 sm:px-6 lg:px-8">
+      <div className="relative w-full overflow-hidden rounded-2xl bg-black">
+        <div
+          className="
+            flex
+            transition-transform
+            duration-500
+            ease-in-out
+          "
+          style={{
+            transform: `translateX(-${current * 100
+              }%)`,
+          }}
+        >
+          {activeBanners.map(
+            (banner, index) => {
+              const isVideo =
+                banner.type ===
+                "video";
 
-            const videoUrl =
-              banner.video ||
-              (isVideo
-                ? banner.image
-                : "");
+              const videoUrl =
+                banner.video ||
+                (isVideo
+                  ? banner.image
+                  : "");
 
-            const imageUrl =
-              banner.image || "";
+              const imageUrl =
+                banner.image || "";
 
-            /*
-             * VIDEO
-             */
-            if (
-              isVideo &&
-              videoUrl
-            ) {
-              return (
-                <div
-                  key={`${videoUrl}-${index}`}
-                  className="
-                    w-full
-                    shrink-0
-                  "
-                >
+              /*
+              * VIDEO
+              */
+              if (
+                isVideo &&
+                videoUrl
+              ) {
+                return (
                   <div
+                    key={`${videoUrl}-${index}`}
                     className="
-                      relative
                       w-full
-                      aspect-[21/9]
-                      sm:aspect-[3/1]
-                      lg:h-[calc(100vh-80px)]
-                      lg:min-h-[600px]
-                      lg:max-h-[850px]
-                      bg-black
-                      overflow-hidden
+                      shrink-0
                     "
-                  >
-                    <BannerVideo
-                      src={videoUrl}
-                      active={
-                        index === current
-                      }
-                      index={index}
-                      onEnded={
-                        nextSlide
-                      }
-                    />
-
-                    {banner.link && (
-                      <Link
-                        href={
-                          banner.link
-                        }
-                        className="
-                          absolute
-                          inset-0
-                          z-20
-                        "
-                        aria-label={`Banner ${index + 1
-                          }`}
-                      />
-                    )}
-                  </div>
-                </div>
-              );
-            }
-
-            /*
-             * IMAGE
-             */
-            // if (imageUrl) {
-            //   return (
-            //     <div
-            //       key={`${imageUrl}-${index}`}
-            //       className="
-            //         w-full
-            //         shrink-0
-            //       "
-            //     >
-            //       <Link
-            //         href={
-            //           banner.link ||
-            //           "#"
-            //         }
-            //         className="block"
-            //       >
-            //         <div
-            //           className="
-            //             relative
-            //             w-full
-            //             aspect-[21/9]
-            //             sm:aspect-[3/1]
-            //             lg:h-[calc(100vh-100px)]
-            //             lg:min-h-[400px]
-            //             lg:max-h-[500px]
-            //             bg-black
-            //           "
-            //         >
-            //           <img
-            //             src={imageUrl}
-            //             alt={`Banner ${
-            //               index + 1
-            //             }`}
-            //             className="
-            //               absolute
-            //               inset-0
-            //               w-full
-            //               h-full
-            //               object-contain sm:object-cover
-            //             "
-            //             loading={
-            //               index === 0
-            //                 ? "eager"
-            //                 : "lazy"
-            //             }
-            //             decoding="async"
-            //           />
-            //         </div>
-            //       </Link>
-            //     </div>
-            //   );
-            // }
-
-            if (imageUrl) {
-              return (
-                <div
-                  key={`${imageUrl}-${index}`}
-                  className="w-full shrink-0"
-                >
-                  <Link
-                    href={banner.link || "#"}
-                    className="block w-full"
                   >
                     <div
                       className="
-            relative
-            w-full
-            overflow-hidden
-            bg-white
-            lg:h-[calc(100vh-100px)]
-            lg:min-h-[400px]
-            lg:max-h-[500px]
-          "
+                        relative
+                        w-full
+                        aspect-[21/9]
+                        sm:aspect-[3/1]
+                        lg:h-[calc(100vh-80px)]
+                        lg:min-h-[600px]
+                        lg:max-h-[850px]
+                        bg-black
+                        overflow-hidden
+                      "
                     >
-                      <img
-                        src={imageUrl}
-                        alt={`Banner ${index + 1}`}
-                        className="
-              block
-              w-full
-              h-auto
-              lg:absolute
-              lg:inset-0
-              lg:h-full
-              lg:object-cover
-            "
-                        loading={
-                          index === 0
-                            ? "eager"
-                            : "lazy"
+                      <BannerVideo
+                        src={videoUrl}
+                        active={
+                          index === current
                         }
-                        decoding="async"
+                        index={index}
+                        onEnded={
+                          nextSlide
+                        }
                       />
+
+                      {banner.link && (
+                        <Link
+                          href={
+                            banner.link
+                          }
+                          className="
+                            absolute
+                            inset-0
+                            z-20
+                          "
+                          aria-label={`Banner ${index + 1
+                            }`}
+                        />
+                      )}
                     </div>
-                  </Link>
-                </div>
-              );
+                  </div>
+                );
+              }
+
+              /*
+              * IMAGE
+              */
+              // if (imageUrl) {
+              //   return (
+              //     <div
+              //       key={`${imageUrl}-${index}`}
+              //       className="
+              //         w-full
+              //         shrink-0
+              //       "
+              //     >
+              //       <Link
+              //         href={
+              //           banner.link ||
+              //           "#"
+              //         }
+              //         className="block"
+              //       >
+              //         <div
+              //           className="
+              //             relative
+              //             w-full
+              //             aspect-[21/9]
+              //             sm:aspect-[3/1]
+              //             lg:h-[calc(100vh-100px)]
+              //             lg:min-h-[400px]
+              //             lg:max-h-[500px]
+              //             bg-black
+              //           "
+              //         >
+              //           <img
+              //             src={imageUrl}
+              //             alt={`Banner ${
+              //               index + 1
+              //             }`}
+              //             className="
+              //               absolute
+              //               inset-0
+              //               w-full
+              //               h-full
+              //               object-contain sm:object-cover
+              //             "
+              //             loading={
+              //               index === 0
+              //                 ? "eager"
+              //                 : "lazy"
+              //             }
+              //             decoding="async"
+              //           />
+              //         </div>
+              //       </Link>
+              //     </div>
+              //   );
+              // }
+
+              if (imageUrl) {
+                return (
+                  <div
+                    key={`${imageUrl}-${index}`}
+                    className="w-full shrink-0"
+                  >
+                    <Link
+                      href={banner.link || "#"}
+                      className="block w-full"
+                    >
+                      <div
+                        className="
+              relative
+              w-full
+              overflow-hidden
+              bg-white
+              lg:h-[calc(100vh-100px)]
+              lg:min-h-[400px]
+              lg:max-h-[500px]
+            "
+                      >
+                        <img
+                          src={imageUrl}
+                          alt={`Banner ${index + 1}`}
+                          className="
+                block
+                w-full
+                h-auto
+                lg:absolute
+                lg:inset-0
+                lg:h-full
+                lg:object-cover
+              "
+                          loading={
+                            index === 0
+                              ? "eager"
+                              : "lazy"
+                          }
+                          decoding="async"
+                        />
+                      </div>
+                    </Link>
+                  </div>
+                );
+              }
+
+              return null;
             }
+          )}
+        </div>
 
-            return null;
-          }
-        )}
-      </div>
-
-      {activeBanners.length >
-        1 && (
-          <div
-            className="
-            absolute
-            bottom-5
-            left-1/2
-            -translate-x-1/2
-            z-50
-            flex
-            items-center
-            gap-1.5
-          "
-          >
-            {activeBanners.map(
-              (_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() =>
-                    setCurrent(index)
-                  }
-                  className={`
-                  h-2
-                  rounded-full
-                  transition-all
-                  duration-300
-                  ${index ===
-                      current
-                      ? "w-6 bg-white"
-                      : "w-2 bg-white/60"
+        {activeBanners.length >
+          1 && (
+            <div
+              className="
+              absolute
+              bottom-5
+              left-1/2
+              -translate-x-1/2
+              z-50
+              flex
+              items-center
+              gap-1.5
+            "
+            >
+              {activeBanners.map(
+                (_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() =>
+                      setCurrent(index)
                     }
-                `}
-                />
-              )
-            )}
-          </div>
-        )}
+                    className={`
+                    h-2
+                    rounded-full
+                    transition-all
+                    duration-300
+                    ${index ===
+                        current
+                        ? "w-6 bg-white"
+                        : "w-2 bg-white/60"
+                      }
+                  `}
+                  />
+                )
+              )}
+            </div>
+          )}
+      </div>
     </div>
   );
 }

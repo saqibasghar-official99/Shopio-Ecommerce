@@ -8,6 +8,14 @@ import {
   Coupon,
   DeliveryZone,
   AdminUser,
+  Seller,
+  SellerProgram,
+  SellerGift,
+  SellerCommission,
+  SellerRewardClaim,
+  SellerPayout,
+  SellerPayoutMethod,
+  SellerAuditLog,
 } from '../lib/models';
  
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -30,6 +38,14 @@ async function main() {
     { name: 'Coupon', model: Coupon },
     { name: 'DeliveryZone', model: DeliveryZone },
     { name: 'AdminUser', model: AdminUser },
+    { name: 'Seller', model: Seller },
+    { name: 'SellerProgram', model: SellerProgram },
+    { name: 'SellerGift', model: SellerGift },
+    { name: 'SellerCommission', model: SellerCommission },
+    { name: 'SellerRewardClaim', model: SellerRewardClaim },
+    { name: 'SellerPayout', model: SellerPayout },
+    { name: 'SellerPayoutMethod', model: SellerPayoutMethod },
+    { name: 'SellerAuditLog', model: SellerAuditLog },
   ];
 
   for (const { name, model } of models) {

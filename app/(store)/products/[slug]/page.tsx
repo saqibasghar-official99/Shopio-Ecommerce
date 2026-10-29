@@ -1651,7 +1651,7 @@ ${variantString
               product.tags.length > 0 && (
                 <div className="col-span-2 flex flex-wrap items-center gap-1.5 mt-1">
 
-                  <span className="text-gray-400 text-xs">
+                  <span className="text-gray-400 text-xs" style={{display: 'none'}}>
                     Tags:
                   </span>
 

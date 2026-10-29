@@ -861,6 +861,14 @@ export default function Footer() {
                 Terms & Conditions
               </Link>
 
+              <Link
+                href="/seller/register"
+                className="group flex items-center gap-1 text-[11px] sm:text-sm text-gray-500 hover:text-[#7A1F3D] transition-colors"
+              >
+                <ChevronRight className="h-3 w-3 text-gray-300 group-hover:text-[#7A1F3D]" />
+                Become a Veeo Seller
+              </Link>
+
             </nav>
 
           </div>

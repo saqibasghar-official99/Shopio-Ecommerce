@@ -94,6 +94,10 @@ export interface OrderItem {
   qty: number;
   unitPrice: number;
   variant?: string;
+  originalUnitPrice?: number;
+  sellerSellingPrice?: number;
+  sellerProfit?: number;
+  variantSelections?: Array<{ label: string; value: string }>;
 }
 
 export interface Order {
@@ -105,6 +109,10 @@ export interface Order {
   // =========================
 
   order_number: string;
+  seller_order?: boolean;
+  seller_name?: string;
+  seller_id?: string | null;
+  seller_referral_code?: string;
 
   // =========================
   // CUSTOMER
@@ -165,6 +173,7 @@ export interface Order {
   payment_proof?: string;
   payment_proof_name?: string;
   bank_transfer_discount?: number;
+  refunded_amount?: number;
 
   // =========================
   // STATUS

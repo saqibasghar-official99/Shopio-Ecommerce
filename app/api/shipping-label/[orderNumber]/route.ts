@@ -664,6 +664,14 @@ export async function GET(
       line-height: 1.4;
     }
 
+    .total-label {
+      margin-top: 4px;
+      font-size: 7px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #555;
+    }
+
     .total {
       font-size: 12px;
 
@@ -944,9 +952,12 @@ export async function GET(
           )}
         </div>
 
+        <div class="total-label">
+          ${order.payment_method === 'cod' ? 'COD amount to collect' : 'Order total'}
+        </div>
         <div class="total">
           ${escapeHtml(
-            String(order.total ?? 0)
+            `PKR ${String(order.total ?? 0)}`
           )}
         </div>
 

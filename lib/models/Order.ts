@@ -96,6 +96,10 @@ export interface IOrderItem {
   unitPrice: number;
   comparePrice: number;
   qty: number;
+  originalUnitPrice?: number;
+  sellerSellingPrice?: number;
+  sellerProfit?: number;
+  variantSelections?: Array<{ label: string; value: string }>;
 }
 
 export interface IOrder extends Document {
@@ -144,6 +148,13 @@ export interface IOrder extends Document {
   payment_proof?: string;
   payment_reference?: string;
   bank_transfer_discount?: number;
+  seller_id?: mongoose.Types.ObjectId | null;
+  seller_referral_code?: string;
+  seller_name?: string;
+  seller_order: boolean;
+  seller_request_id?: string;
+  seller_stock_restored: boolean;
+  refunded_amount: number;
 }
 
 const OrderItemSchema = new Schema<IOrderItem>(
@@ -155,6 +166,13 @@ const OrderItemSchema = new Schema<IOrderItem>(
     unitPrice: { type: Number, required: true },
     comparePrice: { type: Number, default: 0 },
     qty: { type: Number, required: true, min: 1 },
+    originalUnitPrice: { type: Number, min: 0 },
+    sellerSellingPrice: { type: Number, min: 0 },
+    sellerProfit: { type: Number, min: 0 },
+    variantSelections: {
+      type: [{ label: { type: String, required: true }, value: { type: String, required: true } }],
+      default: undefined,
+    },
   },
   { _id: false }
 );
@@ -176,6 +194,43 @@ const OrderSchema = new Schema<IOrder>(
     guest_customer_id: {
       type: String,
       default: null,
+    },
+
+    seller_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Seller',
+      default: null,
+    },
+
+    seller_referral_code: {
+      type: String,
+      default: '',
+    },
+
+    seller_name: {
+      type: String,
+      default: '',
+    },
+
+    seller_order: {
+      type: Boolean,
+      default: false,
+    },
+
+    seller_request_id: {
+      type: String,
+      default: undefined,
+    },
+
+    seller_stock_restored: {
+      type: Boolean,
+      default: false,
+    },
+
+    refunded_amount: {
+      type: Number,
+      default: 0,
+      min: 0,
     },
 
     // =========================
@@ -380,6 +435,12 @@ OrderSchema.index({
 OrderSchema.index({
   created_at: -1,
 });
+
+OrderSchema.index({ seller_id: 1, created_at: -1 });
+OrderSchema.index(
+  { seller_id: 1, seller_request_id: 1 },
+  { unique: true, partialFilterExpression: { seller_request_id: { $type: 'string' } } }
+);
 
 export default mongoose.models.Order ||
   mongoose.model<IOrder>('Order', OrderSchema);

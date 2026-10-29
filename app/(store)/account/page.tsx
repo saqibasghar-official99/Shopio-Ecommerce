@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Lock, Loader as Loader2, Package, LogIn, UserPlus, LogOut } from 'lucide-react';
+import { User, Mail, Lock, Loader as Loader2, Package, LogIn, UserPlus, LogOut, Store } from 'lucide-react';
 import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -256,6 +256,7 @@ export default function AccountPage() {
               Register
             </TabsTrigger>
           </TabsList>
+          
 
           {/* Login Form */}
           <TabsContent value="login" className="mt-4">
@@ -294,6 +295,13 @@ export default function AccountPage() {
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Log In'}
               </Button>
             </form>
+            <Link
+            href="/seller/login"
+            className="my-1 flex w-full items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition-colors border-[#7A1F3D]/30 bg-[#7A1F3D]/5 hover:text-[#7A1F3D]"
+          >
+            <Store className="h-3.5 w-3.5" />
+            Become Seller
+          </Link>
           </TabsContent>
 
           {/* Register Form */}
@@ -302,7 +310,7 @@ export default function AccountPage() {
               <div>
                 <label className="text-xs font-medium text-gray-700 block mb-1">Full Name</label>
                 <Input
-                  placeholder="John Doe"
+                  placeholder="Alice Smith"
                   value={registerForm.name}
                   onChange={(e) => setRegisterForm((prev) => ({ ...prev, name: e.target.value }))}
                   className={`h-9 text-sm ${registerErrors.name ? 'border-red-500' : ''}`}
@@ -355,13 +363,20 @@ export default function AccountPage() {
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Create Account'}
               </Button>
             </form>
+             <Link
+            href="/seller/login"
+            className="my-1 flex w-full items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition-colors border-[#7A1F3D]/30 bg-[#7A1F3D]/5 hover:text-[#7A1F3D]"
+          >
+            <Store className="h-3.5 w-3.5" />
+            Become Seller
+          </Link>
           </TabsContent>
         </Tabs>
 
         <Separator className="my-4" />
 
         <p className="text-xs text-gray-400 text-center">
-          Account features are optional. You can always checkout as a guest.
+          You can also checkout as a guest.
         </p>
       </div>
     </div>

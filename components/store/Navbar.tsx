@@ -932,7 +932,7 @@ export default function Navbar() {
     },
     {
       href: '/orders',
-      label: 'My Orders',
+      label: 'Orders',
       icon: ClipboardList,
       description:
         'Track your purchases',
@@ -1321,7 +1321,7 @@ export default function Navbar() {
 
                 <span className="block text-[9px] text-gray-400 mt-1 tracking-[0.15em] uppercase flex items-center gap-1">
                   <Sparkles className="h-2.5 w-2.5 text-[#7A1F3D]" />
-                  Premium Quality
+                  Quality Meets Value
                 </span>
               </div>
             </Link>

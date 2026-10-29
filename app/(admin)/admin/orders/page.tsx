@@ -560,6 +560,12 @@ export default function AdminOrdersPage() {
 
   const [updatingPayment, setUpdatingPayment] =
     useState<string | null>(null);
+  const [refundAmount, setRefundAmount] = useState('0');
+  const [savingRefund, setSavingRefund] = useState(false);
+
+  useEffect(() => {
+    setRefundAmount(String(selectedOrder?.refunded_amount || 0));
+  }, [selectedOrder]);
 
   // =========================================================
   // FETCH ORDERS
@@ -765,6 +771,35 @@ export default function AdminOrdersPage() {
     }
   };
 
+  const recordRefundAmount = async (orderNumber: string) => {
+    const amount = Number(refundAmount);
+    if (!Number.isFinite(amount) || amount < (selectedOrder?.refunded_amount || 0)) {
+      window.alert('Refund amount must be valid and cannot be lower than the amount already recorded.');
+      return;
+    }
+    if (!window.confirm(`Confirm that a cumulative merchandise refund of ${formatCurrency(amount)} has been paid to the customer?`)) return;
+    setSavingRefund(true);
+    try {
+      const response = await fetch(`/api/orders/${orderNumber}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refunded_amount: amount }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        window.alert(result.message || 'Could not record refund.');
+        return;
+      }
+      setOrders((previous) => previous.map((order) => order.order_number === orderNumber ? { ...order, ...result.data } : order));
+      setSelectedOrder(result.data);
+    } catch (error) {
+      console.error('Failed to record order refund', error);
+      window.alert('Could not record refund.');
+    } finally {
+      setSavingRefund(false);
+    }
+  };
+
   // =========================================================
   // DELETE ORDER
   // =========================================================
@@ -884,6 +919,21 @@ export default function AdminOrdersPage() {
     },
 
     {
+      key: 'seller_name',
+      label: 'Seller',
+      render: (row: Record<string, unknown>) => {
+        const sellerName = row.seller_name as string | undefined;
+        if (!sellerName) return <span className="text-gray-400">—</span>;
+        return (
+          <span className="text-xs text-gray-700">
+            {sellerName}
+            {row.seller_order ? <span className="ml-1 text-[10px] text-gray-500">placed order</span> : null}
+          </span>
+        );
+      },
+    },
+
+    {
       key: 'items',
       label: 'Items',
 
@@ -901,9 +951,10 @@ export default function AdminOrdersPage() {
       render: (
         row: Record<string, unknown>
       ) =>
-        formatCurrency(
-          row.total as number
-        ),
+        <div>
+          <span>{formatCurrency(row.total as number)}</span>
+          {row.seller_order && <p className="text-[10px] text-gray-500">COD to collect</p>}
+        </div>,
     },
 
     {
@@ -1334,7 +1385,48 @@ export default function AdminOrdersPage() {
                     </p>
                   </div>
 
+                  {selectedOrder.seller_name && (
+                    <div>
+                      <span className="text-gray-500">Seller</span>
+                      <p className="font-medium text-gray-900">
+                        {selectedOrder.seller_name}
+                        {selectedOrder.seller_order ? ' · placed order' : ' · referral'}
+                      </p>
+                    </div>
+                  )}
+
                 </div>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-2 rounded-md border border-orange-200 bg-orange-50 p-3">
+                <div>
+                  <p className="text-xs font-semibold text-gray-800">Merchandise refund</p>
+                  <p className="text-[11px] text-gray-600">Cumulative amount excluding delivery: {formatCurrency(Math.max(0, selectedOrder.subtotal - selectedOrder.discount - (selectedOrder.bank_transfer_discount || 0)))}. Only confirm refunds already paid to the customer.</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    min={selectedOrder.refunded_amount || 0}
+                    max={Math.max(0, selectedOrder.subtotal - selectedOrder.discount - (selectedOrder.bank_transfer_discount || 0))}
+                    step="0.01"
+                    value={refundAmount}
+                    onChange={(event) => setRefundAmount(event.target.value)}
+                    disabled={selectedOrder.payment_status !== 'paid' || savingRefund}
+                    className="h-8 min-w-0 flex-1 rounded-md border bg-white px-2 text-xs"
+                    aria-label="Cumulative merchandise refund amount"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => void recordRefundAmount(selectedOrder.order_number)}
+                    disabled={selectedOrder.payment_status !== 'paid' || savingRefund}
+                    className="rounded-md bg-orange-700 px-3 py-2 text-xs font-medium text-white disabled:opacity-50"
+                  >
+                    {savingRefund ? 'Saving…' : 'Record refund'}
+                  </button>
+                </div>
+                <p className="text-[11px] text-gray-600">Recorded so far: {formatCurrency(selectedOrder.refunded_amount || 0)}. Partial refunds reduce unpaid seller earnings proportionally; full refunds reverse them.</p>
               </div>
 
               <Separator />
@@ -1588,6 +1680,16 @@ export default function AdminOrdersPage() {
                                 {item.variant}
                               </p>
                             )}
+                            {item.variantSelections?.length ? (
+                              <p className="text-gray-400">
+                                {item.variantSelections.map((variant) => `${variant.label}: ${variant.value}`).join(' · ')}
+                              </p>
+                            ) : null}
+                            {selectedOrder.seller_order && item.originalUnitPrice !== undefined && (
+                              <p className="mt-1 text-[10px] text-gray-500">
+                                Veeo: {formatCurrency(item.originalUnitPrice)} · Customer: {formatCurrency(item.sellerSellingPrice ?? item.unitPrice)} · Seller profit: {formatCurrency((item.sellerProfit || 0) * item.qty)}
+                              </p>
+                            )}
                           </div>
 
                         </div>
@@ -1680,6 +1782,29 @@ export default function AdminOrdersPage() {
 
               <div className="space-y-1">
 
+                {selectedOrder.seller_order && (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Veeo product-price subtotal</span>
+                      <span>
+                        {formatCurrency(selectedOrder.items.reduce(
+                          (sum, item) => sum + (item.originalUnitPrice ?? item.unitPrice) * item.qty,
+                          0
+                        ))}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Seller profit snapshot (before delivery)</span>
+                      <span>
+                        {formatCurrency(selectedOrder.items.reduce(
+                          (sum, item) => sum + (item.sellerProfit || 0) * item.qty,
+                          0
+                        ))}
+                      </span>
+                    </div>
+                  </>
+                )}
+
                 <div className="flex justify-between">
                   <span className="text-gray-500">
                     Subtotal
@@ -1728,7 +1853,7 @@ export default function AdminOrdersPage() {
                 <div className="flex justify-between font-semibold">
 
                   <span>
-                    Total
+                    {selectedOrder.payment_method === 'cod' ? 'COD amount to collect' : 'Total'}
                   </span>
 
                   <span>
